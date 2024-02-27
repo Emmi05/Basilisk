@@ -114,13 +114,13 @@ app.post('/auth', async (req, res)=> {
 //12 - Método para controlar que está auth en todas las páginas
 app.get('/', (req, res)=> {
 	if (req.session.loggedin) {
+            redirigirSegunRol(req.session.rol, res);	
 		res.render('index',{
 			login: true,
 			name: req.session.name,
-			rol: req.session.rol
-							
+			rol: req.session.rol,		
 		});	
-		redirigirSegunRol(results[0].rol, res);	
+		
 	} else {
 		res.render('index',{
 			login:false,
