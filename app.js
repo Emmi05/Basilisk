@@ -92,6 +92,7 @@ app.post('/auth', async (req, res)=> {
 				//creamos una var de session y le asignamos true si INICIO SESSION       
 				req.session.loggedin = true;                
 				req.session.name = results[0].name;
+				req.session.rol = results[0].rol;
 				res.render('login', {
 					alert: true,
 					alertTitle: "Conexión exitosa",
@@ -115,8 +116,11 @@ app.get('/', (req, res)=> {
 	if (req.session.loggedin) {
 		res.render('index',{
 			login: true,
-			name: req.session.name			
-		});		
+			name: req.session.name,
+			rol: req.session.rol
+							
+		});	
+		redirigirSegunRol(results[0].rol, res);	
 	} else {
 		res.render('index',{
 			login:false,
@@ -125,6 +129,16 @@ app.get('/', (req, res)=> {
 	}
 	res.end();
 });
+
+//funcion para comparar 
+function redirigirSegunRol(rol, res) {
+    if (rol === 'admin') {
+        res.redirect('/admin'); // Redirige a la ventana de administrador
+    } else {
+        res.redirect('/normal'); // Redirige a la ventana para usuarios normales
+    }
+}
+
 
 
 //función para limpiar la caché luego del logout
@@ -145,4 +159,32 @@ app.get('/logout', function (req, res) {
 
 app.listen(3000, (req, res)=>{
     console.log('SERVER RUNNING IN http://localhost:3000');
+});
+
+
+//vistas rutas de normal, admin
+// Ruta para administradores
+app.get('/admin', (req, res) => {
+    if (req.session.loggedin) {
+        res.render('admin', {
+            // Pasa los datos necesarios a la vista de administrador
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    } else {
+        res.redirect('/login'); // Redirige a la página de inicio de sesión si no está autenticado
+    }
+});
+
+// Ruta para usuarios normales
+app.get('/normal', (req, res) => {
+    if (req.session.loggedin) {
+        res.render('normal', {
+            // Pasa los datos necesarios a la vista de usuarios normales
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    } else {
+        res.redirect('/login'); // Redirige a la página de inicio de sesión si no está autenticado
+    }
 });
