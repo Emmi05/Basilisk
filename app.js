@@ -121,7 +121,7 @@ app.get('/', (req, res)=> {
 			rol: req.session.rol,		
 		});
              }  else {
-                 res.render('index',{
+                 res.render('normal',{
 			login: true,
 			name: req.session.name,
 			rol: req.session.rol,		
