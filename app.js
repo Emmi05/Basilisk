@@ -90,18 +90,30 @@ app.post('/auth', async (req, res)=> {
                 //res.send('Incorrect Username and/or Password!');				
 			} else {         
 				//creamos una var de session y le asignamos true si INICIO SESSION       
-				req.session.loggedin = true;                
+				req.session.loggedin = true;             
 				req.session.name = results[0].name;
 				req.session.rol = results[0].rol;
+				if(req.session.rol == 'usuario'){
+				//console.log(req.session.rol);
 				res.render('login', {
 					alert: true,
-					alertTitle: "Conexión exitosa",
-					alertMessage: "¡LOGIN CORRECTO!",
+					alertTitle: "PROPIEDAD DE:",
+					alertMessage: "¡SARAHI!",
 					alertIcon:'success',
 					showConfirmButton: false,
 					timer: 1500,
 					ruta: ''
-				});        			
+				});        			} else {
+					res.render('login',{
+						alert: true,
+						alertTitle: "Eres Larry",
+						alertMessage:"Ata Papa",
+						alertIcon:'success',
+						showConfirmButton:false,
+						timer: 1500,
+						ruta:''
+					});
+				}
 			}			
 			res.end();
 		});
@@ -114,38 +126,29 @@ app.post('/auth', async (req, res)=> {
 //12 - Método para controlar que está auth en todas las páginas
 app.get('/', (req, res)=> {
 	if (req.session.loggedin) {
-            if (redirigirSegunRol(req.session.rol, res)) {	
+		if(req.session.rol == 'usuario'){
+		res.render('normal',{
+			login: true,
+			roluser: false,
+			name: req.session.name,
+			rol: req.session.rol		
+		});		
+	} else if(req.session.rol == 'admin') {
 		res.render('admin',{
-			login: true,
-			name: req.session.name,
-			rol: req.session.rol,		
-		});
-             }  else {
-                 res.render('normal',{
-			login: true,
-			name: req.session.name,
-			rol: req.session.rol,		
-		});
-             }
-		
-	} else {
-		res.render('index',{
-			login:false,
-			name:'Debe iniciar sesión',			
+			login:true,
+			roluser: true,
+			name:req.session.name,
+			rol:req.session.rol			
 		});				
 	}
 	res.end();
-});
-
-//funcion para comparar 
-function redirigirSegunRol(rol, res) {
-    if (rol === 'admin') {
-        return true;
-    } else {
-        return false;
-    }
+}	else {
+	res.render('index',{
+		login:false,
+		name:'Debe iniciar sesión',			
+	});				
 }
-
+});
 
 
 //función para limpiar la caché luego del logout
@@ -166,32 +169,4 @@ app.get('/logout', function (req, res) {
 
 app.listen(3000, (req, res)=>{
     console.log('SERVER RUNNING IN http://localhost:3000');
-});
-
-
-//vistas rutas de normal, admin
-// Ruta para administradores
-app.get('/admin', (req, res) => {
-    if (req.session.loggedin) {
-        res.render('src/views/admin', {
-            // Pasa los datos necesarios a la vista de administrador
-            name: req.session.name,
-            rol: req.session.rol
-        });
-    } else {
-        res.redirect('/login'); // Redirige a la página de inicio de sesión si no está autenticado
-    }
-});
-
-// Ruta para usuarios normales
-app.get('/normal', (req, res) => {
-    if (req.session.loggedin) {
-        res.render('normal', {
-            // Pasa los datos necesarios a la vista de usuarios normales
-            name: req.session.name,
-            rol: req.session.rol
-        });
-    } else {
-        res.redirect('/login'); // Redirige a la página de inicio de sesión si no está autenticado
-    }
 });
