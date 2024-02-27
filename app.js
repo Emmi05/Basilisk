@@ -114,12 +114,19 @@ app.post('/auth', async (req, res)=> {
 //12 - Método para controlar que está auth en todas las páginas
 app.get('/', (req, res)=> {
 	if (req.session.loggedin) {
-            redirigirSegunRol(req.session.rol, res);	
-		res.render('index',{
+            if (redirigirSegunRol(req.session.rol, res)) {	
+		res.render('admin',{
 			login: true,
 			name: req.session.name,
 			rol: req.session.rol,		
-		});	
+		});
+             }  else {
+                 res.render('index',{
+			login: true,
+			name: req.session.name,
+			rol: req.session.rol,		
+		});
+             }
 		
 	} else {
 		res.render('index',{
@@ -166,7 +173,7 @@ app.listen(3000, (req, res)=>{
 // Ruta para administradores
 app.get('/admin', (req, res) => {
     if (req.session.loggedin) {
-        res.render('admin', {
+        res.render('src/views/admin', {
             // Pasa los datos necesarios a la vista de administrador
             name: req.session.name,
             rol: req.session.rol
