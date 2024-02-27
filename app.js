@@ -133,9 +133,9 @@ app.get('/', (req, res)=> {
 //funcion para comparar 
 function redirigirSegunRol(rol, res) {
     if (rol === 'admin') {
-        res.redirect('/admin'); // Redirige a la ventana de administrador
+        return true;
     } else {
-        res.redirect('/normal'); // Redirige a la ventana para usuarios normales
+        return false;
     }
 }
 
