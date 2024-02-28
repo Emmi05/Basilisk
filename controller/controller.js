@@ -1,14 +1,18 @@
 
 //3- Invocamos a dotenv
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
+
+// const dotenv = require('dotenv');
 dotenv.config({ path: './env/.env'});
 
 
 //6 -Invocamos a bcrypt
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
+// const bcrypt = require('bcryptjs');
 
 //7- variables de session
-const session = require('express-session');
+import session from 'express-session';
+// const session = require('express-session');
 app.use(session({
 	secret: 'secret',
 	resave: true,
@@ -16,7 +20,9 @@ app.use(session({
 }));
 
 // 8 - Invocamos a la conexion de la DB
-const connection = require('./database/db');
+import { connection } from './database/db.js';
+
+// const connection = require('./database/db');
 
 
 //10 - Método para la REGISTRACIÓN
