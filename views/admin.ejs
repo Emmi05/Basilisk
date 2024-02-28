@@ -1,54 +1,340 @@
-<!doctype html>
+<!-- checar https://github.com/atherosai/ui/tree/main/sidebar-08 -->
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="resources/css/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <title>Welcome</title>
-    <style>      
+<head>
+  <meta charset="utf-8">
+  <title>Sidebar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="resources/css/dashboard.css">
+  
+</head>
+
+<body>
+  <% if (login) { %> 
+    <% if(roluser){ %>
+  <nav class="sidebar">
+    <div class="sidebar-top-wrapper">
+      <div class="sidebar-top">
+        <a href="#" class="logo__wrapper">
+          <img src="../imagenes/logo.png" alt="Logo" class="logo-small">
+          <span class="hide company-name">
+            Basilisk
+          </span>
+        </a>
+      </div>
+      <button class="expand-btn" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.00979 2.72L10.3565 7.06667C10.8698 7.58 10.8698 8.42 10.3565 8.93333L6.00979 13.28"
+            stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar-links-wrapper">
+      <div class="sidebar-links">
+        <ul>
+          <li>
+            <a href="#dashboard" title="Dashboard" class="tooltip">
+              <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M1.82764 11.8634C1.82764 8.49248 1.82764 6.80699 2.57126 5.61223C2.84639 5.17021 3.18813 4.78574 3.58105 4.47623C4.64306 3.63965 6.14126 3.63965 9.13767 3.63965H12.7927C15.7891 3.63965 17.2873 3.63965 18.3493 4.47623C18.7422 4.78574 19.084 5.17021 19.3591 5.61223C20.1027 6.80699 20.1027 8.49248 20.1027 11.8634C20.1027 15.2344 20.1027 16.9199 19.3591 18.1146C19.084 18.5567 18.7422 18.9411 18.3493 19.2506C17.2873 20.0872 15.7891 20.0872 12.7927 20.0872H9.13767C6.14126 20.0872 4.64306 20.0872 3.58105 19.2506C3.18813 18.9411 2.84639 18.5567 2.57126 18.1146C1.82764 16.9199 1.82764 15.2344 1.82764 11.8634Z"
+                  stroke="#141B34" stroke-width="1.4" />
+                <path d="M8.68066 3.63965L8.68066 20.0872" stroke="#141B34" stroke-width="1.4"
+                  stroke-linejoin="round" />
+                <path d="M4.56885 7.29492H5.4826M4.56885 10.0362H5.4826" stroke="#141B34" stroke-width="1.4"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+
+              <span class="link hide">Dashboard</span>
+            </a>
+          </li>
+        </ul>
+        <h2>Servicios</h2>
+        <div class="divider"></div>
+        <ul>
+
+          <li>
+            <a href="#" title="Team" class="tooltip">
+              <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_15_5297)">
+                  <path
+                    d="M18.9821 17.2756C19.6667 17.2756 20.2113 16.8447 20.7003 16.2423C21.7013 15.009 20.0578 14.0234 19.431 13.5407C18.7938 13.05 18.0824 12.7721 17.361 12.7068M16.4473 10.8793C17.7089 10.8793 18.7317 9.85656 18.7317 8.59493C18.7317 7.3333 17.7089 6.31055 16.4473 6.31055"
+                    stroke="#141B34" stroke-width="1.4" stroke-linecap="round" />
+                  <path
+                    d="M2.94755 17.2756C2.26287 17.2756 1.71829 16.8447 1.22932 16.2423C0.22834 15.009 1.8718 14.0234 2.49861 13.5407C3.1358 13.05 3.84726 12.7721 4.56859 12.7068M5.02547 10.8793C3.76384 10.8793 2.74108 9.85656 2.74108 8.59493C2.74108 7.3333 3.76384 6.31055 5.02547 6.31055"
+                    stroke="#141B34" stroke-width="1.4" stroke-linecap="round" />
+                  <path
+                    d="M7.38635 14.6364C6.4527 15.2138 4.00471 16.3926 5.4957 17.8677C6.22403 18.5883 7.03521 19.1036 8.05506 19.1036H13.8745C14.8944 19.1036 15.7056 18.5883 16.4339 17.8677C17.9249 16.3926 15.4769 15.2138 14.5432 14.6364C12.3538 13.2826 9.57576 13.2826 7.38635 14.6364Z"
+                    stroke="#141B34" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                  <path
+                    d="M14.1629 7.68154C14.1629 9.44782 12.731 10.8797 10.9647 10.8797C9.19846 10.8797 7.7666 9.44782 7.7666 7.68154C7.7666 5.91525 9.19846 4.4834 10.9647 4.4834C12.731 4.4834 14.1629 5.91525 14.1629 7.68154Z"
+                    stroke="#141B34" stroke-width="1.4" />
+                </g>
+                <defs>
+                  <clipPath id="clip0_15_5297">
+                    <rect width="21.9301" height="21.9301" fill="white" transform="translate(0 0.828125)" />
+                  </clipPath>
+                </defs>
+              </svg>
+               <!-- //agregar tabla en donde muestre mis usuarios eliminar editar e insertar -->
+              <span class="link hide">Team</span>
+              <div class="tag hide">New</div> 
+            </a>
+          </li> 
+          
+
+                                  <!-- SOLO USUARIO NORMAL -->
+                                 
+
+          <li>
+            <a href="#onboarding" class="tooltip">
+              <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.8789 14.5088C9.78491 19.9913 3.92166 14.5088 1.82764 19.9913" stroke="#141B34"
+                  stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                  d="M14.1636 14.509H15.5354C17.6891 14.509 18.766 14.509 19.4351 13.8399C20.1041 13.1708 20.1041 12.094 20.1041 9.94022V8.11272C20.1041 5.95898 20.1041 4.88211 19.4351 4.21303C18.766 3.54395 17.6891 3.54395 15.5354 3.54395L11.8804 3.54395C9.72661 3.54395 8.64974 3.54395 7.98066 4.21303C7.41376 4.77993 7.32719 5.63958 7.31396 7.19896"
+                  stroke="#141B34" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                <ellipse cx="6.85323" cy="12.2248" rx="2.28439" ry="2.28439" stroke="#141B34" stroke-width="1.4"
+                  stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M10.9653 7.19922L16.4479 7.19922M16.4479 10.8542L13.7066 10.8542" stroke="#141B34"
+                  stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="link hide">Reportes</span>
+            </a>
+          </li>
+          <li>
+            <a href="#talent" title="Talent" class="tooltip">
+              <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M2.74121 10.7832L2.8809 13.7318C3.031 16.8766 3.10604 18.449 4.16561 19.4133C5.22519 20.3776 6.87792 20.3776 10.1834 20.3776H11.7466C15.0521 20.3776 16.7048 20.3776 17.7644 19.4133C18.824 18.449 18.899 16.8766 19.0491 13.7318L19.1888 10.7832"
+                  stroke="#141B34" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                  d="M2.60142 10.2747C4.15416 13.2274 7.65632 14.4386 10.9648 14.4386C14.2734 14.4386 17.7755 13.2274 19.3283 10.2747C20.0695 8.86524 19.5082 6.21484 17.6828 6.21484H4.24693C2.42146 6.21484 1.86022 8.86524 2.60142 10.2747Z"
+                  stroke="#141B34" stroke-width="1.4" />
+                <path d="M10.9648 10.7832H10.9731" stroke="#141B34" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path
+                  d="M14.6196 6.21474L14.5389 5.93233C14.1369 4.52511 13.9358 3.8215 13.4572 3.41905C12.9786 3.0166 12.3429 3.0166 11.0715 3.0166H10.8577C9.58627 3.0166 8.95056 3.0166 8.47196 3.41905C7.99335 3.8215 7.79232 4.52511 7.39026 5.93233L7.30957 6.21474"
+                  stroke="#141B34" stroke-width="1.4" />
+              </svg>
+              <span class="link hide">Clientes</span>
+            </a>
+          </li>
+        </ul>
+        <h2>Management</h2>
+        <div class="divider"></div>
+        <ul>
+
+          <li>
+            <a href="#time-tracking" title="Time Tracking" class="tooltip">
+              <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.4475 2.49023V4.31774M5.48242 2.49023V4.31774" stroke="#141B34" stroke-width="1.4"
+                  stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                  d="M10.961 12.542H10.9692M10.961 16.197H10.9692M14.6119 12.542H14.6201M7.31006 12.542H7.31826M7.31006 16.197H7.31826"
+                  stroke="#141B34" stroke-width="1.59" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M3.19775 7.97266H18.7316" stroke="#141B34" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path
+                  d="M2.28418 11.8503C2.28418 7.86884 2.28418 5.87809 3.42831 4.64119C4.57244 3.4043 6.41388 3.4043 10.0968 3.4043H11.8329C15.5158 3.4043 17.3573 3.4043 18.5014 4.64119C19.6455 5.87809 19.6455 7.86884 19.6455 11.8503V12.3196C19.6455 16.3011 19.6455 18.2918 18.5014 19.5287C17.3573 20.7656 15.5158 20.7656 11.8329 20.7656H10.0968C6.41388 20.7656 4.57244 20.7656 3.42831 19.5287C2.28418 18.2918 2.28418 16.3011 2.28418 12.3196V11.8503Z"
+                  stroke="#141B34" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M2.74121 7.97266H19.1888" stroke="#141B34" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="link hide">Calendario</span>
+            </a>
+          </li>
+          
+      </div>
+
+
+    </div>
+    <div class="sidebar__profile">
+      <div class="avatar__wrapper">
+        <img class="avatar" src="../imagenes/logo.png" alt="logo">
+        <div class="online__status"></div>
+      </div>
+      <div class="avatar__name hide">
+        <div class="user-name">Usuario</div>
+        <div class="email"> <strong><%= name %></div>
+      </div>
+      <svg class="menu" width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M15.7575 9.12369C15.7575 8.50435 15.2554 8.00227 14.6361 8.00227C14.0167 8.00227 13.5146 8.50435 13.5146 9.12369C13.5146 9.74304 14.0167 10.2451 14.6361 10.2451C15.2554 10.2451 15.7575 9.74304 15.7575 9.12369Z"
+          fill="#0F1419" fill-opacity="0.8" stroke="#0F1419" stroke-opacity="0.8" stroke-width="0.398729" />
+        <path
+          d="M10.1501 9.12369C10.1501 8.50435 9.648 8.00227 9.02865 8.00227C8.40931 8.00227 7.90723 8.50435 7.90723 9.12369C7.90723 9.74304 8.40931 10.2451 9.02865 10.2451C9.648 10.2451 10.1501 9.74304 10.1501 9.12369Z"
+          fill="#0F1419" fill-opacity="0.8" stroke="#0F1419" stroke-opacity="0.8" stroke-width="0.398729" />
+        <path
+          d="M4.54314 9.12369C4.54314 8.50435 4.04107 8.00227 3.42172 8.00227C2.80237 8.00227 2.30029 8.50435 2.30029 9.12369C2.30029 9.74304 2.80237 10.2451 3.42172 10.2451C4.04107 10.2451 4.54314 9.74304 4.54314 9.12369Z"
+          fill="#0F1419" fill-opacity="0.8" stroke="#0F1419" stroke-opacity="0.8" stroke-width="0.398729" />
+      </svg>
+    </div>
+  </nav>
+
+<!-- USUARIO NORMALLLLL -->
+
+  <%} else {%>
+    <nav class="sidebar">
+      <div class="sidebar-top-wrapper">
+        <div class="sidebar-top">
+          <a href="#" class="logo__wrapper">
+            <img src="../imagenes/logo.png" alt="Logo" class="logo-small">
+            <span class="hide company-name">
+              Basilisk
+            </span>
+          </a>
+        </div>
+        <button class="expand-btn" type="button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6.00979 2.72L10.3565 7.06667C10.8698 7.58 10.8698 8.42 10.3565 8.93333L6.00979 13.28"
+              stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+  
+      <div class="sidebar-links-wrapper">
+        <div class="sidebar-links">
+          <ul>
+            <li>
+              <a href="#dashboard" title="Dashboard" class="tooltip">
+                <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M1.82764 11.8634C1.82764 8.49248 1.82764 6.80699 2.57126 5.61223C2.84639 5.17021 3.18813 4.78574 3.58105 4.47623C4.64306 3.63965 6.14126 3.63965 9.13767 3.63965H12.7927C15.7891 3.63965 17.2873 3.63965 18.3493 4.47623C18.7422 4.78574 19.084 5.17021 19.3591 5.61223C20.1027 6.80699 20.1027 8.49248 20.1027 11.8634C20.1027 15.2344 20.1027 16.9199 19.3591 18.1146C19.084 18.5567 18.7422 18.9411 18.3493 19.2506C17.2873 20.0872 15.7891 20.0872 12.7927 20.0872H9.13767C6.14126 20.0872 4.64306 20.0872 3.58105 19.2506C3.18813 18.9411 2.84639 18.5567 2.57126 18.1146C1.82764 16.9199 1.82764 15.2344 1.82764 11.8634Z"
+                    stroke="#141B34" stroke-width="1.4" />
+                  <path d="M8.68066 3.63965L8.68066 20.0872" stroke="#141B34" stroke-width="1.4"
+                    stroke-linejoin="round" />
+                  <path d="M4.56885 7.29492H5.4826M4.56885 10.0362H5.4826" stroke="#141B34" stroke-width="1.4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+  
+                <span class="link hide">Dashboard</span>
+              </a>
+            </li>
+          </ul>
+          <h2>Servicios</h2>
+          <div class="divider"></div>
+          <ul>
+
+                                   
+  
+            <li>
+              <a href="#onboarding" class="tooltip">
+                <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.8789 14.5088C9.78491 19.9913 3.92166 14.5088 1.82764 19.9913" stroke="#141B34"
+                    stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                  <path
+                    d="M14.1636 14.509H15.5354C17.6891 14.509 18.766 14.509 19.4351 13.8399C20.1041 13.1708 20.1041 12.094 20.1041 9.94022V8.11272C20.1041 5.95898 20.1041 4.88211 19.4351 4.21303C18.766 3.54395 17.6891 3.54395 15.5354 3.54395L11.8804 3.54395C9.72661 3.54395 8.64974 3.54395 7.98066 4.21303C7.41376 4.77993 7.32719 5.63958 7.31396 7.19896"
+                    stroke="#141B34" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                  <ellipse cx="6.85323" cy="12.2248" rx="2.28439" ry="2.28439" stroke="#141B34" stroke-width="1.4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M10.9653 7.19922L16.4479 7.19922M16.4479 10.8542L13.7066 10.8542" stroke="#141B34"
+                    stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span class="link hide">Reportes</span>
+              </a>
+            </li>
+      
+
+
+
+          </ul>
+          <h2>Management</h2>
+          <div class="divider"></div>
+          <ul>
+  
+            <li>
+              <a href="#time-tracking" title="Time Tracking" class="tooltip">
+                <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16.4475 2.49023V4.31774M5.48242 2.49023V4.31774" stroke="#141B34" stroke-width="1.4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                  <path
+                    d="M10.961 12.542H10.9692M10.961 16.197H10.9692M14.6119 12.542H14.6201M7.31006 12.542H7.31826M7.31006 16.197H7.31826"
+                    stroke="#141B34" stroke-width="1.59" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M3.19775 7.97266H18.7316" stroke="#141B34" stroke-width="1.4" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path
+                    d="M2.28418 11.8503C2.28418 7.86884 2.28418 5.87809 3.42831 4.64119C4.57244 3.4043 6.41388 3.4043 10.0968 3.4043H11.8329C15.5158 3.4043 17.3573 3.4043 18.5014 4.64119C19.6455 5.87809 19.6455 7.86884 19.6455 11.8503V12.3196C19.6455 16.3011 19.6455 18.2918 18.5014 19.5287C17.3573 20.7656 15.5158 20.7656 11.8329 20.7656H10.0968C6.41388 20.7656 4.57244 20.7656 3.42831 19.5287C2.28418 18.2918 2.28418 16.3011 2.28418 12.3196V11.8503Z"
+                    stroke="#141B34" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M2.74121 7.97266H19.1888" stroke="#141B34" stroke-width="1.4" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+                <span class="link hide">Calendario</span>
+              </a>
+            </li>
+            
+        </div>
+  
+  
+      </div>
+      <div class="sidebar__profile">
+        <div class="avatar__wrapper">
+          <img class="avatar" src="../imagenes/logo.png" alt="logo">
+          <div class="online__status"></div>
+        </div>
+        <div class="avatar__name hide">
+          <div class="user-name">Usuario</div>
+          <div class="email"> <strong><%= name %></div>
+        </div>
+        <svg class="menu" width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M15.7575 9.12369C15.7575 8.50435 15.2554 8.00227 14.6361 8.00227C14.0167 8.00227 13.5146 8.50435 13.5146 9.12369C13.5146 9.74304 14.0167 10.2451 14.6361 10.2451C15.2554 10.2451 15.7575 9.74304 15.7575 9.12369Z"
+            fill="#0F1419" fill-opacity="0.8" stroke="#0F1419" stroke-opacity="0.8" stroke-width="0.398729" />
+          <path
+            d="M10.1501 9.12369C10.1501 8.50435 9.648 8.00227 9.02865 8.00227C8.40931 8.00227 7.90723 8.50435 7.90723 9.12369C7.90723 9.74304 8.40931 10.2451 9.02865 10.2451C9.648 10.2451 10.1501 9.74304 10.1501 9.12369Z"
+            fill="#0F1419" fill-opacity="0.8" stroke="#0F1419" stroke-opacity="0.8" stroke-width="0.398729" />
+          <path
+            d="M4.54314 9.12369C4.54314 8.50435 4.04107 8.00227 3.42172 8.00227C2.80237 8.00227 2.30029 8.50435 2.30029 9.12369C2.30029 9.74304 2.80237 10.2451 3.42172 10.2451C4.04107 10.2451 4.54314 9.74304 4.54314 9.12369Z"
+            fill="#0F1419" fill-opacity="0.8" stroke="#0F1419" stroke-opacity="0.8" stroke-width="0.398729" />
+        </svg>
+      </div>
+    </nav>
+    <% } %>
+
+
+
+
+    <!-- VALIDACIÓN PARA QUE SI NO ESTA LOGUEADO QUE SE LOGUE -->
     
-    </style>
-  </head>
-  <body class="text-center">         
-          <div class="contenedor">
-            <h1>Página de Inicio</h1>
-            <% if (login) { %>                
-                <h1>Usuario conectado: <strong><%= name %></strong></h1>  
-                <h1>Usuario de cargo: <strong><%= rol %></strong></h1>                          
-                <a href="logout" class="a-logout">Logout</a>
-            <%} else { %>
-                <h1><strong><%= name %></strong></h1>   
-                <a href="login" class="a-login">Ir a Login</a>
-            <% } %>
-          </div>
+  <%} else { %>
+    <h1><strong><%= name %></strong></h1>   
+    <a href="login" class="a-login">Ir a Login</a>
+<% } %>
+ <a href="logout" class="a-logout">Logout</a>
 
-          <div class="container text-center">
-            <div class="row align-items-center">
-                <% if(roluser){ %>
-              <div class="col">
-                Registro de Usuario
-              </div>
-              <div class="col">
-                Ventas
-              </div>
-              <div class="col">
-                Reportes
-              </div>
-              <%} else {%>
-                <div class="col">
-                    Ventas
-                  </div>
-                  <div class="col">
-                    Reportes
-                  </div>
-              <% } %>
-            </div>
-          </div>
-          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
+<script>
+  
+const expand_btn = document.querySelector(".expand-btn");
+
+let activeIndex;
+
+expand_btn.addEventListener("click", () => {
+document.body.classList.toggle("collapsed");
+});
+
+const current = window.location.href;
+
+const allLinks = document.querySelectorAll(".sidebar-links a");
+
+allLinks.forEach((elem) => {
+elem.addEventListener("click", function () {
+const hrefLinkClick = elem.href;
+
+allLinks.forEach((link) => {
+  if (link.href == hrefLinkClick) {
+    link.classList.add("active");
+  } else {
+    link.classList.remove("active");
+  }
+});
+});
+});
+
+</script>
+ 
+</body>
+
 </html>

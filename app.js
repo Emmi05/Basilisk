@@ -127,7 +127,7 @@ app.post('/auth', async (req, res)=> {
 app.get('/', (req, res)=> {
 	if (req.session.loggedin) {
 		if(req.session.rol == 'usuario'){
-		res.render('normal',{
+		res.render('admin',{
 			login: true,
 			roluser: false,
 			name: req.session.name,
