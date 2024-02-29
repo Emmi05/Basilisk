@@ -103,7 +103,8 @@ app.post('/auth', async (req, res)=> {
 					showConfirmButton: false,
 					timer: 1500,
 					ruta: ''
-				});        			} else {
+				});        			
+			} else {
 					res.render('login',{
 						alert: true,
 						alertTitle: "Eres Larry",
@@ -127,14 +128,14 @@ app.post('/auth', async (req, res)=> {
 app.get('/', (req, res)=> {
 	if (req.session.loggedin) {
 		if(req.session.rol == 'usuario'){
-		res.render('normal',{
+		res.render('home',{
 			login: true,
 			roluser: false,
 			name: req.session.name,
 			rol: req.session.rol		
 		});		
 	} else if(req.session.rol == 'admin') {
-		res.render('admin',{
+		res.render('home',{
 			login:true,
 			roluser: true,
 			name:req.session.name,
