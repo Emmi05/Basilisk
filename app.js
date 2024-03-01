@@ -1,3 +1,4 @@
+import rutas from './routes/routes.js';
 // 1 - Invocamos a Express
 import express from 'express';
 const app = express();
@@ -32,6 +33,7 @@ app.use(session({
 // 8 - Invocamos a la conexion de la DB
 // import connection from './database/db.js';
 import { pool} from './database/db.js'
+
 // 9 - establecemos las rutas
 app.get('/login', (req, res) => {
     res.render('login');
@@ -41,29 +43,29 @@ app.get('/register', (req, res) => {
     res.render('register');
 });
 
+app.use(rutas);
+
 // 10 - Método para la REGISTRACIÓN
 app.post('/register', async (req, res) => {
-    const user = req.body.user;
-    const name = req.body.name;
-    const rol = req.body.rol;
-    const pass = req.body.pass;
-    let passwordHash = await bcrypt.hash(pass, 8);
-    pool.query('INSERT INTO users SET ?', { user: user, name: name, rol: rol, pass: passwordHash }, async (error, results) => {
-        if (error) {
-            console.log(error);
-        } else {
-            res.render('register', {
-                alert: true,
-                alertTitle: "Registration",
-                alertMessage: "¡Successful Registration!",
-                alertIcon: 'success',
-                showConfirmButton: false,
-                timer: 1500,
-                ruta: ''
-            });
-            //res.redirect('/');
-        }
-    });
+    try {
+        const { user, name, rol, pass } = req.body;
+        const passwordHash = await bcrypt.hash(pass, 8);
+        await pool.query('INSERT INTO users SET ?', { user, name, rol, pass: passwordHash });
+        
+        res.render('register', {
+            alert: true,
+            alertTitle: "Registration",
+            alertMessage: "¡Successful Registration!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: ''
+        });
+    } catch (error) {
+        console.error(error);
+        // Manejar el error apropiadamente
+        res.status(500).send('Error interno del servidor');
+    }
 });
 
 // 11 - Metodo para la autenticacion
