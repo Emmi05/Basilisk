@@ -1,19 +1,18 @@
-//2 - Invocamos a MySQL y realizamos la conexion
-const mysql = require('mysql');
-const connection = mysql.createConnection({
-    //Con variables de entorno
-    host     : process.env.DB_HOST,
-    user     : process.env.DB_USER,
-    password : process.env.DB_PASS,
-    database : process.env.DB_DATABASE
-});
+import {createPool} from 'mysql2/promise';
+import dotenv from "dotenv";
 
-connection.connect((error)=>{
-    if (error) {
-      console.error('El error de conexión es: ' + error);
-      return;
-    }
-    console.log('¡Conectado a la Base de Datos!');
-  });
+dotenv.config({ path: './env/.env' });
 
-  module.exports = connection;
+console.log(process.env.DB_HOST);
+console.log(process.env.DB_USER);
+console.log(process.env.DB_PASSWORD);
+console.log(process.env.DB_DATABASE);
+
+
+export const pool=createPool ({
+    host: process.env.DB_HOST,
+    user:process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    port: 3306,
+    database:process.env.DB_DATABASE,
+})
