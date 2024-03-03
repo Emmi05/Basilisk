@@ -27,12 +27,12 @@ const router = Router();
         }
 });
 
-router.get('/edit/:id', async(req, res) => {
+router.get('/editar/:id', async(req, res) => {
   
      if (req.session.rol == 'admin') {
         const id = req.params.id;
         const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
-        res.render('edit', {
+        res.render('editar', {
             login: true,
             roluser: true,
             name: req.session.name,
