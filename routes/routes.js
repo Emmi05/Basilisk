@@ -25,8 +25,22 @@ const router = Router();
                 usuarios: rows
             });
         }
-        
-        // res.render('usuarios');
 });
+
+router.get('/edit/:id', async(req, res) => {
+  
+     if (req.session.rol == 'admin') {
+        const id = req.params.id;
+        const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
+        res.render('edit', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows
+        });
+    }
+});
+// router.post('/update', crud.update);
 
 export default router;
