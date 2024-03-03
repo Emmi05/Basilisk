@@ -1,6 +1,7 @@
 import rutas from './routes/routes.js';
 // 1 - Invocamos a Express
 import express from 'express';
+import {methods as authentication} from './controller/controlador.js'
 const app = express();
 
 // 2 - Para poder capturar los datos del formulario (sin urlencoded nos devuelve "undefined")
@@ -31,19 +32,40 @@ app.use(session({
 }));
 
 // 8 - Invocamos a la conexion de la DB
-// import connection from './database/db.js';
+
 import { pool} from './database/db.js'
 
 // 9 - establecemos las rutas
 app.get('/login', (req, res) => {
     res.render('login');
 });
+app.use(rutas);
 
-app.get('/register', (req, res) => {
-    res.render('register');
+// app.get('/register',authentication.registro);
+
+app.get('/register', async(req, res) => {
+    if (req.session.rol == 'usuario') {
+        res.render('register', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    } else if (req.session.rol == 'admin') {
+        
+        res.render('register', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+    
+        });
+    }
+    
+    // res.render('usuarios');
 });
 
-app.use(rutas);
+
 
 // 10 - Método para la REGISTRACIÓN
 app.post('/register', async (req, res) => {
@@ -54,18 +76,23 @@ app.post('/register', async (req, res) => {
         
         res.render('register', {
             alert: true,
-            alertTitle: "Registration",
-            alertMessage: "¡Successful Registration!",
+            alertTitle: "Registro",
+            alertMessage: "¡Registro Exitoso",
             alertIcon: 'success',
             showConfirmButton: false,
             timer: 1500,
-            ruta: ''
+            ruta: '/', 
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
         });
     } catch (error) {
         console.error(error);
         // Manejar el error apropiadamente
         res.status(500).send('Error interno del servidor');
     }
+
 });
 
 // 11 - Metodo para la autenticacion

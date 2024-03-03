@@ -1,36 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="resources/css/style.css">
-    <title>Register</title>
-</head>
-<body>
-    <div class="register-form">
-		<h1>Form Registration</h1>
-		<form action="/register" method="POST">
-            <label for="user">User</label>
-                <input type="text" name="user" required tabindex="1" autofocus>            
-            <label for="user">Full Name</label>
-                <input type="text" name="name" required tabindex="2">
-            
-            <label for="rol">Rol</label>                          
-            <select id="rol" name="rol" class="select-css" tabindex="3">
-                <option value="admin" selected>Admin</option>
-                <option value="usuario">Usuario</option>                    
-            </select>
-             <br> 
-            <label for="pass">Password</label>
-			    <input type="password" name="pass" required tabindex="4">
-            <div style="display: inline;">             
-            <a href="/" class="btn-cancel">Cancel</a><input type="submit" class="btn-save" value="Save">           
-            </div>
-		</form>		
-	</div>
+<%- include ('layouts/head.ejs') %>
+<body id="page-top">
 
-    		
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <% if (login) { %> 
+        <!-- Sidebar -->
+        <%- include ('layouts/sidebar.ejs') %>
+        <!-- end sidehar -->
+       
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar /header -->
+                <%- include ('layouts/header.ejs') %>
+                  <!-- header -->
+                  <% } %> 
+        
+       <!-- Begin Page Content -->
+
+        <div class="container-fluid">
+            <h1>Registro usuarios</h1>
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="/register" method="POST">
+                            <div class="form-group">
+                                <label for="user">Usuario:</label>
+                                <input type="text" class="form-control" id="user" name="user" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Nombre:</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="rol">Rol:</label>
+                                <select class="form-control" id="rol" name="rol" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="admin">Administrador</option>
+                                    <option value="usuario">Usuario</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Contraseña:</label>
+                                <input type="password" class="form-control" id="password" name="pass" required>
+                            </div>
+                            <a href="/" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary"  value="Save">Guardar</button>
+
+                            <!-- <button type="submit" class="btn btn-primary" value="Save"></button> -->
+                        </form>
+                    </div>
+                </div>
+       
+            
+            
+
+    		<!-- Bootstrap core JavaScript-->
+  <script src="../resources/vendor/jquery/jquery.min.js"></script>
+  <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="../resources/scripts/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="../resources/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="../resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="../resources/scripts/datables.js"></script>
+
+     		
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <% if (typeof alert != "undefined")  { %>
@@ -46,6 +91,10 @@
  })
  </script>
 <% } %>
- </div>
+
+
+ 
+</div>
+
 </body>
 </html>

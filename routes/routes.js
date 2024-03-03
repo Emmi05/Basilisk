@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
-
+import {methods as authentication} from '../controller/controlador.js'
 const router = Router();
 
-router.get('/register', (req, res) => {
-    res.render('register');
-});
 
-router.get('/usuarios', async(req, res) => {
-    
+// router.get('/usuarios',authentication.usuarios);
+
+
+ router.get('/usuarios', async(req, res) => {
         if (req.session.rol == 'usuario') {
             res.render('usuarios', {
                 login: true,
