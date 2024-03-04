@@ -28,19 +28,18 @@ const router = Router();
 });
 
 router.get('/editar/:id', async(req, res) => {
-  
+    const id = req.params.id;
      if (req.session.rol == 'admin') {
-        const id = req.params.id;
         const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
         res.render('editar', {
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-            usuarios: rows
+            usuarios: rows,
         });
     }
 });
-// router.post('/update', crud.update);
+router.post('/update/:id',authentication.editarUsuario);
 
 export default router;

@@ -1,22 +1,6 @@
-<link  rel="stylesheet" href="../resources/vendor/fontawesome-free/css/all.min.css" type="text/css">
-<link rel="stylesheet"
-href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
 
-<!-- Custom styles for this template-->
-<link rel="stylesheet" href="../resources/css/sb-admin-2.min.css">
-<!-- <link href="css/sb-admin-2.min.css" rel="stylesheet"> -->
+<%- include ('layouts/head2.ejs') %>
 
-<!-- DATATABLES -->
-
-<!-- Custom styles for this page -->
-<link rel="stylesheet" href="../resources/vendor/datatables/dataTables.bootstrap4.min.css">
-
-<!-- Custom styles for this page -->
-<!-- <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet"> -->
-<link  rel="stylesheet" href="../resources/vendor/datatables/dataTables.bootstrap4.min.css">
-
-
-<%- include ('layouts/head.ejs') %>
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -39,47 +23,47 @@ href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,
                   <% } %> 
         
        <!-- Begin Page Content -->
-       <% if (usuarios) { %>
+       <% usuarios.forEach(function(usuario) { %>
         <div class="container-fluid">
             <h1>Editar usuarios</h1>
                 <div class="row">
                     <div class="col-md-12">
-                        <form action="/update" method="POST">
-                            <input id="id" name="id" value="<%= usuarios.id %>" hidden>
+                        <form action="/update/<%= usuario.id %>" method="POST">
+                            <input id="id" name="id" value="<%= usuario.id %>" hidden>
 
                             <div class="form-group">
                                 <label for="user">Usuario:</label>
-                                <input type="text" class="form-control" id="user" name="user" required value="<%= usuarios.user %>">
+                                <input type="text" class="form-control" id="user" name="user" required value="<%= usuario.user %>">
                             </div>
 
                             <div class="form-group">
                                 <label for="name">Nombre:</label>
-                                <input type="text" class="form-control" id="name" name="name" required value="<%= usuarios.name %>">
+                                <input type="text" class="form-control" id="name" name="name" required value="<%= usuario.name %>">
                             </div>
 
                             <div class="form-group">
-                                <h3><%= usuarios.rol %></h3>
+                                <h3><%= usuario.rol %></h3>
                                 <label for="rol">Rol:</label>
                                 <select class="form-control" id="rol" name="rol" required>
                                     <option value="">Seleccionar</option>
-                                    <option <%= usuarios.rol=='admin' ? "selected" : '' %> value="admin">Administrador</option>
-                                    <option <%= usuarios.rol=='usuario' ? "selected" : '' %>  value="usuario">Usuario</option>
+                                    <option <%= usuario.rol=='admin' ? "selected" : '' %> value="admin">Administrador</option>
+                                    <option <%= usuario.rol=='usuario' ? "selected" : '' %>  value="usuario">Usuario</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="password">Contraseña:</label>
                                 <input type="password" class="form-control" id="password" name="pass" required>
-                            </div>
+                            </div> -->
 
                             <a href="/" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-primary"  value="Save">Guardar</button>
+                            <button type="submit" class="btn btn-primary"  value="Save" >Guardar</button>
 
                             <!-- <button type="submit" class="btn btn-primary" value="Save"></button> -->
                         </form>
                     </div>
                 </div>
        
-              <% } %>
+                <% }); %>
             
 
     		<!-- Bootstrap core JavaScript-->
