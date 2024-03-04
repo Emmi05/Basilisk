@@ -42,4 +42,31 @@ router.get('/editar/:id', async(req, res) => {
 });
 router.post('/update/:id',authentication.editarUsuario);
 
+
+// router.delete('/eliminar/:id',authentication.eliminarUsuario );
+
+router.get('/delete/:id', async(req, res) => {
+    const id = req.params.id;
+     if (req.session.rol == 'admin') {
+        const [result]=await pool.query('DELETE FROM users WHERE id=?',[req.params.id])
+        if (result && result.affectedRows > 0) {
+            const [rows]=await pool.query('SELECT * FROM users');
+        res.render('usuarios', {
+            alert: true,
+            alertTitle: "Eliminar",
+            alertMessage: "¡Actualización Exitoso",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios:rows,
+            ruta:'usuarios'
+        });
+    }
+     }
+    });
+    
 export default router;

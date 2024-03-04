@@ -52,10 +52,25 @@ export const editarUsuario = async (req, res) => {
  
 
 
-
+    // export const eliminarUsuario=async(req,res)=>{
+    //     try {
+    //         const [result]=await pool.query('DELETE FROM usuarios WHERE id=?',[req.params.id])
+    //         //    console.log(result);
+    //             if (result.affectedRows <= 0) return res.status(404).json ({
+    //                 message:"No se encontro usuario a eliminar"
+    //             })
+    //         //    res.send("usuario eliminado");
+    //         res.sendStatus(204)
+    //     } catch (error) {
+    //         return res.status(500).json({
+    //         message:'somenthing went wrong'
+    //     })
+    //     }
+    // }
 
 
 export const methods = {
     usuarios,
     editarUsuario,
+
   }
