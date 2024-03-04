@@ -63,8 +63,10 @@
                                                     <td><%= usuario.user %></td>
                                                     <td><%= usuario.rol %></td>
                                                     <td>
-                                                        <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></button>
-                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                                        <a href="/editar/<%= usuario.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                        <a href="/ruta_de_eliminacion" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                                        <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
+                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
                                                     </td> 
                                                 </tr>
                                         <% }); %>
@@ -140,7 +142,23 @@ aria-hidden="true">
 
   <!-- Page level custom scripts -->
   <script src="../resources/scripts/datables.js"></script>
+   		
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+  <% if (typeof alert != "undefined")  { %>
+   <script>
+   Swal.fire({
+     title:'<%= alertTitle %>',
+     text:'<%= alertMessage %>',
+     icon:'<%= alertIcon %>',
+     showConfirmButton: <%= showConfirmButton %>,
+     timer: <%= timer %>
+   }).then(()=>{
+     window.location='/<%= ruta %>'
+   })
+   </script>
+  <% } %>
+  
 </body>
 
 </html>
