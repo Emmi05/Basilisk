@@ -42,4 +42,8 @@ router.get('/editar/:id', async(req, res) => {
 });
 router.post('/update/:id',authentication.editarUsuario);
 
+
+// router.delete('/eliminar/:id',authentication.eliminarUsuario );
+
+router.get('/delete/:id', authentication.eliminarUsuario);
 export default router;

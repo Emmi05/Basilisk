@@ -64,7 +64,7 @@
                                                     <td><%= usuario.rol %></td>
                                                     <td>
                                                         <a href="/editar/<%= usuario.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
-                                                        <a href="/ruta_de_eliminacion" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                                        <a onclick="eliminar(<%= usuario.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                                                         <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
                                                         <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
                                                     </td> 
@@ -159,6 +159,26 @@ aria-hidden="true">
    </script>
   <% } %>
   
+
+  <script>
+    function eliminar(id) {
+     Swal.fire({
+         title: "¿Estás seguro?",
+         text: "¡No podrás revertir esto!",
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#d33",
+         cancelButtonColor: "#3085d6",
+         confirmButtonText: "Sí, eliminarlo"
+     }).then((result) => {
+         if (result.isConfirmed) {
+             // Redirigir a la ruta de eliminación
+             window.location.href = `/delete/${id}`;
+         }
+     });
+ }
+   </script>
+
 </body>
 
 </html>
