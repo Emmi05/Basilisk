@@ -71,13 +71,31 @@ app.get('/register', async(req, res) => {
 app.post('/register', async (req, res) => {
     try {
         const { user, name, rol, pass } = req.body;
+        
+        // Verificar si algún campo está vacío
+        if (!user || !name || !rol || !pass) {
+            return res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos!",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
         const passwordHash = await bcrypt.hash(pass, 8);
         await pool.query('INSERT INTO users SET ?', { user, name, rol, pass: passwordHash });
         
         res.render('register', {
             alert: true,
             alertTitle: "Registro",
-            alertMessage: "¡Registro Exitoso",
+            alertMessage: "¡Registro Exitoso!",
             alertIcon: 'success',
             showConfirmButton: false,
             timer: 1500,
@@ -90,10 +108,13 @@ app.post('/register', async (req, res) => {
     } catch (error) {
         console.error(error);
         // Manejar el error apropiadamente
-        res.status(500).send('Error interno del servidor');
+        res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor'
+        });
     }
-
 });
+
 
 // 11 - Metodo para la autenticacion
 app.post('/auth', async (req, res) => {

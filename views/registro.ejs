@@ -1,3 +1,4 @@
+
 <%- include ('layouts/head.ejs') %>
 <body id="page-top">
 
@@ -33,8 +34,13 @@
 
                 <div class="col-md-6">
                   <label for="telefono" class="form-label">Telefono</label>
-                  <input type="int" class="form-control" id="telefono" name="cel" placeholder="Telefono">
-                </div>
+                  <input type="text" class="form-control" id="telefono" name="cel" placeholder="Telefono" pattern="[0-9]{10}" required maxlength="10">
+                  <div id="telefono-feedback" class="invalid-feedback">
+                      El número de teléfono debe tener exactamente 10 dígitos.
+                  </div>
+              </div>
+              
+              
 
                
                 <!-- <div class="col-12">
@@ -108,7 +114,18 @@
  </script>
 <% } %>
 
+<script>
+  document.getElementById('telefono').addEventListener('input', function() {
+      var telefonoInput = this;
+      var feedback = document.getElementById('telefono-feedback');
 
+      if (!telefonoInput.checkValidity()) {
+          feedback.style.display = 'block';
+      } else {
+          feedback.style.display = 'none';
+      }
+  });
+</script>
  
 </div>
 
