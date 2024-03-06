@@ -176,7 +176,7 @@ router.get('/terrenoedit/:id', async(req, res) => {
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT * FROM land WHERE id=?',[id]);
-        res.render('terrenoedit', {
+        res.render('terrenosEdit', {
             login: true,
             roluser: false,
             name: req.session.name,
@@ -186,7 +186,7 @@ router.get('/terrenoedit/:id', async(req, res) => {
     }
     else if (req.session.rol == 'admin') {
         const [rows] = await pool.query('SELECT * FROM land WHERE id=?',[id]);
-        res.render('terrenoedit', {
+        res.render('terrenosEdit', {
             login: true,
             roluser: true,
             name: req.session.name,
@@ -196,7 +196,11 @@ router.get('/terrenoedit/:id', async(req, res) => {
     }
 });
 
-router.post('/updateterreno/:id',authentication.editarTerrenos);
+ router.post('/updateterreno/:id',authentication.editarTerrenos);
+
+
+//  ELIMINAR TERRENO
+router.get('/deleteterreno/:id', authentication.eliminarTerreno);
 
 
 export default router;
