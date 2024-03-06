@@ -99,7 +99,7 @@ export const editarUsuario = async (req, res) => {
                 timer: 1500,
                 ruta: '/', 
                 login: true,
-                roluser: true,
+                roluser: false,
                 name: req.session.name,
                 rol: req.session.rol,
             });
@@ -146,7 +146,7 @@ export const editarUsuario = async (req, res) => {
             showConfirmButton: false,
             timer: 1500,
             login: true,
-            roluser: true,
+            roluser: false,
             name: req.session.name,
             rol: req.session.rol,
             clientes:rows,
@@ -229,7 +229,7 @@ export const crearTerreno= async (req, res) => {
                 timer: 1500,
                 ruta: '/', 
                 login: true,
-                roluser: true,
+                roluser: false,
                 name: req.session.name,
                 rol: req.session.rol,
             });
@@ -259,6 +259,57 @@ export const crearTerreno= async (req, res) => {
 }
 
 
+export const editarTerrenos = async (req, res) => {
+    if (req.session.rol == 'usuario') {
+        const { id } = req.params;
+        const {calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
+        const [result] = await pool.query('UPDATE land SET calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado),  WHERE id = ?', [calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
+    //otro if de si es mayor a 0?
+    if (result && result.affectedRows > 0) {
+        const [rows]=await pool.query('SELECT * FROM land');
+    res.render('terrenos', {
+        alert: true,
+        alertTitle: "Actualización",
+        alertMessage: "¡Actualización Exitoso",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+        login: true,
+        roluser: false,
+        name: req.session.name,
+        rol: req.session.rol,
+        clientes:rows,
+        ruta:'terrenos'
+    });
+
+   }} else if (req.session.rol == 'admin') {
+    const { id } = req.params;
+    const {calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
+    const [result] = await pool.query('UPDATE land SET calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado),  WHERE id = ?', [calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
+    //otro if de si es mayor a 0?
+    if (result && result.affectedRows > 0) {
+        const [rows]=await pool.query('SELECT * FROM land');
+    res.render('terrenos', {
+        alert: true,
+        alertTitle: "Actualización",
+        alertMessage: "¡Actualización Exitoso",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+        login: true,
+        roluser: true,
+        name: req.session.name,
+        rol: req.session.rol,
+        clientes:rows,
+        ruta:'terrenos'
+    });
+} }else{
+   
+        // Manejar el error apropiadamente
+        res.status(500).send('Error interno del servidor');
+    }
+}
+
 export const methods = {
     usuarios,
     editarUsuario,
@@ -267,5 +318,6 @@ export const methods = {
     editarClientes,
     eliminarCliente,
     crearTerreno,
+    editarTerrenos
   }
 

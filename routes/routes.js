@@ -94,10 +94,21 @@ router.get('/clientes', async(req, res) => {
 
 
 
-// editar cambiar ruta se pone la misma / en el boton y cambiar rows 
+// editar cambiar ruta se pone la misma / en el boton y cambiar rows debo darle permiso a mi usuario y cambiar el rol a false en usuario
 router.get('/clienteEdit/:id', async(req, res) => {
+
     const id = req.params.id;
-     if (req.session.rol == 'admin') {
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT * FROM customer WHERE id=?',[id]);
+        res.render('clienteEdit', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            clientes: rows,
+        });
+    }
+    else if (req.session.rol == 'admin') {
         const [rows] = await pool.query('SELECT * FROM customer WHERE id=?',[id]);
         res.render('clienteEdit', {
             login: true,
@@ -159,6 +170,33 @@ router.get('/terrenos', async(req, res) => {
         });
     }
 });
+
+router.get('/terrenoedit/:id', async(req, res) => {
+
+    const id = req.params.id;
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT * FROM land WHERE id=?',[id]);
+        res.render('terrenoedit', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            terrenos: rows,
+        });
+    }
+    else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT * FROM land WHERE id=?',[id]);
+        res.render('terrenoedit', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            terrenos: rows,
+        });
+    }
+});
+
+router.post('/updateterreno/:id',authentication.editarTerrenos);
 
 
 export default router;

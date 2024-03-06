@@ -21,7 +21,7 @@
                   <% } %> 
         
        <!-- Begin Page Content -->
-
+       <% if(roluser){ %>
         <div class="container-fluid">
 
             <!-- Page Heading -->
@@ -81,7 +81,7 @@
                                                     <td><%= terreno.escritura %></td>
                                                     <td><%= terreno.estado %></td>
                                                     <td>
-                                                        <a href="/editar/<%= terreno.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                        <a href="/terrenosEditar/<%= terreno.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
                                                         <a onclick="eliminar(<%= terreno.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                                                         <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
                                                         <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
@@ -97,10 +97,89 @@
 
                 </div>
         <!-- /.container-fluid -->
-       
+        <%}else{%> 
+
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+                <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+                    For more information about DataTables, please visit the <a target="_blank"
+                        href="https://datatables.net">official DataTables documentation</a>.</p>
+    
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Usuarios</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Calle</th>
+                                                <th>Lote</th>
+                                                <th>Manzana</th>
+                                                <th>Superficie</th>
+                                                <th>Precio</th>
+                                                <th>Predial</th>
+                                                <th>Escritura</th>
+                                                <th>Estado</th>
+                                                <th>Options</th>
+                                              
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Calle</th>
+                                                <th>Lote</th>
+                                                <th>Manzana</th>
+                                                <th>Superficie</th>
+                                                <th>Precio</th>
+                                                <th>Predial</th>
+                                                <th>Escritura</th>
+                                                <th>Estado</th>
+                                                <th>Options</th>
+                                               
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <% terrenos.forEach(function(terreno) { %>
+                                              
+                                                    <tr>
+                                                        <td><%= terreno.id %></td>
+                                                        <td><%= terreno.calle %></td>
+                                                        <td><%= terreno.lote %></td>
+                                                        <td><%= terreno.manzana %></td>
+                                                        <td><%= terreno.superficie %></td>
+                                                        <td><%= terreno.precio %></td>
+                                                        <td><%= terreno.predial %></td>
+                                                        <td><%= terreno.escritura %></td>
+                                                        <td><%= terreno.estado %></td>
+                                                        <td>
+                                                            <a href="/terrenoedit/<%= terreno.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                            <!-- <a onclick="eliminar(<%= terreno.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a> -->
+                                                            <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
+                                                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
+                                                        </td> 
+                                                    </tr>
+                                            <% }); %>
+                                      
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+            <!-- /.container-fluid -->
+            <% } %>
+
 
     </div>
-    <!-- /.container-fluid -->
+   
 
 <!-- End of Main Content -->
 
