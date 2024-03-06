@@ -21,7 +21,7 @@
                   <% } %> 
         
        <!-- Begin Page Content -->
-
+       <% if(roluser){ %>
         <div class="container-fluid">
 
             <!-- Page Heading -->
@@ -87,6 +87,78 @@
                 </div>
         <!-- /.container-fluid -->
        
+
+        <%}else{%> 
+
+<!-- USUARIO -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+        For more information about DataTables, please visit the <a target="_blank"
+            href="https://datatables.net">official DataTables documentation</a>.</p>
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">clientes</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Telefono</th>
+                                    <th>C.Nombre</th>
+                                    <th>C.Telefono</th>
+                                    <th>Dirección</th>
+                                    <th>Opciones</th>
+                                  
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Telefono</th>
+                                    <th>C.Nombre</th>
+                                    <th>C.Telefono</th>
+                                    <th>Dirección</th>
+                                    <th>Opciones</th>
+                                   
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <% clientes.forEach(function(cliente) { %>
+                                  
+                                        <tr>
+                                            <td><%= cliente.name %></td>
+                                            <td><%= cliente.cel %></td>
+                                            <td><%= cliente.conyuge_name %></td>
+                                            <td><%= cliente.conyuge_cel %></td>
+                                            <td><%= cliente.adress %></td>
+                                            <td>
+                                                <!-- <a href="/clienteEdit/<%= cliente.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a> -->
+                                                <a href="/clienteEdit/<%= cliente.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
+                                            </td> 
+                                        </tr>
+                                <% }); %>
+                          
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <% } %>
+
+
+
 
     </div>
     <!-- /.container-fluid -->

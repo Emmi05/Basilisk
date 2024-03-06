@@ -20,7 +20,6 @@ export const usuarios=  async(req, res) => {
     }
 }
 export const editarUsuario = async (req, res) => {
-
         if (req.session.rol == 'admin') {
             const { id } = req.params;
             const { user, name, rol } = req.body;
@@ -85,11 +84,30 @@ export const editarUsuario = async (req, res) => {
 
     // CLIENTES
     export const crearCliente= async (req, res) => {
+
         try {
+            if (req.session.rol == 'usuario') {
             const { name, cel, conyuge_name, conyuge_cel, adress } = req.body;
             await pool.query('INSERT INTO customer SET ?', { name, cel, conyuge_name, conyuge_cel,adress });
             
-            res.render('register', {
+            res.render('registro', {
+                alert: true,
+                alertTitle: "Registro",
+                alertMessage: "¡Registro Exitoso",
+                alertIcon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }else if (req.session.rol == 'admin'){
+            const { name, cel, conyuge_name, conyuge_cel, adress } = req.body;
+            await pool.query('INSERT INTO customer SET ?', { name, cel, conyuge_name, conyuge_cel,adress });
+            
+            res.render('registro', {
                 alert: true,
                 alertTitle: "Registro",
                 alertMessage: "¡Registro Exitoso",
@@ -102,17 +120,40 @@ export const editarUsuario = async (req, res) => {
                 name: req.session.name,
                 rol: req.session.rol,
             });
-        } catch (error) {
+
+        }
+     } catch (error) {
             console.error(error);
             // Manejar el error apropiadamente
             res.status(500).send('Error interno del servidor');
         }
-    
+        
     }
 
     export const editarClientes = async (req, res) => {
+        if (req.session.rol == 'usuario') {
+            const { id } = req.params;
+            const { name, cel, conyuge_name, conyuge_cel, adress } = req.body;
+            const [result] = await pool.query('UPDATE customer SET name = IFNULL (?, name), cel = IFNULL (?, cel), conyuge_name = IFNULL (?, conyuge_name), conyuge_cel = IFNULL (?, conyuge_cel), adress= IFNULL (?, adress) WHERE id = ?', [name, cel, conyuge_name,conyuge_cel, adress, id]);
+        //otro if de si es mayor a 0?
+        if (result && result.affectedRows > 0) {
+            const [rows]=await pool.query('SELECT * FROM customer');
+        res.render('clientes', {
+            alert: true,
+            alertTitle: "Actualización",
+            alertMessage: "¡Actualización Exitoso",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            clientes:rows,
+            ruta:'clientes'
+        });
 
-        if (req.session.rol == 'admin') {
+       }} else if (req.session.rol == 'admin') {
             const { id } = req.params;
             const { name, cel, conyuge_name, conyuge_cel, adress } = req.body;
             const [result] = await pool.query('UPDATE customer SET name = IFNULL (?, name), cel = IFNULL (?, cel), conyuge_name = IFNULL (?, conyuge_name), conyuge_cel = IFNULL (?, conyuge_cel), adress= IFNULL (?, adress) WHERE id = ?', [name, cel, conyuge_name,conyuge_cel, adress, id]);
@@ -163,13 +204,111 @@ export const editarUsuario = async (req, res) => {
             ruta:'clientes'
         });
     } }else{
-        (error) 
-            console.error(error);
+        // (error) 
+        //     console.error(error);
             // Manejar el error apropiadamente
             res.status(500).send('Error interno del servidor');
         }
     }
 
+
+// terreno
+export const crearTerreno= async (req, res) => {
+    try {
+        const { id, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
+        
+        // console.log(req.body.id,req.body.calle);
+         // Verificar si algún campo está vacío
+         if (!id || !calle || !lote || !manzana || !superficie ||!precio ||!predial ||!escritura ||!estado) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos!",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+        await pool.query('INSERT INTO land SET ?', { id, calle, lote, manzana,superficie,precio,predial,escritura,estado });
+        
+        res.render('terrenoAlta', {
+            alert: true,
+            alertTitle: "Registro",
+            alertMessage: "¡Registro Exitoso",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: '/', 
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+        });
+    } catch (error) {
+        console.error(error);
+        // Manejar el error apropiadamente
+        res.status(500).send('Error interno del servidor');
+    }
+
+}
+
+
+export const editarTerrenos = async (req, res) => {
+    if (req.session.rol == 'usuario') {
+        const { id } = req.params;
+        const {calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
+        const [result] = await pool.query('UPDATE land SET calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado),  WHERE id = ?', [calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
+    //otro if de si es mayor a 0?
+    if (result && result.affectedRows > 0) {
+        const [rows]=await pool.query('SELECT * FROM land');
+    res.render('terrenos', {
+        alert: true,
+        alertTitle: "Actualización",
+        alertMessage: "¡Actualización Exitoso",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+        login: true,
+        roluser: false,
+        name: req.session.name,
+        rol: req.session.rol,
+        clientes:rows,
+        ruta:'terrenos'
+    });
+
+   }} else if (req.session.rol == 'admin') {
+    const { id } = req.params;
+    const {calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
+    const [result] = await pool.query('UPDATE land SET calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado),  WHERE id = ?', [calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
+    //otro if de si es mayor a 0?
+    if (result && result.affectedRows > 0) {
+        const [rows]=await pool.query('SELECT * FROM land');
+    res.render('terrenos', {
+        alert: true,
+        alertTitle: "Actualización",
+        alertMessage: "¡Actualización Exitoso",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+        login: true,
+        roluser: true,
+        name: req.session.name,
+        rol: req.session.rol,
+        clientes:rows,
+        ruta:'terrenos'
+    });
+} }else{
+   
+        // Manejar el error apropiadamente
+        res.status(500).send('Error interno del servidor');
+    }
+}
 
 export const methods = {
     usuarios,
@@ -178,5 +317,7 @@ export const methods = {
     crearCliente,
     editarClientes,
     eliminarCliente,
+    crearTerreno,
+    editarTerrenos
   }
 
