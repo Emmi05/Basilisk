@@ -28,10 +28,12 @@
             <form class="row g-3" action="/updateterreno/<%= terreno.id %>" method="POST">
 
                 <input id="id" name="id" value="<%= terreno.id %>" hidden>
-                <!-- <div class="col-md-6">
+                
+                
+                <div class="col-md-6">
                   <label for="id" name="id" class="form-label">Id Interno</label>
-                  <input type="text" class="form-control" id="id" name="id" value="">
-                </div> -->
+                  <input type="text" class="form-control" id="id_interno" name="id_interno" value="<%= terreno.id_interno %>" >
+                </div> 
 
                 <div class="col-md-6">
                   <label for="calle" class="form-label">Calle</label>
@@ -46,7 +48,7 @@
 
                 <div class="col-md-6">
                   <label for="manzana" class="form-label">Manzana</label>
-                  <input type="text" class="form-control" id="manzana" name="manzana">
+                  <input type="text" class="form-control" id="manzana" name="manzana" value="<%= terreno.manzana %>">
                 </div>
 
                  <div class="col-12">
@@ -73,7 +75,7 @@
                   <select class="form-control" id="escritura" name="escritura" >
                       <option value="">Seleccionar</option>
                       <option  <%= terreno.escritura=='si' ? "selected" : '' %> value="si">Si</option>
-                      <option  <%= usuario.escritura=='no' ? "selected" : '' %>  value="no">No</option>
+                      <option  <%= terreno.escritura=='no' ? "selected" : '' %>  value="no">No</option>
                   </select>
                 </div>
                 
@@ -95,7 +97,7 @@
 
               </form>
        
-            
+              <% }); %>
     <!-- Footer -->
 <footer class="sticky-footer bg-white">
   <%- include ('layouts/footer.ejs') %>
