@@ -203,4 +203,24 @@ router.get('/terrenoedit/:id', async(req, res) => {
 router.get('/deleteterreno/:id', authentication.eliminarTerreno);
 
 
+// venta
+router.get('/ventas', async(req, res) => {
+    if (req.session.rol == 'usuario') {
+        res.render('ventas', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    } else if (req.session.rol == 'admin') {
+        
+        res.render('ventas', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+        });
+    }
+});
+
 export default router;
