@@ -210,20 +210,25 @@ router.get('/deleteterreno/:id', authentication.eliminarTerreno);
 
 // venta
 router.get('/ventas', async(req, res) => {
+    const [rows] = await pool.query('SELECT c.name as customer_name, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id');
+
     if (req.session.rol == 'usuario') {
         res.render('ventas', {
             login: true,
             roluser: false,
             name: req.session.name,
-            rol: req.session.rol
+            rol: req.session.rol,
+            ventas: rows,
         });
     } else if (req.session.rol == 'admin') {
-        
+        const [rows] = await pool.query('SELECT c.name as customer_name, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id');
+
         res.render('ventas', {
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
+            ventas: rows,
         });
     }
 });
