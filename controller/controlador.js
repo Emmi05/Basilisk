@@ -132,85 +132,97 @@ export const editarUsuario = async (req, res) => {
     
 
     export const editarClientes = async (req, res) => {
-        if (req.session.rol == 'usuario') {
-            const { id } = req.params;
-            const { name, cel, conyuge_name, conyuge_cel, adress } = req.body;
-            const [result] = await pool.query('UPDATE customer SET name = IFNULL (?, name), cel = IFNULL (?, cel), conyuge_name = IFNULL (?, conyuge_name), conyuge_cel = IFNULL (?, conyuge_cel), adress= IFNULL (?, adress) WHERE id = ?', [name, cel, conyuge_name,conyuge_cel, adress, id]);
-        //otro if de si es mayor a 0?
-        if (result && result.affectedRows > 0) {
-            const [rows]=await pool.query('SELECT * FROM customer');
-        res.render('clientes', {
-            alert: true,
-            alertTitle: "Actualización",
-            alertMessage: "¡Actualización Exitoso",
-            alertIcon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
-            login: true,
-            roluser: false,
-            name: req.session.name,
-            rol: req.session.rol,
-            clientes:rows,
-            ruta:'clientes'
-        });
-
-       }} else if (req.session.rol == 'admin') {
-            const { id } = req.params;
-            const { name, cel, conyuge_name, conyuge_cel, adress } = req.body;
-            const [result] = await pool.query('UPDATE customer SET name = IFNULL (?, name), cel = IFNULL (?, cel), conyuge_name = IFNULL (?, conyuge_name), conyuge_cel = IFNULL (?, conyuge_cel), adress= IFNULL (?, adress) WHERE id = ?', [name, cel, conyuge_name,conyuge_cel, adress, id]);
-        //otro if de si es mayor a 0?
-        if (result && result.affectedRows > 0) {
-            const [rows]=await pool.query('SELECT * FROM customer');
-        res.render('clientes', {
-            alert: true,
-            alertTitle: "Actualización",
-            alertMessage: "¡Actualización Exitoso",
-            alertIcon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
-            login: true,
-            roluser: true,
-            name: req.session.name,
-            rol: req.session.rol,
-            clientes:rows,
-            ruta:'clientes'
-        });
-    } }else{
-       
-            // Manejar el error apropiadamente
+        try {
+            if (req.session.rol == 'usuario' || req.session.rol == 'admin') {
+                const { id } = req.params;
+                const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
+                
+                // Actualizar los datos del cliente en la tabla customers
+                const [result] = await pool.query('UPDATE customers SET name = IFNULL (?, name), a_paterno = IFNULL (?, a_paterno), a_materno = IFNULL (?, a_materno), cel = IFNULL (?, cel), adress= IFNULL (?, adress) WHERE id = ?', [name, a_paterno, a_materno, cel, adress, id]);
+    
+                // Verificar si la actualización fue exitosa
+                if (result && result.affectedRows > 0) {
+                    // Verificar si el cliente ya tiene un registro en la tabla parentesco
+                    const [existingParentesco] = await pool.query('SELECT * FROM parentesco WHERE customer_id = ?', [id]);
+    
+                    if (existingParentesco && existingParentesco.length > 0) {
+                        // Si existe un registro en la tabla parentesco, actualizarlo
+                        await pool.query('UPDATE parentesco SET name_conyuge = ?, a_paterno_conyuge = ?, a_materno_conyuge = ?, cel_conyuge = ? WHERE customer_id = ?', [name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge, id]);
+                    } else {
+                        // Si no existe un registro en la tabla parentesco, insertar uno nuevo
+                        await pool.query('INSERT INTO parentesco SET ?', { customer_id: id, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge });
+                    }
+    
+                    // Obtener los datos actualizados del cliente
+                    const [clientes] = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
+    
+                    // Renderizar la vista
+                    res.render('clientes', {
+                        alert: true,
+                        alertTitle: "Actualización",
+                        alertMessage: "¡Actualización Exitoso",
+                        alertIcon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        login: true,
+                        roluser: req.session.rol === 'admin',
+                        name: req.session.name,
+                        rol: req.session.rol,
+                        clientes: clientes,
+                        ruta: 'clientes'
+                    });
+                } else {
+                    // La actualización no fue exitosa
+                    res.status(500).send('Error interno del servidor');
+                }
+            } else {
+                // Rol no válido
+                res.status(403).send('Acceso denegado');
+            }
+        } catch (error) {
+            console.error(error);
             res.status(500).send('Error interno del servidor');
         }
-    }
- 
-    export const eliminarCliente = async (req, res) => {
+    };
 
+    
+    export const eliminarCliente = async (req, res) => {
         if (req.session.rol == 'admin') {
             const { id } = req.params;
-            const [result]=await pool.query('DELETE FROM customer WHERE id=?',[id])
-        //otro if de si es mayor a 0?
-        if (result && result.affectedRows > 0) {
-            const [rows]=await pool.query('SELECT * FROM customer');
-        res.render('clientes', {
-            alert: true,
-            alertTitle: "Eliminado",
-            alertMessage: "¡Eliminado Exitoso",
-            alertIcon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
-            login: true,
-            roluser: true,
-            name: req.session.name,
-            rol: req.session.rol,
-            clientes:rows,
-            ruta:'clientes'
-        });
-    } }else{
-        // (error) 
-        //     console.error(error);
-            // Manejar el error apropiadamente
-            res.status(500).send('Error interno del servidor');
+            try {
+                // Eliminar registros relacionados en la tabla parentezco
+                await pool.query('DELETE FROM parentesco WHERE customer_id = ?', [id]);
+                
+                // Eliminar el cliente de la tabla customers
+                const [result] = await pool.query('DELETE FROM customers WHERE id = ?', [id]);
+                if (result && result.affectedRows > 0) {
+                    const [rows] = await pool.query('SELECT * FROM customers');
+                    res.render('clientes', {
+                        alert: true,
+                        alertTitle: "Eliminado",
+                        alertMessage: "¡Eliminado Exitoso!",
+                        alertIcon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                        clientes: rows,
+                        ruta: 'clientes'
+                    });
+                } else {
+                    res.status(404).send('Cliente no encontrado');
+                }
+            } catch (error) {
+                console.error(error);
+                res.status(500).send('Error interno del servidor');
+            }
+        } else {
+            res.status(403).send('Acceso denegado');
         }
-    }
+    };
+    
 
 
 // terreno

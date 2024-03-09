@@ -72,22 +72,26 @@ router.post('/cliente', authentication.crearCliente)
 //ver clientesss
 router.get('/clientes', async(req, res) => {
     if (req.session.rol == 'usuario') {
-        const [rows] = await pool.query('SELECT *FROM customer');
+        const [rows] = await pool.query('SELECT c.*, p.name_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id');
+
         res.render('clientes', {
             login: true,
             roluser: false,
             name: req.session.name,
             rol: req.session.rol,
-            clientes: rows
+            clientes: rows,
+           
         });
     } else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT *FROM customer');
+        const [rows] = await pool.query('SELECT c.*, p.name_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id');
+
         res.render('clientes', {
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-            clientes: rows
+            clientes: rows,
+       
         });
     }
 });
@@ -99,7 +103,8 @@ router.get('/clienteEdit/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
-        const [rows] = await pool.query('SELECT * FROM customer WHERE id=?',[id]);
+        const [rows] =await pool.query('SELECT c.*, p.name_conyuge, p.a_paterno_conyuge, p.a_materno_conyuge, p.cel_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id WHERE c.id = ?', [id]);
+
         res.render('clienteEdit', {
             login: true,
             roluser: false,
@@ -109,7 +114,7 @@ router.get('/clienteEdit/:id', async(req, res) => {
         });
     }
     else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT * FROM customer WHERE id=?',[id]);
+        const [rows] =await pool.query('SELECT c.*, p.name_conyuge, p.a_paterno_conyuge, p.a_materno_conyuge, p.cel_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id WHERE c.id = ?', [id]);
         res.render('clienteEdit', {
             login: true,
             roluser: true,

@@ -25,11 +25,8 @@
         <div class="container-fluid">
 
             <!-- Page Heading -->
-            <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-            <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-                For more information about DataTables, please visit the <a target="_blank"
-                    href="https://datatables.net">official DataTables documentation</a>.</p>
-
+            <h1 class="h3 mb-2 text-gray-800">Clientes</h1>
+            
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">clientes</h6>
@@ -40,10 +37,11 @@
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
                                             <th>Telefono</th>
-                                            <th>C.Nombre</th>
-                                            <th>C.Telefono</th>
                                             <th>Dirección</th>
+                                            <th>Parentesco</th>
                                             <th>Opciones</th>
                                           
                                         </tr>
@@ -51,11 +49,13 @@
                                     <tfoot>
                                         <tr>
                                             <th>Nombre</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
                                             <th>Telefono</th>
-                                            <th>C.Nombre</th>
-                                            <th>C.Telefono</th>
                                             <th>Dirección</th>
+                                            <th>Parentesco</th>
                                             <th>Opciones</th>
+                                          
                                            
                                         </tr>
                                     </tfoot>
@@ -64,10 +64,11 @@
                                           
                                                 <tr>
                                                     <td><%= cliente.name %></td>
+                                                    <td><%= cliente.a_paterno %></td>
+                                                    <td><%= cliente.a_materno %></td>
                                                     <td><%= cliente.cel %></td>
-                                                    <td><%= cliente.conyuge_name %></td>
-                                                    <td><%= cliente.conyuge_cel %></td>
                                                     <td><%= cliente.adress %></td>
+                                                    <td><%= cliente.name_conyuge %></td>
                                                     <td>
                                                         <!-- <a href="/clienteEdit/<%= cliente.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a> -->
                                                         <a href="/clienteEdit/<%= cliente.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
@@ -94,10 +95,8 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-        For more information about DataTables, please visit the <a target="_blank"
-            href="https://datatables.net">official DataTables documentation</a>.</p>
+    <h1 class="h3 mb-2 text-gray-800">Clientes</h1>
+    <!--  -->
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -109,10 +108,11 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
                                     <th>Telefono</th>
-                                    <th>C.Nombre</th>
-                                    <th>C.Telefono</th>
                                     <th>Dirección</th>
+                                    <th>Parentesco</th>
                                     <th>Opciones</th>
                                   
                                 </tr>
@@ -120,11 +120,13 @@
                             <tfoot>
                                 <tr>
                                     <th>Nombre</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
                                     <th>Telefono</th>
-                                    <th>C.Nombre</th>
-                                    <th>C.Telefono</th>
                                     <th>Dirección</th>
+                                    <th>Parentesco</th>
                                     <th>Opciones</th>
+                                  
                                    
                                 </tr>
                             </tfoot>
@@ -133,18 +135,19 @@
                                   
                                         <tr>
                                             <td><%= cliente.name %></td>
+                                            <td><%= cliente.a_paterno %></td>
+                                            <td><%= cliente.a_materno %></td>
                                             <td><%= cliente.cel %></td>
-                                            <td><%= cliente.conyuge_name %></td>
-                                            <td><%= cliente.conyuge_cel %></td>
                                             <td><%= cliente.adress %></td>
+                                            <td><%= cliente.name_conyuge %></td>
                                             <td>
                                                 <!-- <a href="/clienteEdit/<%= cliente.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a> -->
                                                 <a href="/clienteEdit/<%= cliente.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
-                                                <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
-                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
+                                               
                                             </td> 
                                         </tr>
                                 <% }); %>
+                          
                           
                             </tbody>
                         </table>
@@ -166,9 +169,7 @@
 <!-- End of Main Content -->
 
 <!-- Footer -->
-<footer class="sticky-footer bg-white">
-    <%- include ('layouts/footer.ejs') %>
-</footer>
+
 <!-- End of Footer -->
 
 </div>
@@ -177,10 +178,7 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-<i class="fas fa-angle-up"></i>
-</a>
+
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
