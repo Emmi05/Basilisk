@@ -59,6 +59,7 @@
                     <label for="precio" name="precio" class="form-label">precio</label>
                     <input type="int" class="form-control" id="precio" name="precio">
                   </div>
+                 
 
                   <div class="col-md-6">
                     <label for="fecha" name="fecha" class="form-label">Fecha</label>
@@ -66,14 +67,21 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label for="rol">Estado</label>
-                    <select class="form-control" id="estado" name="estado" >
-                        <option value="">Seleccionar</option>
-                        <option value="pagado">Pagado</option>
-                        <option value="disponible">Disponible</option>
-                        <option value="proceso">En pago</option>
-                    </select>
+                    <label for="inicial" name="inicial" class="form-label">Inicial</label>
+                    <input type="int" class="form-control" id="inicial" name="inicial">
                   </div>
+
+                  <div class="col-md-6">
+                    <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
+                    <input type="int" class="form-control" id="n_plazos" name="n_plazos">
+                  </div>
+                
+                  <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
+                  <div class="col-md-6">
+                    <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
+                    <input type="int" class="form-control" id="n_plazos" name="vendedor" value="<%= name %>" disabled>
+                  </div>
+                
 
               <br> <br> <br> <br>
                 <div class="col-12">
@@ -153,11 +161,6 @@ aria-hidden="true">
 <% } %>
 
 <script>
-  
-  //TABLA DE CUSTOMER Y TERRENO POR SEPARADO 
-  // const rows =await pool.query('SELECT * FROM customer');
-    var countries = ["Elvia FLORES CARMONA EMMA", "Elias", "emma", "Juan", "Random"];
-
 $(document).ready(function() {
   var inputField = $('#myInput');
 
@@ -166,28 +169,37 @@ $(document).ready(function() {
   function autoComplete(event) {
     var inputValue = event.target.value.toLowerCase();
     var suggestions = $('#suggestions');
-    suggestions.empty(); // Limpia las sugerencias anteriores
+    suggestions.empty();
 
     if (inputValue.length) {
-      // Filtra los países que coinciden con la entrada del usuario
-      var filteredcountries = countries.filter(function(country) {
-        return country.toLowerCase().startsWith(inputValue);
-      });
+      $.ajax({
+        url: '/ventas', // La ruta de tu endpoint en el backend
+        method: 'GET',
+        success: function(data) {
+          console.log(data)
+          var clientes = data.ventas.map(function(venta) {
+            return venta.customer_name;
+          });
 
-      // Muestra las sugerencias
-      filteredCountries.forEach(function(country) {
-        var suggestionItem = $('<li class="list-group-item"></li>').text(country);
-        suggestions.append(suggestionItem);
+          var filteredClients = clientes.filter(function(cliente) {
+            return cliente.toLowerCase().startsWith(inputValue);
+          });
+
+          filteredClients.forEach(function(cliente) {
+            var suggestionItem = $('<li class="list-group-item"></li>').text(cliente);
+            suggestions.append(suggestionItem);
+          });
+        }
       });
     }
   }
 
-  // Maneja el clic en una sugerencia
   $('#suggestions').on('click', '.list-group-item', function() {
     inputField.val($(this).text());
-    $('#suggestions').empty(); // Limpia las sugerencias después de seleccionar una
+    $('#suggestions').empty();
   });
 });
+
 </script>
 </div>
 </body>
