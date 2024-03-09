@@ -155,8 +155,8 @@ aria-hidden="true">
 <script>
   
   //TABLA DE CUSTOMER Y TERRENO POR SEPARADO 
-  const rows =await pool.query('SELECT * FROM customer');
-    // var countries = ["Elvia FLORES CARMONA EMMA", "Elias", "emma", "Juan", "Random"];
+  // const rows =await pool.query('SELECT * FROM customer');
+    var countries = ["Elvia FLORES CARMONA EMMA", "Elias", "emma", "Juan", "Random"];
 
 $(document).ready(function() {
   var inputField = $('#myInput');
@@ -170,7 +170,7 @@ $(document).ready(function() {
 
     if (inputValue.length) {
       // Filtra los países que coinciden con la entrada del usuario
-      var filteredrows = rows.filter(function(country) {
+      var filteredcountries = countries.filter(function(country) {
         return country.toLowerCase().startsWith(inputValue);
       });
 

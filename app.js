@@ -144,7 +144,7 @@ app.post('/auth', async (req, res) => {
                 if (req.session.rol == 'usuario') {
                     res.render('login', {
                         alert: true,
-                        alertTitle: "Usuario:",
+                        alertTitle: "Propiedad:",
                         alertMessage: "¡SARAHI!",
                         alertIcon: 'success',
                         showConfirmButton: false,
@@ -154,7 +154,7 @@ app.post('/auth', async (req, res) => {
                 } else {
                     res.render('login', {
                         alert: true,
-                        alertTitle: "Admistrador",
+                        alertTitle: "Eres larry",
                         alertMessage: "Ata Papa",
                         alertIcon: 'success',
                         showConfirmButton: false,
