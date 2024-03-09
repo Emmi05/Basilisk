@@ -83,52 +83,53 @@ export const editarUsuario = async (req, res) => {
 
 
     // CLIENTES
-    export const crearCliente= async (req, res) => {
-
+    export const crearCliente = async (req, res) => {
         try {
-            if (req.session.rol == 'usuario') {
-            const { name, cel, conyuge_name, conyuge_cel, adress } = req.body;
-            await pool.query('INSERT INTO customer SET ?', { name, cel, conyuge_name, conyuge_cel,adress });
-            
-            res.render('registro', {
-                alert: true,
-                alertTitle: "Registro",
-                alertMessage: "¡Registro Exitoso",
-                alertIcon: 'success',
-                showConfirmButton: false,
-                timer: 1500,
-                ruta: '/', 
-                login: true,
-                roluser: false,
-                name: req.session.name,
-                rol: req.session.rol,
-            });
-        }else if (req.session.rol == 'admin'){
-            const { name, cel, conyuge_name, conyuge_cel, adress } = req.body;
-            await pool.query('INSERT INTO customer SET ?', { name, cel, conyuge_name, conyuge_cel,adress });
-            
-            res.render('registro', {
-                alert: true,
-                alertTitle: "Registro",
-                alertMessage: "¡Registro Exitoso",
-                alertIcon: 'success',
-                showConfirmButton: false,
-                timer: 1500,
-                ruta: '/', 
-                login: true,
-                roluser: true,
-                name: req.session.name,
-                rol: req.session.rol,
-            });
-
-        }
-     } catch (error) {
+            if (req.session.rol == 'usuario' || req.session.rol == 'admin') {
+                const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
+                console.log(req.body);
+    
+                const ejemplo = await pool.query('INSERT INTO customers SET ?', { name, a_paterno, a_materno, cel, adress });
+    
+                if (ejemplo) {
+                    const [rows] = await pool.query('SELECT * FROM customers WHERE name = ? AND a_paterno = ? AND a_materno = ?', [name, a_paterno, a_materno]);
+    
+                    if (rows.length > 0) {
+                        const customer_id = rows[0].id;
+                        await pool.query('INSERT INTO parentesco SET ?', { customer_id, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge });
+                        
+                        // Renderizar vista
+                        renderizarRegistro(req, res);
+                    }
+                }
+            } else {
+                // El rol no es válido
+                res.status(403).send('Acceso denegado');
+            }
+        } catch (error) {
             console.error(error);
-            // Manejar el error apropiadamente
             res.status(500).send('Error interno del servidor');
         }
-        
+    };
+    
+    function renderizarRegistro(req, res) {
+        const roluser = (req.session.rol == 'admin');
+        res.render('registro', {
+            alert: true,
+            alertTitle: "Registro",
+            alertMessage: "¡Registro Exitoso!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: '/',
+            login: true,
+            roluser: roluser,
+            name: req.session.name,
+            rol: req.session.rol,
+        });
     }
+
+    
 
     export const editarClientes = async (req, res) => {
         if (req.session.rol == 'usuario') {
@@ -345,6 +346,8 @@ export const eliminarTerreno = async (req, res) => {
     }
 }
 
+
+// 
 
 
 export const methods = {
