@@ -262,7 +262,7 @@ router.get('/abonos', async(req, res) => {
             ventas: rows
         });
     } else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
         res.render('venta', {
             login: true,
             roluser: true,
@@ -273,5 +273,31 @@ router.get('/abonos', async(req, res) => {
     }
 });
 
+//Editar
+router.get('/venta/:id', async(req, res) => {
+
+    const id = req.params.id;
+    if (req.session.rol == 'usuario') {
+        const [rows] =await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.inicial FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id  WHERE s.id = ?', [id]);
+
+        res.render('ventaEdit', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows,
+        });
+    }
+    else if (req.session.rol == 'admin') {
+        const [rows] =await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id  WHERE s.id = ?', [id]);
+        res.render('ventaEdit', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows,
+        });
+    }
+});
 
 export default router;
