@@ -247,5 +247,7 @@ router.get('/terreno/:id', async (req, res) => {
     }
 });
 
+router.post('/venta', authentication.crearVenta)
+
 
 export default router;
