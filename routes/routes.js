@@ -209,8 +209,10 @@ router.get('/deleteterreno/:id', authentication.eliminarTerreno);
 
 
 // venta
-router.get('/ventas', async(req, res) => {
-    const [rows] = await pool.query('SELECT c.name as customer_name, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id');
+router.get('/ventas', async (req, res) => {
+    const [rows] = await pool.query('SELECT * FROM customers');
+    const [rows2] = await pool.query('SELECT * FROM land');
+    // const [rows2] = await pool.query('SELECT * FROM land WHERE lote = ? AND manzana = ?');
 
     if (req.session.rol == 'usuario') {
         res.render('ventas', {
@@ -218,19 +220,32 @@ router.get('/ventas', async(req, res) => {
             roluser: false,
             name: req.session.name,
             rol: req.session.rol,
-            ventas: rows,
+            clientes: rows, //clientes
+            terrenos: rows2, // terrenos
         });
     } else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT c.name as customer_name, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id');
-
         res.render('ventas', {
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-            ventas: rows,
+            clientes: rows, // Cambié 'ventas' por 'clientes'
+            terrenos:rows2,
         });
     }
 });
+
+
+router.get('/terreno/:id', async (req, res) => {
+    const terrenoId = req.params.id;
+    const [rows] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
+
+    if (rows.length > 0) {
+        res.json(rows[0]); // Enviar datos del terreno al cliente
+    } else {
+        res.status(404).json({ error: 'Terreno no encontrado' });
+    }
+});
+
 
 export default router;
