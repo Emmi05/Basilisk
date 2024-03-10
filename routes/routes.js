@@ -249,5 +249,29 @@ router.get('/terreno/:id', async (req, res) => {
 
 router.post('/venta', authentication.crearVenta)
 
+//VER VENTAS
+
+router.get('/abonos', async(req, res) => {
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        res.render('venta', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        res.render('venta', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows
+        });
+    }
+});
+
 
 export default router;

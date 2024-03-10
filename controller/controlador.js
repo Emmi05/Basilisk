@@ -368,8 +368,29 @@ export const crearVenta= async (req, res) => {
     const [rows2] = await pool.query('SELECT * FROM land');
     try {
         const { id_customer, id_land, fecha_venta, inicial, n_cuentas } = req.body;
+        // console.log(req.body);
+
+          // Verificar si algún campo está vacío
+          if (!id_customer || !id_land || !fecha_venta || !inicial || !n_cuentas) {
+            return res.render('ventas', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos!",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+                clientes:rows,
+            terrenos:rows2,
+            terrenos2:terreno,
+            });
+        }
         
-         console.log(req.body);
+
          
 
         await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, inicial, n_cuentas) VALUES (?, ?, ?, ?, ?)', [id_customer, id_land, fecha_venta, inicial, n_cuentas]);
