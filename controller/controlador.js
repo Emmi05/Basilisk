@@ -1,4 +1,5 @@
 import { pool} from '../database/db.js'
+import moment from 'moment';
 
 export const usuarios=  async(req, res) => {
     if (req.session.rol == 'usuario') {
@@ -390,10 +391,12 @@ export const crearVenta= async (req, res) => {
             });
         }
         
+//formato a fecha         
+const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD'); // Utilizando moment.js
 
          
 
-        await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, inicial, n_cuentas) VALUES (?, ?, ?, ?, ?)', [id_customer, id_land, fecha_venta, inicial, n_cuentas]);
+await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, inicial, n_cuentas) VALUES (?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, inicial, n_cuentas]);
 
         
         res.render('ventas', {

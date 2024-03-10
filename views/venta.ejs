@@ -1,3 +1,4 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <%- include ('layouts/head.ejs') %>
 <body id="page-top">
 
@@ -75,11 +76,11 @@
                                                 <td><%= venta.lote %></td>
                                                 <td><%= venta.manzana %></td>
                                                 <td><%= venta.precio %></td>
-                                                <td><%= venta.fecha_venta %></td>
+                                                <td><%= venta.fecha_venta%></td>
                                                 <td><%= venta.n_cuentas %></td>
                                             
                                                 <td>
-                                                    <a href="/editar/<%= venta.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                    <a href="/venta/<%= venta.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
                                                     <a onclick="eliminar(<%= venta.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                                                     <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
                                                     <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
@@ -151,6 +152,9 @@ aria-hidden="true">
    		
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+
   <% if (typeof alert != "undefined")  { %>
    <script>
    Swal.fire({
@@ -184,6 +188,29 @@ aria-hidden="true">
      });
  }
    </script>
+
+<script>
+    <% ventas.forEach(function(venta) { %>
+        // Obtener la fecha como una cadena
+        const fechaString = "<%= venta.fecha_venta %>";
+
+        // Crear un objeto Date a partir de la cadena de fecha
+        const fecha = new Date(fechaString);
+
+        // Obtener los componentes de la fecha
+        const year = fecha.getFullYear();
+        const month = String(fecha.getMonth() + 1).padStart(2, '0'); // Ajustar el mes a dos dígitos
+        const day = String(fecha.getDate()).padStart(2, '0'); // Ajustar el día a dos dígitos
+
+        // Construir la cadena de fecha en el formato YYYY-MM-DD
+        const fechaFormateada = `${year}-${month}-${day}`;
+
+        // Asignar el valor formateado al input
+        document.getElementById('fecha_venta').value = fechaFormateada;
+    <% }); %>
+</script>
+
+
 
 </body>
 
