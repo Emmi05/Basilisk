@@ -42,7 +42,7 @@
 
         <div class="container-fluid">
             <h1>Registro ventas</h1>
-            <form class="row g-3" action="" method="POST" autocomplete="off">
+            <form class="row g-3" action="/venta" method="POST" autocomplete="off">
                 
                 <!-- <div class="col-md-6">
                   <label for="myInput" class="form-label">Cliente</label>
@@ -52,7 +52,7 @@
 
               <div class="col-md-6">
                 <label for="cliente" class="form-label">Cliente</label>
-                <select class="form-select" id="cliente" name="cliente">
+                <select class="form-select" id="id_customer" name="id_customer">
                     <option value="" >Seleccione un cliente</option>
                     <% clientes.forEach(cliente => { %>
                         <option value="<%= cliente.id %>"><%= cliente.name %> <%= cliente.a_paterno %> <%= cliente.a_materno %></option>
@@ -62,7 +62,7 @@
 
             <div class="col-md-6">
               <label for="terreno" class="form-label">Terreno</label>
-              <select class="form-select" id="terreno" name="terreno">
+              <select class="form-select" id="id_land" name="id_land">
                   <option value="">Seleccione un terreno</option>
                   <% terrenos.forEach(terreno => { %>
                       <option value="<%= terreno.id %>">Manzana <%= terreno.manzana %> Lote <%= terreno.lote %></option>
@@ -85,7 +85,7 @@
                 
                   <div class="col-md-6">
                     <label for="fecha" name="fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="fecha" name="fecha">
+                    <input type="date" class="form-control" id="fecha_venta" name="fecha_venta">
                   </div>
                   <div class="col-md-6">
                     <label for="inicial" name="inicial" class="form-label">Inicial</label>
@@ -94,13 +94,13 @@
 
                   <div class="col-md-6">
                     <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                    <input type="int" class="form-control" id="n_plazos" name="n_plazos">
+                    <input type="int" class="form-control" id="n_cuentas" name="n_cuentas">
                   </div>
                 
                   <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
                   <div class="col-md-6">
                     <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
-                    <input type="int" class="form-control" id="n_plazos" name="vendedor" value="<%= name %>" disabled>
+                    <input type="int" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" disabled>
                   </div>
                 
 
@@ -182,7 +182,7 @@ aria-hidden="true">
 <% } %>
 
 <script>
-  document.getElementById('terreno').addEventListener('change', function() {
+  document.getElementById('id_land').addEventListener('change', function() {
     var terrenoId = this.value;
 
     // Realizar una solicitud al servidor para obtener los detalles del terreno seleccionado
