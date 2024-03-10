@@ -44,12 +44,11 @@ primary key (id));
 CREATE TABLE sale (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_customer INT,
-    nombre_cliente varchar (150),
     id_land INT,
-    id_interno VARCHAR(50),
     fecha_venta DATETIME,
     precio INT(40),
-    cantidad_escrita VARCHAR(50),
-    FOREIGN KEY (id_cliente) REFERENCES customer(id),
-    FOREIGN KEY (id_terreno) REFERENCES land(id)
+    inicial INT (10),
+    n_plazos INT(10),
+    FOREIGN KEY (id_customer) REFERENCES customers(id),
+    FOREIGN KEY (id_land) REFERENCES land(id)
 );
