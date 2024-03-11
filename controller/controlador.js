@@ -361,67 +361,104 @@ export const eliminarTerreno = async (req, res) => {
 
 
 // venta crear
-export const crearVenta= async (req, res) => {
-    //
+export const crearVenta = async (req, res) => {
     const terrenoId = req.params.id;
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
     const [rows] = await pool.query('SELECT * FROM customers');
     const [rows2] = await pool.query('SELECT * FROM land');
     try {
-        const { id_customer, id_land, fecha_venta, inicial, n_cuentas } = req.body;
-        // console.log(req.body);
+        const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas } = req.body;
 
-          // Verificar si algún campo está vacío
-          if (!id_customer || !id_land || !fecha_venta || !inicial || !n_cuentas) {
+        // Verificar si algún campo está vacío
+        if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
             return res.render('ventas', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "Debes rellenar todos los campos!",
+                alertMessage: "Debes rellenar todos los campos obligatorios!",
                 alertIcon: 'error',
                 showConfirmButton: false,
                 timer: 1500,
-                ruta: '/', 
+                ruta: '/',
                 login: true,
                 roluser: false,
                 name: req.session.name,
                 rol: req.session.rol,
-                clientes:rows,
-            terrenos:rows2,
-            terrenos2:terreno,
+                clientes: rows,
+                terrenos: rows2,
+                terrenos2: terreno,
             });
         }
-        
-//formato a fecha         
-const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD'); // Utilizando moment.js
 
-         
+        // Formatear fecha
+        const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD');
 
-await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, inicial, n_cuentas) VALUES (?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, inicial, n_cuentas]);
+        // Insertar valores en la base de datos
+        if (tipo_venta === 'contado') {
+            // Verificar si falta algún campo obligatorio
+            if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
+                return res.render('ventas', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Debes rellenar todos los campos obligatorios!",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: '/',
+                    login: true,
+                    roluser: false,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    clientes: rows,
+                    terrenos: rows2,
+                    terrenos2: terreno,
+                });
+            }
+            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta) VALUES (?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta]);
+        } else if (tipo_venta === 'credito') {
+            // Verificar si falta algún campo obligatorio
+            if (!id_customer || !id_land || !fecha_venta || !tipo_venta || !inicial || !n_cuentas) {
+                return res.render('ventas', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Debes rellenar todos los campos obligatorios!",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: '/',
+                    login: true,
+                    roluser: false,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    clientes: rows,
+                    terrenos: rows2,
+                    terrenos2: terreno,
+                });
+            }
+            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas) VALUES (?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas]);
+        }
 
-        
         res.render('ventas', {
             alert: true,
             alertTitle: "Registro",
-            alertMessage: "¡Registro Exitoso",
+            alertMessage: "¡Registro Exitoso!",
             alertIcon: 'success',
             showConfirmButton: false,
             timer: 1500,
-            ruta: '/', 
+            ruta: '/',
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-            clientes:rows,
-            terrenos:rows2,
-            terrenos2:terreno,
+            clientes: rows,
+            terrenos: rows2,
+            terrenos2: terreno,
         });
     } catch (error) {
         console.error(error);
-        // Manejar el error apropiadamente
         res.status(500).send('Error interno del servidor');
     }
-
 }
+
 
 
 export const methods = {

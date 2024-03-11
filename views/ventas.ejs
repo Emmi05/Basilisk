@@ -80,7 +80,15 @@
             <input type="int" class="form-control" id="precio" name="precio" disabled>
         </div>
           
-           
+        <!-- Tipo venta -->
+        <div class="form-group">
+          <label for="tipo_venta">Tipo venta:</label>
+          <select class="form-control" id="tipo_venta" name="tipo_venta" >
+              <option value="">Seleccionar</option>
+              <option value="contado">Contado</option>
+              <option value="credito">Credito</option>
+          </select>
+      </div>
                 
                 
                   <div class="col-md-6">
@@ -199,6 +207,27 @@ aria-hidden="true">
         });
 });
 
+</script>
+
+<!--  -->
+<script>
+  document.getElementById('tipo_venta').addEventListener('change', function() {
+    var tipoVenta = this.value;
+
+    // Obtener los campos de "inicial" y "n_plazos"
+    var inicialField = document.getElementById('inicial');
+    var nPlazosField = document.getElementById('n_cuentas');
+
+    // Si se selecciona "contado", deshabilitar los campos de "inicial" y "n_plazos"
+    if (tipoVenta === 'contado') {
+      inicialField.disabled = true;
+      nPlazosField.disabled = true;
+    } else {
+      // Si se selecciona otra opción, habilitar los campos de "inicial" y "n_plazos"
+      inicialField.disabled = false;
+      nPlazosField.disabled = false;
+    }
+  });
 </script>
 
 
