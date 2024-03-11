@@ -42,9 +42,13 @@
          <% ventas.forEach(function(venta) { %>
           <div class="container-fluid">
               <h1>Editar ventas</h1>
-              <form class="row g-3" action="" method="POST" autocomplete="off">
+              <form class="row g-3" action="/updateventa/<%= venta.id %>" method="POST">
             
-                    <input id="id" name="id" value="<%= venta.id %>" hidden>
+                <input id="id" name="id" value="<%= venta.id %>" hidden>
+
+
+
+               
   
                 <div class="col-md-6">
                   <label for="cliente" class="form-label">Cliente</label>
@@ -74,7 +78,17 @@
           </div>
             
              
-                  
+                    <!-- Tipo venta -->
+        <div class="form-group">
+          <label for="tipo_venta">Tipo venta:</label>
+          <select class="form-control" id="tipo_venta" name="tipo_venta" >
+              <option value="">Seleccionar</option>
+              <option <%= venta.tipo_venta=='contado' ? "selected" : '' %> value="contado">Contado</option>
+              <option <%= venta.tipo_venta=='credito' ? "selected" : '' %> value="credito">Credito</option>
+            
+          </select>
+      </div>
+
                   
                     <div class="col-md-6">
                       <label for="fecha" name="fecha" class="form-label">Fecha</label>
@@ -215,6 +229,46 @@ document.getElementById('fecha_venta').value = fechaFormateada;
 <% }); %>
             
   </script>
+
+<script>
+  // Función para verificar el valor inicial del campo "tipo_venta" al cargar la página
+  document.addEventListener('DOMContentLoaded', function() {
+    var tipoVenta = document.getElementById('tipo_venta').value;
+
+    // Obtener los campos de "inicial" y "n_cuentas"
+    var inicialField = document.getElementById('inicial');
+    var nPlazosField = document.getElementById('n_cuentas');
+
+    // Si el valor inicial es "contado", deshabilitar los campos de "inicial" y "n_cuentas"
+    if (tipoVenta === 'contado') {
+      inicialField.disabled = true;
+      nPlazosField.disabled = true;
+    }
+  });
+
+  // Agregar el evento de cambio al campo "tipo_venta"
+  document.getElementById('tipo_venta').addEventListener('change', function() {
+    var tipoVenta = this.value;
+
+    // Obtener los campos de "inicial" y "n_cuentas"
+    var inicialField = document.getElementById('inicial');
+    var nPlazosField = document.getElementById('n_cuentas');
+
+    // Si se selecciona "contado", deshabilitar los campos de "inicial" y "n_cuentas"
+    if (tipoVenta === 'contado') {
+      inicialField.disabled = true;
+      nPlazosField.disabled = true;
+    } else {
+      // Si se selecciona otra opción, habilitar los campos de "inicial" y "n_cuentas"
+      inicialField.disabled = false;
+      nPlazosField.disabled = false;
+    }
+  });
+</script>
+
+
+
+
   
   </div>
   </body>
