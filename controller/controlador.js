@@ -480,7 +480,7 @@ export const editarVenta = async (req, res) => {
         roluser: false,
         name: req.session.name,
         rol: req.session.rol,
-        terrenos:rows,
+        ventas:rows,
         ruta:'terrenos'
     });
 
@@ -504,8 +504,8 @@ export const editarVenta = async (req, res) => {
         roluser: true,
         name: req.session.name,
         rol: req.session.rol,
-        terrenos:rows,
-        ruta:'terrenos'
+        ventas:rows,
+        ruta:'abonos'
     });
 } }else{
    

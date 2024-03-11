@@ -42,9 +42,10 @@
          <% ventas.forEach(function(venta) { %>
           <div class="container-fluid">
               <h1>Editar ventas</h1>
-              <form class="row g-3" action="/updateventa/<%= venta.id %>" method="POST" autocomplete="off">
+              <form class="row g-3" action="/updateventa/<%= venta.id %>" method="POST">
             
-                    <input id="id" name="id" value="<%= venta.id %>" hidden>
+                <input id="id" name="id" value="<%= venta.id %>" hidden>
+
 
 
                
