@@ -459,6 +459,68 @@ export const crearVenta = async (req, res) => {
     }
 }
 
+export const editarVenta = async (req, res) => {
+    if (req.session.rol == 'usuario') {
+        const { id } = req.params;
+        const {tipo_venta, inicial, n_cuentas } = req.body;
+        console.log(req.body);
+
+        const [result] = await pool.query('UPDATE sale SET tipo_venta  = IFNULL (?, tipo_venta), inicial = IFNULL (?, inicial), n_cuentas = IFNULL (?, n_cuentas)  WHERE id = ?', [tipo_venta, inicial, n_cuentas, id]);
+    //otro if de si es mayor a 0?
+    if (result && result.affectedRows > 0) {
+        const [rows]=await pool.query('SELECT * FROM sale');
+    res.render('venta', {
+        alert: true,
+        alertTitle: "Actualización",
+        alertMessage: "¡Actualización Exitoso",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+        login: true,
+        roluser: false,
+        name: req.session.name,
+        rol: req.session.rol,
+        terrenos:rows,
+        ruta:'terrenos'
+    });
+
+   }} else if (req.session.rol == 'admin') {
+    const { id } = req.params;
+    const {tipo_venta, inicial, n_cuentas } = req.body;
+    console.log(req.body);
+
+    const [result] = await pool.query('UPDATE sale SET tipo_venta  = IFNULL (?, tipo_venta), inicial = IFNULL (?, inicial), n_cuentas = IFNULL (?, n_cuentas)  WHERE id = ?', [tipo_venta, inicial, n_cuentas, id]);
+
+    if (result && result.affectedRows > 0) {
+        const [rows]=await pool.query('SELECT * FROM sale');
+    res.render('venta', {
+        alert: true,
+        alertTitle: "Actualización",
+        alertMessage: "¡Actualización Exitoso",
+        alertIcon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+        login: true,
+        roluser: true,
+        name: req.session.name,
+        rol: req.session.rol,
+        terrenos:rows,
+        ruta:'terrenos'
+    });
+} }else{
+   
+        // Manejar el error apropiadamente
+        res.status(500).send('Error interno del servidor');
+    }
+}
+
+
+  
+
+
+
+
+
 
 
 export const methods = {
@@ -472,5 +534,6 @@ export const methods = {
     editarTerrenos,
     eliminarTerreno,
     crearVenta,
+    editarVenta
   }
 

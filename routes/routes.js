@@ -300,4 +300,8 @@ router.get('/venta/:id', async(req, res) => {
     }
 });
 
+
+
+router.post('/updateventa/:id',authentication.editarVenta);
+
 export default router;
