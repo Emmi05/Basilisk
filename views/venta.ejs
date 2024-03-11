@@ -46,6 +46,7 @@
                                             <th>Precio</th>
                                             <th>Fecha</th>
                                             <th>N_cuentas</th>
+                                            <th>Venta</th>
                                             <th>Options</th>
                                           
                                         </tr>
@@ -60,6 +61,7 @@
                                             <th>Precio</th>
                                             <th>Fecha</th>
                                             <th>N_cuentas</th>
+                                            <th>Venta</th>
                                             <th>Options</th>
                                           
                                            
@@ -77,7 +79,10 @@
                                                 <td><%= venta.manzana %></td>
                                                 <td><%= venta.precio %></td>
                                                 <td><%= venta.fecha_venta%></td>
+                                                
                                                 <td><%= venta.n_cuentas %></td>
+                                                <td><%= venta.tipo_venta %></td>
+
                                             
                                                 <td>
                                                     <a href="/venta/<%= venta.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
