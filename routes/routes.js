@@ -304,4 +304,8 @@ router.get('/venta/:id', async(req, res) => {
 
 router.post('/updateventa/:id',authentication.editarVenta);
 
+
+//  ELIMINAR TERRENO
+router.get('/deleteventa/:id', authentication.eliminarVenta);
+
 export default router;
