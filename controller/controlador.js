@@ -415,30 +415,36 @@ const crearVenta = async (req, res) => {
     }
 }
 
-
-
-
-
-export const editarVenta = async (req, res) => {
-    let result; // Definir la variable result fuera de los bloques if y else
-
+const editarVenta = async (req, res) => {
+    let result;
     try {
         const { id } = req.params;
         const { tipo_venta, inicial, n_cuentas } = req.body;
 
-        // Verifica si el tipo de venta es "contado"
-        if (tipo_venta === 'contado') {
-            // Actualiza los datos normales y establece los valores de "inicial" y "n_cuentas" como null
+        // Obtener el id_terreno_asociado
+        const [venta] = await pool.query('SELECT id_land FROM sale WHERE id = ?', [id]);
+        const id_terreno_asociado = venta[0].id_land;
+
+        // Obtener el estado actual del terreno
+        const [terreno] = await pool.query('SELECT estado FROM land WHERE id = ?', [id_terreno_asociado]);
+        const estado_terreno = terreno[0].estado;
+
+        if (tipo_venta === 'contado' && estado_terreno !== 'pagado') {
+            // Actualizar los datos normales y establecer los valores de "inicial" y "n_cuentas" como null
             [result] = await pool.query(
                 'UPDATE sale SET tipo_venta = ?, inicial = NULL, n_cuentas = NULL WHERE id = ?',
                 [tipo_venta, id]
             );
-        } else {
-            // Si no es "contado", actualiza los valores normales
+            // Marcar el terreno como "pagado"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_terreno_asociado]);
+        } else if (tipo_venta !== 'contado' && estado_terreno !== 'proceso') {
+            // Si no es "contado" y el terreno no está en proceso, actualiza los valores normales
             [result] = await pool.query(
                 'UPDATE sale SET tipo_venta = ?, inicial = ?, n_cuentas = ? WHERE id = ?',
                 [tipo_venta, inicial, n_cuentas, id]
             );
+            // Marcar el terreno como "proceso"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_terreno_asociado]);
         }
 
         if (result && result.affectedRows > 0) {
@@ -461,8 +467,14 @@ export const editarVenta = async (req, res) => {
     } catch (error) {
         console.error("Error al actualizar la venta:", error);
         // Manejar el error aquí
+        res.status(500).send('Error al actualizar la venta');
     }
 };
+
+
+
+
+
 
 
 //ELIMINAR VENTA
