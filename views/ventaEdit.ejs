@@ -246,6 +246,7 @@ document.getElementById('fecha_venta').value = fechaFormateada;
     }
   });
 
+  
   // Agregar el evento de cambio al campo "tipo_venta"
   document.getElementById('tipo_venta').addEventListener('change', function() {
     var tipoVenta = this.value;
@@ -254,8 +255,10 @@ document.getElementById('fecha_venta').value = fechaFormateada;
     var inicialField = document.getElementById('inicial');
     var nPlazosField = document.getElementById('n_cuentas');
 
-    // Si se selecciona "contado", deshabilitar los campos de "inicial" y "n_cuentas"
+    // Si se selecciona "contado", limpiar los campos de "inicial" y "n_cuentas"
     if (tipoVenta === 'contado') {
+      inicialField.value = '';
+      nPlazosField.value = '';
       inicialField.disabled = true;
       nPlazosField.disabled = true;
     } else {
@@ -265,6 +268,7 @@ document.getElementById('fecha_venta').value = fechaFormateada;
     }
   });
 </script>
+
 
 
 
