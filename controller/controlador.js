@@ -365,7 +365,7 @@ const crearVenta = async (req, res) => {
     const terrenoId = req.params.id;
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
     const [rows] = await pool.query('SELECT * FROM customers');
-    const [rows2] = await pool.query('SELECT * FROM land');
+    const [rows2] = await pool.query('SELECT * FROM land WHERE estado = ?', ['disponible']);
 
     try {
         const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas } = req.body;
@@ -394,22 +394,21 @@ const crearVenta = async (req, res) => {
         // Formatear fecha
         const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD');
 
-        // Insertar venta en la base de datos
         if (tipo_venta === 'contado') {
+            // Insertar venta en la base de datos
             await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta) VALUES (?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta]);
+
+            // Marcar el terreno como "pagado"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_land]);
         } else if (tipo_venta === 'credito') {
+            // Insertar venta a crédito en la base de datos
             await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas) VALUES (?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas]);
+
+            // Marcar el terreno como "proceso"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
         }
 
-        // Marcar el terreno como "en proceso"
-        await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['en proceso', id_land]);
-
-  
-        
         res.redirect('/ventas');
-
-        
-
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
@@ -467,35 +466,48 @@ export const editarVenta = async (req, res) => {
 
 
 //ELIMINAR VENTA
-export const eliminarVenta = async (req, res) => {
+const eliminarVenta = async (req, res) => {
+    const ventaId = req.params.id;
 
-    if (req.session.rol == 'admin') {
-        const { id } = req.params;
-        const [result]=await pool.query('DELETE FROM sale WHERE id=?',[id])
-    //otro if de si es mayor a 0?
-    if (result && result.affectedRows > 0) {
-        const [rows]=await pool.query('SELECT * FROM sale');
-    res.render('venta', {
-        alert: true,
-        alertTitle: "Eliminado",
-        alertMessage: "¡Eliminado Exitoso",
-        alertIcon: 'success',
-        showConfirmButton: false,
-        timer: 1500,
-        login: true,
-        roluser: true,
-        name: req.session.name,
-        rol: req.session.rol,
-        ventas:rows,
-        ruta:'abonos'
-    });
-} }else{
-    // (error) 
-    //     console.error(error);
-        // Manejar el error apropiadamente
-        res.status(500).send('Error interno del servidor');
+    const [venta] = await pool.query('SELECT id_land FROM sale WHERE id = ?', [ventaId]);
+
+    const id_terreno_asociado = venta[0].id_land;
+
+// Después de eliminar la venta
+const [result] = await pool.query('DELETE FROM sale WHERE id=?', [ventaId]);
+if (result && result.affectedRows > 0) {
+    // Actualizar el estado del terreno
+    const [updateResult] = await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['disponible', id_terreno_asociado]);
+    if (updateResult && updateResult.affectedRows > 0) {
+        // Renderizar la página con el mensaje de eliminación exitosa
+        const [rows] = await pool.query('SELECT * FROM sale');
+        res.render('venta', {
+            alert: true,
+            alertTitle: "Eliminado",
+            alertMessage: "¡Eliminado Exitoso!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows,
+            ruta: 'abonos'
+        });
+    } else {
+        // Manejar el caso en que no se pudo actualizar el estado del terreno
+        res.status(500).send('Error al actualizar el estado del terreno');
     }
+} else {
+    // Manejar el caso en que no se pudo eliminar la venta
+    res.status(500).send('Error al eliminar la venta');
 }
+
+}
+
+
+
   
 
 
