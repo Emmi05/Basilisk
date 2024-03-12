@@ -365,7 +365,7 @@ const crearVenta = async (req, res) => {
     const terrenoId = req.params.id;
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
     const [rows] = await pool.query('SELECT * FROM customers');
-    const [rows2] = await pool.query('SELECT * FROM land');
+    const [rows2] = await pool.query('SELECT * FROM land WHERE estado = ?', ['disponible']);
 
     try {
         const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas } = req.body;
@@ -394,22 +394,21 @@ const crearVenta = async (req, res) => {
         // Formatear fecha
         const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD');
 
-        // Insertar venta en la base de datos
         if (tipo_venta === 'contado') {
+            // Insertar venta en la base de datos
             await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta) VALUES (?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta]);
+
+            // Marcar el terreno como "pagado"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_land]);
         } else if (tipo_venta === 'credito') {
+            // Insertar venta a crédito en la base de datos
             await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas) VALUES (?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas]);
+
+            // Marcar el terreno como "proceso"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
         }
 
-        // Marcar el terreno como "en proceso"
-        await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['en proceso', id_land]);
-
-  
-        
         res.redirect('/ventas');
-
-        
-
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
