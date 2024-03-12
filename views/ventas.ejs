@@ -65,10 +65,13 @@
               <select class="form-select" id="id_land" name="id_land">
                   <option value="">Seleccione un terreno</option>
                   <% terrenos.forEach(terreno => { %>
-                      <option value="<%= terreno.id %>">Manzana <%= terreno.manzana %> Lote <%= terreno.lote %></option>
+                      <% if (terreno.estado === 'disponible') { %>
+                          <option value="<%= terreno.id %>">Manzana <%= terreno.manzana %> Lote <%= terreno.lote %></option>
+                      <% } %>
                   <% }); %>
               </select>
           </div>
+          
           
           <div class="col-md-6">
               <label for="interno" class="form-label">Id_terreno</label>
@@ -229,6 +232,8 @@ aria-hidden="true">
     }
   });
 </script>
+<!-- Después de mostrar el mensaje, redirigir después de un breve tiempo -->
+
 
 
 </div>
