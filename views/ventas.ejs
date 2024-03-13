@@ -50,9 +50,12 @@
                   <ul id="suggestions" class="list-group" ></ul>
               </div> -->
 
+          
+
+
               <div class="col-md-6">
                 <label for="cliente" class="form-label">Cliente</label>
-                <select class="form-select" id="id_customer" name="id_customer">
+                <select class="form-control" id="id_customer" name="id_customer">
                     <option value="" >Seleccione un cliente</option>
                     <% clientes.forEach(cliente => { %>
                         <option value="<%= cliente.id %>"><%= cliente.name %> <%= cliente.a_paterno %> <%= cliente.a_materno %></option>
@@ -61,6 +64,19 @@
             </div>
 
             <div class="col-md-6">
+              <label for="terreno" class="form-label">Terreno</label>
+              <select class="form-control" id="id_land" name="id_land">
+                  <option value="">Seleccione un terreno</option>
+                  <% terrenos.forEach(terreno => { %>
+                      <% if (terreno.estado === 'disponible') { %>
+                          <option value="<%= terreno.id %>">Manzana <%= terreno.manzana %> Lote <%= terreno.lote %></option>
+                      <% } %>
+                  <% }); %>
+              </select>
+          </div>
+          
+
+            <!-- <div class="col-md-6">
               <label for="terreno" class="form-label">Terreno</label>
               <select class="form-select" id="id_land" name="id_land">
                   <option value="">Seleccione un terreno</option>
@@ -71,7 +87,7 @@
                   <% }); %>
               </select>
           </div>
-          
+           -->
           
           <div class="col-md-6">
               <label for="interno" class="form-label">Id_terreno</label>
@@ -156,7 +172,7 @@ aria-hidden="true">
   </div>
 </div>
 </div>
-</div>s        
+</div>      
 
     		<!-- Bootstrap core JavaScript-->
   <script src="../resources/vendor/jquery/jquery.min.js"></script>
