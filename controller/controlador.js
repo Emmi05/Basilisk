@@ -408,7 +408,23 @@ const crearVenta = async (req, res) => {
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
         }
 
-        res.redirect('/ventas');
+        return res.render('ventas', {
+            alert: true,
+            alertTitle: "Exito",
+            alertMessage: "Debes rellenar todos los campos obligatorios!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: 'ventas',
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            clientes: rows,
+            terrenos: rows2,
+            terrenos2: terreno,
+        });
+  
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
