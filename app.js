@@ -168,7 +168,15 @@ app.post('/auth', async (req, res) => {
             return res.status(500).send('Error de servidor');
         }
     } else {
-        res.send('Please enter user and Password!');
+        res.render('login', {
+            alert: true,
+            alertTitle: "Advertecia",
+            alertMessage: "Por favor ingrese un usuario y/o contraseña",
+            alertIcon: 'warning',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: 'login'
+        });
         res.end();
     }
 });
