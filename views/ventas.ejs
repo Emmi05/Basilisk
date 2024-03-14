@@ -100,7 +100,7 @@
         </div>
           
         <!-- Tipo venta -->
-        <div class="form-group">
+        <div class="col-md-6">
           <label for="tipo_venta">Tipo venta:</label>
           <select class="form-control" id="tipo_venta" name="tipo_venta" >
               <option value="">Seleccionar</option>
@@ -115,7 +115,7 @@
                     <input type="date" class="form-control" id="fecha_venta" name="fecha_venta">
                   </div>
                   <div class="col-md-6">
-                    <label for="inicial" name="inicial" class="form-label">Inicial</label>
+                    <label for="inicial" name="inicial" class="form-label">Enganche</label>
                     <input type="int" class="form-control" id="inicial" name="inicial">
                   </div>
 
@@ -126,9 +126,10 @@
                 
                   <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
                   <div class="col-md-6">
-                    <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
-                    <input type="int" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" disabled>
-                  </div>
+                    <label for="vendedor" class="form-label">Vendedor</label>
+                    <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" disabled>
+                </div>
+                
                 
 
               <br> <br> <br> <br>

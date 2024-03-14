@@ -308,4 +308,27 @@ router.post('/updateventa/:id',authentication.editarVenta);
 //  ELIMINAR TERRENO
 router.get('/deleteventa/:id', authentication.eliminarVenta);
 
+
+
+router.get('/credits', async(req, res) => {
+    if (req.session.rol == 'usuario') {
+        res.render('usuarios', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT *FROM users');
+        res.render('usuarios', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows
+        });
+    }
+});
+
+
 export default router;

@@ -366,9 +366,11 @@ const crearVenta = async (req, res) => {
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
     const [rows] = await pool.query('SELECT * FROM customers');
     const [rows2] = await pool.query('SELECT * FROM land WHERE estado = ?', ['disponible']);
-
+    const vendedor = req.session.name
     try {
         const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas } = req.body;
+
+        console.log (req.body);
 
         // Verificar si algún campo está vacío
         if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
@@ -396,13 +398,13 @@ const crearVenta = async (req, res) => {
 
         if (tipo_venta === 'contado') {
             // Insertar venta en la base de datos
-            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta) VALUES (?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta]);
+            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, vendedor) VALUES (?, ?, ?,?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta,vendedor]);
 
             // Marcar el terreno como "pagado"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_land]);
         } else if (tipo_venta === 'credito') {
             // Insertar venta a crédito en la base de datos
-            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas) VALUES (?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas]);
+            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, vendedor) VALUES (?, ?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas,vendedor]);
 
             // Marcar el terreno como "proceso"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
