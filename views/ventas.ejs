@@ -135,9 +135,12 @@
                 
                 <!-- Cuotas -->
                 <div class="col-md-6">
-                  <label for="cuotas" class="form-label">Cuotas total</label>
-                  <input type="number" class="form-control" id="cuotas" name="cuotas" >
+                  <label for="cuotas" class="form-label">Cuotas por mes</label>
+                  <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` >
               </div>
+
+          
+         
 
                 
                 
@@ -261,7 +264,32 @@ aria-hidden="true">
   });
 </script>
 <!-- Después de mostrar el mensaje, redirigir después de un breve tiempo -->
+<script>
+  // Obtener los campos de "inicial", "n_cuentas" y "cuotas"
+  var inicialField = document.getElementById('inicial');
+  var nCuentasField = document.getElementById('n_cuentas');
+  var cuotasField = document.getElementById('cuotas');
 
+  // Agregar un evento "input" a los campos de "inicial" y "n_cuentas"
+  inicialField.addEventListener('input', calcularCuotas);
+  nCuentasField.addEventListener('input', calcularCuotas);
+
+  function calcularCuotas() {
+      // Obtener el valor de "inicial" y "n_cuentas"
+      var inicialValue = parseFloat(inicialField.value) || 0; // Si no hay valor, asignar cero
+      var nCuentasValue = parseFloat(nCuentasField.value) || 0; // Si no hay valor, asignar cero
+
+      // Obtener el valor de "precio" y calcular "cuotasTotal"
+      var precioTerreno = parseFloat(document.getElementById('precio').value);
+      var saldoPendiente = precioTerreno - inicialValue;
+      var cuotasTotal = saldoPendiente / nCuentasValue;
+
+      // Actualizar el campo "cuotas" con el valor calculado
+      cuotasField.value = isNaN(cuotasTotal) ? '' : cuotasTotal.toFixed(2); // Mostrar el valor solo si es un número válido
+      return cuotasTotal;
+      
+  }
+</script>
 
 
 </div>
