@@ -231,9 +231,11 @@ export const crearTerreno= async (req, res) => {
     try {
         const { id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
         
-        console.log(req.body.id_interno,req.body.calle, req.body.lote, req.body.manzana, req.body.superficie, req.body.precio, req.body.predial, req.body.escritura, req.body.estado);
-         // Verificar si algún campo está vacío
-         if (!id_interno || !calle || !lote || !manzana || !superficie || !precio || !predial || !escritura || !estado) {
+        // Convertir el precio a un número entero
+        const precioTerreno = parseInt(precio);
+
+        // Verificar si algún campo está vacío
+        if (!id_interno || !calle || !lote || !manzana || !superficie || !precio || !predial || !escritura || !estado) {
             return res.render('terrenoAlta', {
                 alert: true,
                 alertTitle: "Error",
@@ -249,7 +251,7 @@ export const crearTerreno= async (req, res) => {
             });
         }
 
-        await pool.query('INSERT INTO land SET ?', { id_interno, calle, lote, manzana,superficie,precio,predial,escritura,estado });
+        await pool.query('INSERT INTO land SET ?', { id_interno, calle, lote, manzana,superficie,precio: precioTerreno,predial,escritura,estado });
         
         res.render('terrenoAlta', {
             alert: true,
@@ -269,8 +271,9 @@ export const crearTerreno= async (req, res) => {
         // Manejar el error apropiadamente
         res.status(500).send('Error interno del servidor');
     }
-
 }
+
+
 
 
 export const editarTerrenos = async (req, res) => {
@@ -366,6 +369,7 @@ const crearVenta = async (req, res) => {
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
     const [rows] = await pool.query('SELECT * FROM customers');
     const [rows2] = await pool.query('SELECT * FROM land WHERE estado = ?', ['disponible']);
+    
     const vendedor = req.session.name
     try {
         const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas } = req.body;
@@ -395,6 +399,10 @@ const crearVenta = async (req, res) => {
 
         // Formatear fecha
         const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD');
+        
+        console.log(terreno)
+        // const precioTerreno = terreno.precio;
+        // console.log('Precio del terreno:', precioTerreno);
 
         if (tipo_venta === 'contado') {
             // Insertar venta en la base de datos
@@ -432,6 +440,11 @@ const crearVenta = async (req, res) => {
         res.status(500).send('Error interno del servidor');
     }
 }
+
+
+
+
+
 
 const editarVenta = async (req, res) => {
     let result;

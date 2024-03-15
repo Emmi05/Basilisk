@@ -96,7 +96,9 @@
           
           <div class="col-md-6">
             <label for="precio" class="form-label">Precio</label>
-            <input type="int" class="form-control" id="precio" name="precio" disabled>
+            <!-- <input type="int" class="form-control" id="precio" name="precio" disabled  min="1"> -->
+            <input type="number" class="form-control" id="precio" name="precio" disabled min="1">
+
         </div>
           
         <!-- Tipo venta -->
@@ -116,12 +118,12 @@
                   </div>
                   <div class="col-md-6">
                     <label for="inicial" name="inicial" class="form-label">Enganche</label>
-                    <input type="int" class="form-control" id="inicial" name="inicial">
+                    <input type="number" class="form-control" id="inicial" name="inicial"  min="1">
                   </div>
 
                   <div class="col-md-6">
                     <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                    <input type="int" class="form-control" id="n_cuentas" name="n_cuentas">
+                    <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" min="1">
                   </div>
                 
                   <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
@@ -129,6 +131,15 @@
                     <label for="vendedor" class="form-label">Vendedor</label>
                     <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" disabled>
                 </div>
+                    
+                
+                <!-- Cuotas -->
+                <div class="col-md-6">
+                  <label for="cuotas" class="form-label">Cuotas total</label>
+                  <input type="number" class="form-control" id="cuotas" name="cuotas" >
+              </div>
+
+                
                 
                 
 
