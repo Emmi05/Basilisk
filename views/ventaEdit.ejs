@@ -115,9 +115,9 @@
                           <!-- Cuotas -->
                           <div class="col-md-6">
                             <label for="cuotas" class="form-label">Cuotas por mes</label>
-                            <input type="number" class="form-control" id="cuotas" name="cuotas" value="<%= venta.cuotas %>">
+                            <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` >
                         </div>
-                        
+          
 
 
   
@@ -287,9 +287,11 @@ function calcularCuotas() {
     // Obtener los valores de "inicial" y "n_cuentas"
     var inicialValue = parseFloat(document.getElementById('inicial').value) || 0;
     var nCuentasValue = parseFloat(document.getElementById('n_cuentas').value) || 0;
-
+    var precioTerreno = parseFloat(document.getElementById('precio').value);
+   
     // Calcular las cuotas (aquí puedes aplicar tu lógica específica)
-    var cuotasTotal = inicialValue / nCuentasValue;
+    var saldoPendiente = precioTerreno - inicialValue;
+    var cuotasTotal = saldoPendiente / nCuentasValue;
 
     // Actualizar el valor del campo "cuotas"
     document.getElementById('cuotas').value = cuotasTotal.toFixed(2);
