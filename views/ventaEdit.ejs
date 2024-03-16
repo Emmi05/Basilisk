@@ -248,11 +248,13 @@ document.getElementById('fecha_venta').value = fechaFormateada;
     // Obtener los campos de "inicial" y "n_cuentas"
     var inicialField = document.getElementById('inicial');
     var nPlazosField = document.getElementById('n_cuentas');
+    var cuotas = document.getElementById('cuotas');
 
     // Si el valor inicial es "contado", deshabilitar los campos de "inicial" y "n_cuentas"
     if (tipoVenta === 'contado') {
       inicialField.disabled = true;
       nPlazosField.disabled = true;
+      coutas.disabled = true;
     }
   });
 
@@ -264,11 +266,14 @@ document.getElementById('fecha_venta').value = fechaFormateada;
     // Obtener los campos de "inicial" y "n_cuentas"
     var inicialField = document.getElementById('inicial');
     var nPlazosField = document.getElementById('n_cuentas');
+    var coutas = document.getElementById('cuotas');
+    
 
     // Si se selecciona "contado", limpiar los campos de "inicial" y "n_cuentas"
     if (tipoVenta === 'contado') {
       inicialField.value = '';
       nPlazosField.value = '';
+      cuotas.value = '';
       inicialField.disabled = true;
       nPlazosField.disabled = true;
     } else {
