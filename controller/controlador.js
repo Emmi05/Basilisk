@@ -49,9 +49,6 @@ export const editarUsuario = async (req, res) => {
         }
     }
  
-
-
-
     export const eliminarUsuario = async (req, res) => {
 
         if (req.session.rol == 'admin') {
@@ -273,9 +270,6 @@ export const crearTerreno= async (req, res) => {
     }
 }
 
-
-
-
 export const editarTerrenos = async (req, res) => {
     if (req.session.rol == 'usuario') {
         const { id } = req.params;
@@ -326,9 +320,6 @@ export const editarTerrenos = async (req, res) => {
         res.status(500).send('Error interno del servidor');
     }
 }
-
-
-
 
 // ELIMINAR TERRENO
 
@@ -407,18 +398,7 @@ const crearVenta = async (req, res) => {
         // const precioTerreno = rows2[0].precio;
         // console.log('Precio del terreno:', precioTerreno);
 
-        // const inicialpago=parseFloat(inicial)
-        // console.log( 'inicial ', inicialpago)
-
-        // const saldoPendiente = parseFloat(precioTerreno) - (inicialpago);
-        // console.log('Saldo pendiente:', saldoPendiente);
-
-        // console.log('Número de cuotas:', n_cuentas);
-
-        //  // Calcular el monto de cada cuota
-        //  const cuotaTotal = saldoPendiente / parseFloat(n_cuentas);
-        //  console.log('Cuota total:', cuotaTotal);
-
+     
          
 
         if (tipo_venta === 'contado') {
@@ -459,15 +439,13 @@ const crearVenta = async (req, res) => {
 }
 
 
-
-
-
-
 const editarVenta = async (req, res) => {
     let result;
     try {
         const { id } = req.params;
-        const { tipo_venta, inicial, n_cuentas } = req.body;
+        const { tipo_venta, inicial, n_cuentas, cuotas } = req.body;
+
+        // console.log(req.body);
 
         // Obtener el id_terreno_asociado
         const [venta] = await pool.query('SELECT id_land FROM sale WHERE id = ?', [id]);
@@ -478,19 +456,23 @@ const editarVenta = async (req, res) => {
         const estado_terreno = terreno[0].estado;
 
         if (tipo_venta === 'contado' && estado_terreno !== 'pagado') {
-            // Actualizar los datos normales y establecer los valores de "inicial" y "n_cuentas" como null
-            [result] = await pool.query(
-                'UPDATE sale SET tipo_venta = ?, inicial = NULL, n_cuentas = NULL WHERE id = ?',
+            // Actualizar los datos normales y establecer los valores de "inicial", "n_cuentas" y "cuotas" como null
+            result = await pool.query(
+                'UPDATE sale SET tipo_venta = ?, inicial = NULL, n_cuentas = NULL, cuotas = NULL WHERE id = ?',
                 [tipo_venta, id]
             );
+            console.log(result);
             // Marcar el terreno como "pagado"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_terreno_asociado]);
+
         } else if (tipo_venta !== 'contado' && estado_terreno !== 'proceso') {
             // Si no es "contado" y el terreno no está en proceso, actualiza los valores normales
-            [result] = await pool.query(
-                'UPDATE sale SET tipo_venta = ?, inicial = ?, n_cuentas = ? WHERE id = ?',
-                [tipo_venta, inicial, n_cuentas, id]
+            result = await pool.query(
+                'UPDATE sale SET tipo_venta = ?, inicial = ?, n_cuentas = ?, cuotas = ? WHERE id = ?',
+                [tipo_venta, inicial, n_cuentas, cuotas, id]
             );
+          
+
             // Marcar el terreno como "proceso"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_terreno_asociado]);
         }
@@ -511,6 +493,9 @@ const editarVenta = async (req, res) => {
                 ventas: rows,
                 ruta: 'abonos'
             });
+        }else{
+            console.log("ERROR WEY DATE DE BAJA");
+
         }
     } catch (error) {
         console.error("Error al actualizar la venta:", error);
@@ -565,12 +550,6 @@ if (result && result.affectedRows > 0) {
 }
 
 }
-
-
-
-  
-
-
 
 
 

@@ -96,20 +96,30 @@
                     </div>
                     <div class="col-md-6">
                       <label for="inicial" name="inicial" class="form-label">Inicial</label>
-                      <input type="int" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>">
+                      <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>">
                     </div>
   
                     <div class="col-md-6">
                       <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                      <input type="int" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>">
+                      <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>">
                     </div>
                   
                     <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
                     <div class="col-md-6">
                       <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
-                      <input type="int" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" disabled>
+                      <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" readonly>
                     </div>
                   
+              
+                  
+                          <!-- Cuotas -->
+                          <div class="col-md-6">
+                            <label for="cuotas" class="form-label">Cuotas por mes</label>
+                            <input type="number" class="form-control" id="cuotas" name="cuotas" value="<%= venta.cuotas %>">
+                        </div>
+                        
+
+
   
                 <br> <br> <br> <br>
                   <div class="col-12">
@@ -271,8 +281,28 @@ document.getElementById('fecha_venta').value = fechaFormateada;
 
 
 
+  <script>
+    // Función para calcular y actualizar las cuotas
+function calcularCuotas() {
+    // Obtener los valores de "inicial" y "n_cuentas"
+    var inicialValue = parseFloat(document.getElementById('inicial').value) || 0;
+    var nCuentasValue = parseFloat(document.getElementById('n_cuentas').value) || 0;
 
+    // Calcular las cuotas (aquí puedes aplicar tu lógica específica)
+    var cuotasTotal = inicialValue / nCuentasValue;
 
+    // Actualizar el valor del campo "cuotas"
+    document.getElementById('cuotas').value = cuotasTotal.toFixed(2);
+}
+
+// Agregar un evento "input" a los campos relevantes para llamar a la función calcularCuotas
+document.getElementById('inicial').addEventListener('input', calcularCuotas);
+document.getElementById('n_cuentas').addEventListener('input', calcularCuotas);
+
+// Llamar a la función calcularCuotas para que las cuotas se muestren automáticamente al cargar la página
+calcularCuotas();
+
+  </script>
   
   </div>
   </body>
