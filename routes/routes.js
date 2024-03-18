@@ -342,7 +342,7 @@ router.get('/abono_view', async(req, res) => {
             roluser: false,
             name: req.session.name,
             rol: req.session.rol,
-            abonos: rows
+            abonos: rows,
         });
     } else if (req.session.rol == 'admin') {
         const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.id, s.tipo_venta, s.inicial FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito";');
@@ -351,9 +351,37 @@ router.get('/abono_view', async(req, res) => {
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-            abonos: rows
+            abonos: rows,
         });
     }
 });
+
+router.get('/abonosAlta/:id', async (req, res) => {
+ 
+
+    const id = req.params.id;
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id]);
+        res.render('abonos_formulario', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+  
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.id, s.tipo_venta, s.inicial, s.cuotas FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito" && s.id=?;', [id]);
+        res.render('abonos_formulario', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+       
+        });
+    }
+});
+
 
 export default router;

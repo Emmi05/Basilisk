@@ -39,30 +39,30 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Cliente</th>
-                                            <th>A.Paterno</th>
-                                            <th>A.Materno</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
                                             <th>Venta</th>
                                             <th>Inicial</th>
-                                            <th>Deuda_Restante</th>
+                                            <th>D.R</th>
                                             <th>Cuotas</th>
-                                            <th>Cuotas_pagadas</th>
-                                            <th>Cuotas_restantes</th>
-                                            <th>Options</th>
+                                            <th>C.P</th>
+                                            <th>C.R</th>
+                                            <th>Abonar</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>ID</th>
                                             <th>Cliente</th>
-                                            <th>A.Paterno</th>
-                                            <th>A.Materno</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
                                             <th>Venta</th>
                                             <th>Inicial</th>
-                                            <th>Deuda_Restante</th>
+                                            <th>D.R</th>
                                             <th>Cuotas</th>
-                                            <th>Cuotas_pagadas</th>
-                                            <th>Cuotas_restantes</th>
-                                            <th>Options</th>
+                                            <th>C.P</th>
+                                            <th>C.R</th>
+                                            <th>Abonar</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -75,12 +75,12 @@
                                                     <td><%= abono.customer_materno %></td>
                                                     <td><%= abono.precio %></td>
                                                     <td><%= abono.inicial %></td>
-                                                    <td><%= abono.Deuda_Restante %></td>
+                                                    <td><%= abono.precio - abono.inicial %></td>
                                                     <td><%= abono.n_cuentas %></td>
                                                     <td><%= abono.cuotas_pagadas %></td>
                                                     <td><%= abono.cuotas_restantes %></td>
                                                     <td>
-                                                        <a href="/abonoedit/<%= abono.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                        <a href="/abonosAlta/<%= abono.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
                                                         <!-- <a onclick="eliminar(<%= abono.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a> -->
                                                         <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
                                                         <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
@@ -118,30 +118,30 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Cliente</th>
-                                                <th>A.Paterno</th>
-                                                <th>A.Materno</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
                                                 <th>Venta</th>
                                                 <th>Inicial</th>
-                                                <th>Deuda_Restante</th>
+                                                <th>D.R</th>
                                                 <th>Cuotas</th>
-                                                <th>Cuotas_pagadas</th>
-                                                <th>Cuotas_restantes</th>
-                                                <th>Options</th>
+                                                <th>C.P</th>
+                                                <th>C.R</th>
+                                                <th>Abonar</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Cliente</th>
-                                                <th>A.Paterno</th>
-                                                <th>A.Materno</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
                                                 <th>Venta</th>
                                                 <th>Inicial</th>
-                                                <th>Deuda_Restante</th>
+                                                <th>D.R</th>
                                                 <th>Cuotas</th>
-                                                <th>Cuotas_pagadas</th>
-                                                <th>Cuotas_restantes</th>
-                                                <th>Options</th>
+                                                <th>C.P</th>
+                                                <th>C.R</th>
+                                                <th>Abonar</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
@@ -154,12 +154,12 @@
                                                         <td><%= abono.customer_materno %></td>
                                                         <td><%= abono.precio %></td>
                                                         <td><%= abono.inicial %></td>
-                                                        <td><%= abono.Deuda_Restante %></td>
+                                                        <td><%= abono.precio - abono.inicial %></td>
                                                         <td><%= abono.n_cuentas %></td>
                                                         <td><%= abono.cuotas_pagadas %></td>
                                                         <td><%= abono.cuotas_restantes %></td>
                                                         <td>
-                                                            <a href="/abonoedit/<%= abono.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                            <a href="/abonosAlta/<%= abono.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
                                                             <!-- <a onclick="eliminar(<%= abono.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a> -->
                                                             <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
                                                             <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
@@ -266,6 +266,8 @@ aria-hidden="true">
      });
  }
    </script>
+
+ 
 
 </body>
 
