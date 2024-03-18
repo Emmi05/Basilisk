@@ -159,24 +159,30 @@
   <% } %>
   
   <script>
+    // Función para calcular y actualizar la cantidad de abono
     function calcularCantidadAbono() {
-        // Obtén el valor de n_abono y abono.cuotas
-        var nAbono = parseFloat(document.getElementById('n_abono').value);
-        var cuotas = parseFloat(document.getElementById('cuota').value);
+       <% abonos.forEach(abono => { %> 
+        // Obtener el valor de "n_abono" y "abono.cuotas"
+        var nAbonoValue = parseFloat(document.getElementById('n_abono').value) || 0;
+        var cuotasValue = parseFloat(<%= abono.cuotas %>) || 0; // Asegúrate de tener acceso a abono.cuotas
 
-        //num valido o ne
-        if (!isNaN(nAbono)) {
-           
-            var cantidadAbono = nAbono * cuotas;
+        // Calcular la cantidad de abono
+        var cantidadAbono = nAbonoValue * cuotasValue;
 
-           
-            document.getElementById('cantidadAbono').value = cantidadAbono;
-        } else {
-            document.getElementById('cantidadAbono').value = "Error: Ingresa un número válido";
-        }
-        return cantidadAbono;
+        // Actualizar el valor del campo "cantidadAbono"
+        document.getElementById('cantidadAbono').value = cantidadAbono.toFixed(2);
     }
+
+    // Agregar un evento "input" al campo "n_abono" para llamar a la función calcularCantidadAbono
+    document.getElementById('n_abono').addEventListener('input', calcularCantidadAbono);
+
+    // Llamar a la función calcularCantidadAbono para que la cantidad de abono se actualice automáticamente al cargar la página
+    calcularCantidadAbono();
+    <% }); %>
+
 </script>
+
+
   
   </div>
   </body>
