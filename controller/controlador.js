@@ -398,8 +398,6 @@ const crearVenta = async (req, res) => {
         // const precioTerreno = rows2[0].precio;
         // console.log('Precio del terreno:', precioTerreno);
 
-     
-         
 
         if (tipo_venta === 'contado') {
             // Insertar venta en la base de datos
@@ -507,10 +505,6 @@ const editarVenta = async (req, res) => {
 };
 
 
-
-
-
-
 //ELIMINAR VENTA
 const eliminarVenta = async (req, res) => {
     const ventaId = req.params.id;
@@ -553,6 +547,60 @@ if (result && result.affectedRows > 0) {
 }
 
 
+// Crear abonos
+const crearAbonos = async (req, res) => {
+    const id = req.params.id; // Obtener el ID de los parámetros de la solicitud
+
+    try {
+        const [rows] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id]);
+
+        const { deuda_restante, cuotas_faltantes, n_abono, fecha_abono, cantidad } = req.body;
+        console.log(req.body);
+        
+        // Verificar si algún campo está vacío
+        if (!n_abono || !fecha_abono) {
+            return res.render('abonos_formulario', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos obligatorios!",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/',
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+                abonos: rows,
+            });
+        }
+
+        // Insertar los datos en la base de datos
+        await pool.query('INSERT INTO credits SET ?', { deuda_restante, cuotas_faltantes, n_abono, fecha_abono, cantidad });
+        
+        // Redirigir a la página principal después de la inserción exitosa
+        res.render('abonos_formulario', {
+            alert: true,
+            alertTitle: "Registro",
+            alertMessage: "¡Registro Exitoso!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: '/', 
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error interno del servidor');
+    }
+}
+
+
 
 
 
@@ -568,6 +616,7 @@ export const methods = {
     eliminarTerreno,
     crearVenta,
     editarVenta,
-    eliminarVenta
+    eliminarVenta,
+    crearAbonos
   }
 

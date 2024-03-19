@@ -332,7 +332,7 @@ router.get('/credits', async(req, res) => {
 
 
 
-// MÓDULO DE ABONOS
+// MÓDULO DE ABONOS vista
 
 router.get('/abono_view', async(req, res) => {
     if (req.session.rol == 'usuario') {
@@ -355,6 +355,8 @@ router.get('/abono_view', async(req, res) => {
         });
     }
 });
+
+// ABONOS VISTA FORMULARIO
 
 router.get('/abonosAlta/:id', async (req, res) => {
  
@@ -382,6 +384,11 @@ router.get('/abonosAlta/:id', async (req, res) => {
         });
     }
 });
+
+// crear abono
+
+router.post('/crearAbonos/:id',authentication.crearAbonos);
+
 
 
 export default router;
