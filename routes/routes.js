@@ -335,8 +335,9 @@ router.get('/credits', async(req, res) => {
 // MÓDULO DE ABONOS vista
 
 router.get('/abono_view', async(req, res) => {
+    
     if (req.session.rol == 'usuario') {
-        const [rows] = await pool.query('SELECT c.name , c.a_paterno, c.a_materno, l.precio  FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        const [rows] = await pool.query('SELECT c.name , c.a_paterno, c.a_materno, l.precio, s.id   FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
         res.render('abonos_vista', {
             login: true,
             roluser: false,
@@ -359,9 +360,9 @@ router.get('/abono_view', async(req, res) => {
 // ABONOS VISTA FORMULARIO
 
 router.get('/abonosAlta/:id', async (req, res) => {
- 
 
     const id = req.params.id;
+
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id]);
         res.render('abonos_formulario', {
@@ -380,6 +381,7 @@ router.get('/abonosAlta/:id', async (req, res) => {
             name: req.session.name,
             rol: req.session.rol,
             abonos: rows,
+       
        
         });
     }
