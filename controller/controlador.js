@@ -554,16 +554,16 @@ const crearAbonos = async (req, res) => {
     try {
         // Obtener los detalles de la venta, incluyendo la cantidad inicial pagada
         const [venta] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio, s.id, s.cuotas, s.inicial FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id_venta]);
-        const [credit] =await pool.query('SELECT * FROM credits')
+   
 
         console.log(venta)
         // Obtener los datos del cuerpo de la solicitud
-        const { cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad } = req.body;
+        const { deuda_restante, cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad } = req.body;
 
         console.log("Cantidad:", cantidad);
 
         // Calcular la deuda restante
-        const deudaRestante = credit.deuda_restante - cantidad;
+        const deudaRestante = deuda_restante - cantidad;
         
         console.log(deudaRestante, "Restante")
         // Verificar si algún campo está vacío
