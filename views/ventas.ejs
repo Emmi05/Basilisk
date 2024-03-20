@@ -97,7 +97,7 @@
           <div class="col-md-6">
             <label for="precio" class="form-label">Precio</label>
             <!-- <input type="int" class="form-control" id="precio" name="precio" disabled  min="1"> -->
-            <input type="number" class="form-control" id="precio" name="precio" disabled min="1">
+            <input type="number" class="form-control" id="precio" name="precio" readonly min="1">
 
         </div>
           
@@ -125,7 +125,7 @@
                     <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
                     <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" min="1">
                   </div>
-                
+
                   <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
                   <div class="col-md-6">
                     <label for="vendedor" class="form-label">Vendedor</label>
@@ -262,6 +262,7 @@ aria-hidden="true">
   var inicialField = document.getElementById('inicial');
   var nCuentasField = document.getElementById('n_cuentas');
   var cuotasField = document.getElementById('cuotas');
+  var saldoPendienteField = document.getElementById('saldo_pendiente'); // Agrega el campo de saldo pendiente
 
   // Agregar un evento "input" a los campos de "inicial" y "n_cuentas"
   inicialField.addEventListener('input', calcularCuotas);
@@ -279,8 +280,10 @@ aria-hidden="true">
 
       // Actualizar el campo "cuotas" con el valor calculado
       cuotasField.value = isNaN(cuotasTotal) ? '' : cuotasTotal.toFixed(2); // Mostrar el valor solo si es un número válido
-      return cuotasTotal;
       
+      // Actualizar el campo "saldo_pendiente" con el valor calculado
+      saldoPendienteField.value = isNaN(saldoPendiente) ? '' : saldoPendiente.toFixed(2); // Mostrar el valor solo si es un número válido
+      return cuotasTotal;
   }
 </script>
 

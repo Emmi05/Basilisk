@@ -1,3 +1,4 @@
+import { query } from 'express';
 import { pool} from '../database/db.js'
 import moment from 'moment';
 
@@ -361,13 +362,14 @@ const crearVenta = async (req, res) => {
     const [rows] = await pool.query('SELECT * FROM customers');
     const [rows2] = await pool.query('SELECT * FROM land WHERE estado = ?', ['disponible']);
     
-    const vendedor = req.session.name
+    const vendedor = req.session.name;
+    
     
     try {
-        const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, cuotas} = req.body;
+        const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, cuotas, precio} = req.body;
 
          console.log (req.body);
-
+        const deuda_restante =  precio - inicial;
         // Verificar si algún campo está vacío
         if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
             // Renderizar la vista de ventas con un mensaje de error
@@ -401,16 +403,24 @@ const crearVenta = async (req, res) => {
 
         if (tipo_venta === 'contado') {
             // Insertar venta en la base de datos
-            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, vendedor) VALUES (?, ?, ?,?, ?,?)', [id_customer, id_land, fechaFormateada, tipo_venta,vendedor]);
+            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, vendedor) VALUES (?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, vendedor]);
 
             // Marcar el terreno como "pagado"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_land]);
         } else if (tipo_venta === 'credito') {
             // Insertar venta a crédito en la base de datos
-            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, vendedor, cuotas) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas, vendedor, cuotas]);
+           const ventasearch = await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante]);
 
             // Marcar el terreno como "proceso"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
+
+            if(ventasearch){
+               const [ventasrows] =  await pool.query('SELECT * FROM sale WHERE id_land = ? ', [id_land]);
+
+             await pool.query('INSERT INTO abonos (id_sale, cuotas_restantes ) VALUES (?, ?)', [ventasrows[0].id, n_cuentas]);
+
+
+            }
         }
 
         return res.render('ventas', {
@@ -552,20 +562,11 @@ const crearAbonos = async (req, res) => {
     const id_venta = req.params.id;
 
     try {
-        // Obtener los detalles de la venta, incluyendo la cantidad inicial pagada
-        const [venta] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio, s.id, s.cuotas, s.inicial FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id_venta]);
-   
-
-        console.log(venta)
         // Obtener los datos del cuerpo de la solicitud
-        const { deuda_restante, cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad } = req.body;
-
-        console.log("Cantidad:", cantidad);
-
-        // Calcular la deuda restante
-        const deudaRestante = deuda_restante - cantidad;
+       const { n_abono, fecha_abono, cantidad } = req.body;
         
-        console.log(deudaRestante, "Restante")
+        const [abonosrows] = await pool.query('SELECT  s.id, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN abonos a ON s.id = a.id_sale WHERE s.id = ?;', [id_venta]);
+        
         // Verificar si algún campo está vacío
         if (!n_abono || !fecha_abono) {
             return res.render('abonos_formulario', {
@@ -583,10 +584,22 @@ const crearAbonos = async (req, res) => {
                 abonos: venta,
             });
         }
+         else if(abonosrows[0].cuotas_pagadas <= abonosrows[0].n_cuentas){
+        const deuda_restante = abonosrows[0].deuda_restante - cantidad;
+        const cuota_pagada = abonosrows[0].cuotas_restantes - n_abono;
+        const cuota_restante = parseFloat(abonosrows[0].cuotas_pagadas) + parseFloat(n_abono);
+        const id_sale = abonosrows[0].id;
 
-        // Insertar los datos en la tabla credits
-        await pool.query('INSERT INTO credits SET ?', { id_sale: id_venta, deuda_restante: deudaRestante, cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad });
-
+            console.log(deuda_restante);
+            console.log(cuota_pagada);
+            console.log(cuota_restante);
+        // Actualizamos los datos en la tabla abonos y sale
+        const result = await pool.query(`
+        UPDATE sale AS s
+        INNER JOIN abonos AS a ON a.id_sale = s.id
+        SET s.deuda_restante = ?, a.cuotas_restantes = ?, a.cuotas_pagadas = ?,  a.fecha_abono = ?
+        WHERE a.id_sale = ?;
+    `, [deuda_restante, cuota_pagada, cuota_restante, fecha_abono, id_sale]);
         // Redirigir a la página principal después de la inserción exitosa
         res.render('abonos_formulario', {
             alert: true,
@@ -600,9 +613,9 @@ const crearAbonos = async (req, res) => {
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-            abonos: venta,
+            abonos: abonosrows,
         });
-
+}
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
