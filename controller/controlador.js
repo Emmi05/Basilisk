@@ -553,11 +553,11 @@ const crearAbonos = async (req, res) => {
 
     try {
         // Obtener los detalles de la venta
-        const [venta] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id_venta]);
+        const [venta] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio, s.id, s.cuotas FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id_venta]);
 
         // Obtener los datos del cuerpo de la solicitud
-        const { deuda_restante, cuotas_faltantes, n_abono, fecha_abono, cantidad } = req.body;
-        console.log(req.body);
+        const { deuda_restante, cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad } = req.body;
+        console.log(req.body.cantidasxcuota);
         
         // Verificar si algún campo está vacío
         if (!n_abono || !fecha_abono) {
@@ -578,7 +578,7 @@ const crearAbonos = async (req, res) => {
         }
 
         // Insertar los datos en la tabla credits, omitiendo el ID manualmente
-        await pool.query('INSERT INTO credits SET ?', { id_sale: id_venta, deuda_restante, cuotas_faltantes, n_abono, fecha_abono, cantidad });
+        await pool.query('INSERT INTO credits SET ?', { id_sale: id_venta, deuda_restante, cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad });
         
         // Redirigir a la página principal después de la inserción exitosa
         res.render('abonos_formulario', {
