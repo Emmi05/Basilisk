@@ -552,13 +552,20 @@ const crearAbonos = async (req, res) => {
     const id_venta = req.params.id;
 
     try {
-        // Obtener los detalles de la venta
-        const [venta] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio, s.id, s.cuotas FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id_venta]);
+        // Obtener los detalles de la venta, incluyendo la cantidad inicial pagada
+        const [venta] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio, s.id, s.cuotas, s.inicial FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id_venta]);
+        const [credit] =await pool.query('SELECT * FROM credits')
 
+        console.log(venta)
         // Obtener los datos del cuerpo de la solicitud
-        const { deuda_restante, cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad } = req.body;
-        console.log(req.body.cantidasxcuota);
+        const { cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad } = req.body;
+
+        console.log("Cantidad:", cantidad);
+
+        // Calcular la deuda restante
+        const deudaRestante = credit.deuda_restante - cantidad;
         
+        console.log(deudaRestante, "Restante")
         // Verificar si algún campo está vacío
         if (!n_abono || !fecha_abono) {
             return res.render('abonos_formulario', {
@@ -577,9 +584,9 @@ const crearAbonos = async (req, res) => {
             });
         }
 
-        // Insertar los datos en la tabla credits, omitiendo el ID manualmente
-        await pool.query('INSERT INTO credits SET ?', { id_sale: id_venta, deuda_restante, cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad });
-        
+        // Insertar los datos en la tabla credits
+        await pool.query('INSERT INTO credits SET ?', { id_sale: id_venta, deuda_restante: deudaRestante, cuotas_faltantes, n_abono, cantidasxcuota, fecha_abono, cantidad });
+
         // Redirigir a la página principal después de la inserción exitosa
         res.render('abonos_formulario', {
             alert: true,

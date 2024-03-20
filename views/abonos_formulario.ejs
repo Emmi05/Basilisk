@@ -36,12 +36,11 @@
                 </div>
 
     
-                <div class="col-md-6" >
-                    <label for="cliente" class="form-label">Deuda restante</label>
-                            <input type="number" class="form-control" id="precio-inicial" name="deuda_restante" value="<%= abono.precio - abono.inicial %>" readonly>
-                    </select>
-                </div>
-
+                <div class="col-md-6">
+                  <label for="cliente" class="form-label">Deuda restante</label>
+                  <input type="number" class="form-control" id="precio-inicial" name="deuda_restante" value="<%= parseFloat(abono.precio) - parseFloat(abono.inicial) %>" readonly>
+              </div>
+              
         
         
             <div class="col-md-6">
