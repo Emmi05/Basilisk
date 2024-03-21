@@ -563,66 +563,70 @@ const crearAbonos = async (req, res) => {
 
     try {
         // Obtener los datos del cuerpo de la solicitud
-       const { n_abono, fecha_abono, cantidad } = req.body;
-        
-        const [abonosrows] = await pool.query('SELECT  s.id, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN abonos a ON s.id = a.id_sale WHERE s.id = ?;', [id_venta]);
-        
-        // Verificar si algún campo está vacío
-        if (!n_abono || !fecha_abono) {
-            return res.render('abonos_formulario', {
-                alert: true,
-                alertTitle: "Error",
-                alertMessage: "Debes rellenar todos los campos obligatorios!",
-                alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 1500,
-                ruta: '/',
-                login: true,
-                roluser: false,
-                name: req.session.name,
-                rol: req.session.rol,
-                abonos: venta,
-            });
-        }
-         else if(abonosrows[0].cuotas_pagadas <= abonosrows[0].n_cuentas){
-        const deuda_restante = abonosrows[0].deuda_restante - cantidad;
-        const cuota_pagada = abonosrows[0].cuotas_restantes - n_abono;
-        const cuota_restante = parseFloat(abonosrows[0].cuotas_pagadas) + parseFloat(n_abono);
-        const id_sale = abonosrows[0].id;
+        const { n_abono, fecha_abono, cantidad } = req.body;
 
-            console.log(deuda_restante);
-            console.log(cuota_pagada);
-            console.log(cuota_restante);
-        // Actualizamos los datos en la tabla abonos y sale
-        const result = await pool.query(`
-        UPDATE sale AS s
-        INNER JOIN abonos AS a ON a.id_sale = s.id
-        SET s.deuda_restante = ?, a.cuotas_restantes = ?, a.cuotas_pagadas = ?,  a.fecha_abono = ?
-        WHERE a.id_sale = ?;
-    `, [deuda_restante, cuota_pagada, cuota_restante, fecha_abono, id_sale]);
-        // Redirigir a la página principal después de la inserción exitosa
-        res.render('abonos_formulario', {
-            alert: true,
-            alertTitle: "Registro",
-            alertMessage: "¡Registro Exitoso!",
-            alertIcon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
-            ruta: '/', 
-            login: true,
-            roluser: true,
-            name: req.session.name,
-            rol: req.session.rol,
-            abonos: abonosrows,
-        });
-}
+        try {
+            const [abonosrows] = await pool.query('SELECT s.id, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN abonos a ON s.id = a.id_sale WHERE s.id = ?;', [id_venta]);
+        
+            // Verificar si algún campo está vacío
+            if (!n_abono || !fecha_abono) {
+                // Renderizar la vista con un mensaje de error si faltan campos
+                return res.render('abonos_formulario', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Debes rellenar todos los campos obligatorios!",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: '/',
+                    login: true,
+                    roluser: false,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    abonos: abonosrows,
+                });
+            } else if (abonosrows[0].cuotas_pagadas <= abonosrows[0].n_cuentas) {
+                const deuda_restante = abonosrows[0].deuda_restante - cantidad;
+                const cuota_pagada = abonosrows[0].cuotas_restantes - n_abono;
+                const cuota_restante = parseFloat(abonosrows[0].cuotas_pagadas) + parseFloat(n_abono);
+                const id_sale = abonosrows[0].id;
+        
+                // Calcular la cantidad abonada
+                const cantidad_abonada = parseFloat(n_abono) * parseFloat(cantidad);
+        
+                // Actualizar los datos en la tabla abonos y sale
+                const result = await pool.query(`
+                    UPDATE sale AS s
+                    INNER JOIN abonos AS a ON a.id_sale = s.id
+                    SET s.deuda_restante = ?, a.cuotas_restantes = ?, a.cuotas_pagadas = ?, a.fecha_abono = ?, a.cantidad_abonada = ?
+                    WHERE a.id_sale = ?;
+                `, [deuda_restante, cuota_pagada, cuota_restante, fecha_abono, cantidad_abonada, id_sale]);
+        
+                // Redirigir a la página principal después de la actualización exitosa
+                res.render('abonos_formulario', {
+                    alert: true,
+                    alertTitle: "Registro",
+                    alertMessage: "¡Registro Exitoso!",
+                    alertIcon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    abonos: abonosrows,
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error interno del servidor');
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
     }
 }
-
-
 
 
 

@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
 import {methods as authentication} from '../controller/controlador.js'
+import { buildPDF } from "../libs/pdfkit.js";
+
 const router = Router();
 
 
@@ -394,6 +396,21 @@ router.get('/abonosAlta/:id', async (req, res) => {
 
 router.post('/crearAbonos/:id',authentication.crearAbonos);
 
+
+
+// Reportes
+router.get("/reporte", (req, res) => {
+    const stream = res.writeHead(200, {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment; filename=reporte.pdf",
+    });
+  
+    buildPDF(
+      (data) => stream.write(data),
+      () => stream.end()
+    );
+  });
+  
 
 
 export default router;
