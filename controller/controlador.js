@@ -613,7 +613,8 @@ export const crearTerreno= async (req, res) => {
         
         console.log(req.body);
         // Convertir el precio a un número entero
-        const precioTerreno = parseInt(precio);
+        // const precioTerreno = parseFloat(precio);
+        const precioTerreno = parseFloat(precio.replace(',', ''));
 
         // Verificar si algún campo está vacío
         if (!id_interno || !calle || !lote || !manzana || !superficie || !precio || !predial || !escritura || !estado) {
@@ -649,7 +650,9 @@ export const crearTerreno= async (req, res) => {
             });
         }
 
-        const idInternoRegex = /^\d+(\.\d+)?(\/\d+)?$/;
+        // const idInternoRegex = /^\d+(\.\d+)?(\/\d+)?$/;
+        const idInternoRegex = /^\d+\.\d+\/\d+$/;
+
 
         const validID = idInternoRegex.test(id_interno);
 
@@ -671,7 +674,152 @@ export const crearTerreno= async (req, res) => {
             });
         }
 
+        const validAdress=addressRegex.test(calle);
+        if (!validAdress) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato de dirección inválido. No debe tener caracteres especiales.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+        const loteRegex = /^\d{1,2}$/;
+        const validLote=loteRegex.test(lote);
+        if (!validLote) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato de lote inválido. No debe tener caracteres especiales ni cifras mayor a 2 digitos.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
 
+        const existmanzana = await pool.query('SELECT * FROM land WHERE manzana = ?', manzana);
+        console.log(existmanzana)
+        if (existmanzana[0].length > 0) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "La manzana ya existe. Por favor, verifique manzana",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+
+        const manzanaregex = /^[a-zA-Z0-9\s-]+$/;
+        const validManzana=manzanaregex.test(manzana);
+        if (!validManzana) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato de manzana inválido. No debe tener caracteres especiales.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+        const dimensionesregex = /^\d+$/;
+
+        const validDimensiones=dimensionesregex.test(superficie)
+        if (!validDimensiones) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato de superficie / dimensiones inválido. Solo números.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+        const precioRegex = /\b\d{1,3}(,\d{3})*(\.\d+)?\b/;
+        const validPrecio=precioRegex.test(precio);
+           if (!validPrecio) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato de precio inválido. Debe llevar comas y puntos ejemplo 1,000.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+        const existpredial = await pool.query('SELECT * FROM land WHERE predial = ?', predial);
+        console.log(existpredial)
+        if (existpredial[0].length > 0) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El número de predial ya existe. Por favor, verifique números",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+        const predialregex = /^\d{3}-\d{3}-\d{3}-\d{3}$/;
+        const validPredial=predialregex.test(predial);
+               if (!validPredial) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato de predial inválido. Debe llevar separador (-)",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+
+        
 
 
         await pool.query('INSERT INTO land SET ?', { id_interno, calle, lote, manzana,superficie,precio: precioTerreno,predial,escritura,estado });
