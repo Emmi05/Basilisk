@@ -611,6 +611,7 @@ export const crearTerreno= async (req, res) => {
     try {
         const { id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
         
+        console.log(req.body);
         // Convertir el precio a un número entero
         const precioTerreno = parseInt(precio);
 
@@ -630,6 +631,48 @@ export const crearTerreno= async (req, res) => {
                 rol: req.session.rol,
             });
         }
+        const existinid_interno = await pool.query('SELECT * FROM land WHERE id_interno = ?', id_interno);
+        console.log(existinid_interno)
+        if (existinid_interno[0].length > 0) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El id_interno ya existe. Por favor, verifique el id",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+        const idInternoRegex = /^\d+(\.\d+)?(\/\d+)?$/;
+
+        const validID = idInternoRegex.test(id_interno);
+
+        
+        if (!validID) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato del id_interno es inválido.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 5000,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+        
+            });
+        }
+
+
+
 
         await pool.query('INSERT INTO land SET ?', { id_interno, calle, lote, manzana,superficie,precio: precioTerreno,predial,escritura,estado });
         
