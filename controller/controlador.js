@@ -22,34 +22,94 @@ export const usuarios=  async(req, res) => {
     }
 }
 export const editarUsuario = async (req, res) => {
-        if (req.session.rol == 'admin') {
-            const { id } = req.params;
-            const { user, name, rol } = req.body;
-            const [result] = await pool.query('UPDATE users SET name = IFNULL (?, name), user = IFNULL (?, user), rol = IFNULL (?, rol) WHERE id = ?', [name, user, rol, id]);
-        //otro if de si es mayor a 0?
-        if (result && result.affectedRows > 0) {
-            const [rows]=await pool.query('SELECT * FROM users');
-        res.render('usuarios', {
-            alert: true,
-            alertTitle: "Actualización",
-            alertMessage: "¡Actualización Exitoso",
-            alertIcon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
-            login: true,
-            roluser: true,
-            name: req.session.name,
-            rol: req.session.rol,
-            usuarios:rows,
-            ruta:'usuarios'
+    const id = req.params.id;
+    //para retornar la vista de formulario 
+    const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
+
+    if (req.session.rol == 'admin') {
+      const { id } = req.params;
+      const { user, name, rol } = req.body;
+              // Verificar si algún campo está vacío
+              if (!user || !name || !rol) {
+                return res.render('editar', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Debes rellenar todos los campos!",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    usuarios:rows,
+                });
+            }
+  
+      // Verificar si el usuario ya existe en la base de datos
+      const existingUser = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
+      if (existingUser[0].length > 0) {
+        // Si el usuario ya existe, mostrar un mensaje de errorss
+        return res.render('editar', {
+          alert: true,
+          alertTitle: "Error",
+          alertMessage: "El usuario ya existe. Por favor, elija otro nombre de usuario.",
+          alertIcon: 'error',
+          showConfirmButton: false,
+          timer: 1500,
+          ruta: '/', 
+          login: true,
+          roluser: true,
+          name: req.session.name,
+          rol: req.session.rol,
+          usuarios:rows,
         });
-    } }else{
-        
-            // Manejar el error apropiadamente
-            res.status(500).send('Error interno del servidor');
-        }
+      }
+  
+      // Si el usuario no existe en la base de datos, continuar con la actualización
+      const [result] = await pool.query('UPDATE users SET name = IFNULL (?, name), user = IFNULL (?, user), rol = IFNULL (?, rol) WHERE id = ?', [name, user, rol, id]);
+  
+      // Verificar si la actualización fue exitosa
+      if (result && result.affectedRows > 0) {
+        const [rows] = await pool.query('SELECT * FROM users');
+        res.render('usuarios', {
+          alert: true,
+          alertTitle: "Actualización",
+          alertMessage: "¡Actualización Exitosa!",
+          alertIcon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+          login: true,
+          roluser: true,
+          name: req.session.name,
+          rol: req.session.rol,
+          usuarios: rows,
+          ruta: 'usuarios'
+        });
+      } else {
+        // Si no se actualizó ninguna fila, mostrar un mensaje de error
+        res.render('register', {
+          alert: true,
+          alertTitle: "Error",
+          alertMessage: "No se pudo actualizar el usuario.",
+          alertIcon: 'error',
+          showConfirmButton: false,
+          timer: 1500,
+          ruta: '/', 
+          login: true,
+          roluser: true,
+          name: req.session.name,
+          rol: req.session.rol,
+          usuarios:rows,
+        });
+      }
+    } else {
+      // Manejar el error apropiadamente
+      res.status(500).send('Error interno del servidor');
     }
- 
+  }
+
     export const eliminarUsuario = async (req, res) => {
 
         if (req.session.rol == 'admin') {
