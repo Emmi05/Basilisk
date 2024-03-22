@@ -43,10 +43,7 @@
 
               <div class="col-md-6">
                 <label for="cel" class="form-label">Telefono</label>
-                <input type="text" class="form-control" id="cel" name="cel" placeholder="Telefono" pattern="[0-9]{10}" required maxlength="10" value="<%= cliente.cel %>">
-                <div id="telefono-feedback" class="invalid-feedback">
-                    El número de teléfono debe tener exactamente 10 dígitos.
-                </div>
+                <input type="text" class="form-control" id="cel" name="cel" placeholder="Telefono"  value="<%= cliente.cel %>" maxlength="10">
             </div>
             <br>
             <br>
@@ -74,7 +71,7 @@
 
             <div class="col-md-6" id="campos4" style="display: none;">
               <label for="cel" name="cel" class="form-label">Celular</label>
-              <input type="text" class="form-control" id="cel2" name="cel_conyuge" value="<%= cliente.cel_conyuge %>">
+              <input type="text" class="form-control" id="cel2" name="cel_conyuge" value="<%= cliente.cel_conyuge %>" maxlength="10">
             </div>
             
 

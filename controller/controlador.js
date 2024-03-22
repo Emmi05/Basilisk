@@ -2,6 +2,15 @@ import { query } from 'express';
 import { pool} from '../database/db.js'
 import moment from 'moment';
 
+
+// Expresiones regulares globales
+const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+const apellidoRegex = /^[A-Za-zÁ-Úá-ú]+$/;
+const celRegex = /^\d{10}$/;
+const addressRegex = /^[A-Za-z0-9\s.,#-]+$/;
+
+
+
 export const usuarios=  async(req, res) => {
     if (req.session.rol == 'usuario') {
         res.render('usuarios', {
@@ -165,17 +174,35 @@ export const editarUsuario = async (req, res) => {
                     });
                 }
     
-                // Validar el formato del nombre, apellido paterno y apellido materno
-                const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+               
+                // Validar el formato del nombre permitiendo espacios en blanco
                 const validName = nombreRegex.test(name);
-                const validApellido = nombreRegex.test(a_paterno);
-                const validMaterno = nombreRegex.test(a_materno);
-                    
-                if (!validName || !validApellido || !validMaterno) {
+
+                if (!validName) {
                     return res.render('registro', {
                         alert: true,
                         alertTitle: "Error",
-                        alertMessage: "El formato del nombre, apellido paterno o apellido materno es inválido. Por favor, solo letras.",
+                        alertMessage: "El formato del nombre es inválido. Por favor, solo letras.",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: '/', 
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                    });
+                }
+                
+                const validApellido = apellidoRegex.test(a_paterno);
+                const validMaterno = apellidoRegex.test(a_materno);
+    
+
+                if (!validApellido || !validMaterno) {
+                    return res.render('registro', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "El formato del apellidos es inválido. Por favor, solo letras.",
                         alertIcon: 'error',
                         showConfirmButton: false,
                         timer: 3500,
@@ -187,8 +214,8 @@ export const editarUsuario = async (req, res) => {
                     });
                 }
     
-                            // Validar el formato del número de celular
-                            const celRegex = /^\d{10}$/;
+                 // Validar el formato del número de celular
+        
                     const validCel = celRegex.test(cel);
             
             if (!validCel) {
@@ -207,6 +234,77 @@ export const editarUsuario = async (req, res) => {
                 });
             }
 
+            //validar formato de dirección 
+            const validAdress=addressRegex.test(adress);
+            if (!validAdress) {
+                return res.render('registro', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El formato de dirección inválido. No debe tener caracteres especiales.",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                });
+            }
+              // Validar el formato del nombre, apellido paterno, apellido materno y número de celular del cónyuge
+              const validNameConyuge = nombreRegex.test(name_conyuge);
+              const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
+              const validMaternoConyuge = apellidoRegex.test(a_materno_conyuge);
+              const validCelConyuge = celRegex.test(cel_conyuge);
+
+              if (!validNameConyuge) {
+                return res.render('registro', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El formato del nombre  conyuge es inválido. Por favor, solo letras.",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                });
+            }
+  
+              if (!validApellidoConyuge || !validMaternoConyuge) {
+                  return res.render('registro', {
+                      alert: true,
+                      alertTitle: "Error",
+                      alertMessage: "El formato apellido paterno, apellido materno del cónyuge es inválido.",
+                      alertIcon: 'error',
+                      showConfirmButton: false,
+                      timer: 5000,
+                      ruta: '/', 
+                      login: true,
+                      roluser: true,
+                      name: req.session.name,
+                      rol: req.session.rol,
+                  });
+              }
+
+              if (!validCelConyuge) {
+                return res.render('registro', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El formato del telefono del cónyuge es inválido.",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                });
+            }
+  
 
                 // Continuar con la inserción en la base de datos si todos los campos son válidos
     
@@ -214,7 +312,7 @@ export const editarUsuario = async (req, res) => {
     
                 if (ejemplo) {
                     const [rows] = await pool.query('SELECT * FROM customers WHERE name = ? AND a_paterno = ? AND a_materno = ?', [name, a_paterno, a_materno]);
-    
+    // Si hubo un registro se detiene y toma el id del cliente y se inserta mas información en parentesco 
                     if (rows.length > 0) {
                         const customer_id = rows[0].id;
                         await pool.query('INSERT INTO parentesco SET ?', { customer_id, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge });
@@ -255,10 +353,171 @@ export const editarUsuario = async (req, res) => {
 
     export const editarClientes = async (req, res) => {
         try {
+
+            const id = req.params.id;
+            const [rows] =await pool.query('SELECT c.*, p.name_conyuge, p.a_paterno_conyuge, p.a_materno_conyuge, p.cel_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id WHERE c.id = ?', [id]);
+
+
             if (req.session.rol == 'usuario' || req.session.rol == 'admin') {
                 const { id } = req.params;
                 const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
-                
+                    // Verificar si algún campo está vacío
+                    if (!name || !a_paterno || !a_materno || !cel || !adress) {
+                        return res.render('clienteEdit', {
+                            alert: true,
+                            alertTitle: "Error",
+                            alertMessage: "Debes rellenar todos los campos!",
+                            alertIcon: 'error',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            ruta: '/', 
+                            login: true,
+                            roluser: true,
+                            name: req.session.name,
+                            rol: req.session.rol,
+                            clientes: rows,
+                        });
+                    }
+    
+                        // Validar el formato del nombre permitiendo espacios en blanco
+                const validName = nombreRegex.test(name);
+
+                if (!validName) {
+                    return res.render('clienteEdit', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "El formato del nombre es inválido. Por favor, solo letras.",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: '/', 
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                        clientes: rows,
+                    });
+                }
+
+                const validApellido = apellidoRegex.test(a_paterno);
+                const validMaterno = apellidoRegex.test(a_materno);
+    
+
+                if (!validApellido || !validMaterno) {
+                    return res.render('clienteEdit', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "El formato del apellidos es inválido. Por favor, solo letras.",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: '/', 
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                        clientes: rows,
+                    });
+                }
+                 // Validar el formato del número de celular
+        
+                 const validCel = celRegex.test(cel);
+            
+                 if (!validCel) {
+                     return res.render('clienteEdit', {
+                         alert: true,
+                         alertTitle: "Error",
+                         alertMessage: "El formato del número de celular es inválido. Debe tener 10 dígitos.",
+                         alertIcon: 'error',
+                         showConfirmButton: false,
+                         timer: 3500,
+                         ruta: '/', 
+                         login: true,
+                         roluser: true,
+                         name: req.session.name,
+                         rol: req.session.rol,
+                         clientes: rows,
+                     });
+                 }
+    
+                       //validar formato de dirección 
+            const validAdress=addressRegex.test(adress);
+            if (!validAdress) {
+                return res.render('clienteEdit', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El formato de dirección inválido. No debe tener caracteres especiales.",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    clientes: rows,
+                });
+            }
+
+             // Validar el formato del nombre, apellido paterno, apellido materno y número de celular del cónyuge
+             const validNameConyuge = nombreRegex.test(name_conyuge);
+             const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
+             const validMaternoConyuge = apellidoRegex.test(a_materno_conyuge);
+             const validCelConyuge = celRegex.test(cel_conyuge);
+
+             if (!validNameConyuge) {
+               return res.render('clienteEdit', {
+                   alert: true,
+                   alertTitle: "Error",
+                   alertMessage: "El formato del nombre  conyuge es inválido. Por favor, solo letras.",
+                   alertIcon: 'error',
+                   showConfirmButton: false,
+                   timer: 3500,
+                   ruta: '/', 
+                   login: true,
+                   roluser: true,
+                   name: req.session.name,
+                   rol: req.session.rol,
+                   clientes: rows,
+               });
+           }
+ 
+             if (!validApellidoConyuge || !validMaternoConyuge) {
+                 return res.render('clienteEdit', {
+                     alert: true,
+                     alertTitle: "Error",
+                     alertMessage: "El formato apellido paterno, apellido materno del cónyuge es inválido.",
+                     alertIcon: 'error',
+                     showConfirmButton: false,
+                     timer: 5000,
+                     ruta: '/', 
+                     login: true,
+                     roluser: true,
+                     name: req.session.name,
+                     rol: req.session.rol,
+                     clientes: rows,
+                 });
+             }
+
+             if (!validCelConyuge) {
+               return res.render('clienteEdit', {
+                   alert: true,
+                   alertTitle: "Error",
+                   alertMessage: "El formato del telefono del cónyuge es inválido.",
+                   alertIcon: 'error',
+                   showConfirmButton: false,
+                   timer: 5000,
+                   ruta: '/', 
+                   login: true,
+                   roluser: true,
+                   name: req.session.name,
+                   rol: req.session.rol,
+                   clientes: rows,
+               });
+           }
+ 
+
+                    
                 // Actualizar los datos del cliente en la tabla customers
                 const [result] = await pool.query('UPDATE customers SET name = IFNULL (?, name), a_paterno = IFNULL (?, a_paterno), a_materno = IFNULL (?, a_materno), cel = IFNULL (?, cel), adress= IFNULL (?, adress) WHERE id = ?', [name, a_paterno, a_materno, cel, adress, id]);
     
