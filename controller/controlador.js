@@ -148,6 +148,68 @@ export const editarUsuario = async (req, res) => {
                 const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
                 console.log(req.body);
     
+                // Verificar si algún campo está vacío
+                if (!name || !a_paterno || !a_materno || !cel || !adress) {
+                    return res.render('registro', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "Debes rellenar todos los campos!",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: '/', 
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                    });
+                }
+    
+                // Validar el formato del nombre, apellido paterno y apellido materno
+                const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+                const validName = nombreRegex.test(name);
+                const validApellido = nombreRegex.test(a_paterno);
+                const validMaterno = nombreRegex.test(a_materno);
+                    
+                if (!validName || !validApellido || !validMaterno) {
+                    return res.render('registro', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "El formato del nombre, apellido paterno o apellido materno es inválido. Por favor, solo letras.",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: '/', 
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                    });
+                }
+    
+                            // Validar el formato del número de celular
+                            const celRegex = /^\d{10}$/;
+                    const validCel = celRegex.test(cel);
+            
+            if (!validCel) {
+                return res.render('registro', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El formato del número de celular es inválido. Debe tener 10 dígitos.",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                });
+            }
+
+
+                // Continuar con la inserción en la base de datos si todos los campos son válidos
+    
                 const ejemplo = await pool.query('INSERT INTO customers SET ?', { name, a_paterno, a_materno, cel, adress });
     
                 if (ejemplo) {
@@ -170,7 +232,6 @@ export const editarUsuario = async (req, res) => {
             res.status(500).send('Error interno del servidor');
         }
     };
-    
     function renderizarRegistro(req, res) {
         const roluser = (req.session.rol == 'admin');
         res.render('registro', {
@@ -188,6 +249,8 @@ export const editarUsuario = async (req, res) => {
         });
     }
 
+
+    
     
 
     export const editarClientes = async (req, res) => {
