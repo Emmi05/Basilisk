@@ -59,11 +59,17 @@
                   <label for="inputCity" class="form-label">City</label>
                   <input type="text" class="form-control" id="inputCity">
                 </div> -->
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <label for="precio" name="precio" class="form-label">precio</label>
                     <input type="int" class="form-control" id="precio" name="precio" value="<%= terreno.precio %>">
-                  </div>
+                  </div> -->
   
+                  <div class="col-md-6">
+                    <label for="precio" name="precio" class="form-label">Precio</label>
+                    <input type="text" class="form-control" id="precio" name="precio" value="<%= terreno.precio.toLocaleString() %>">
+                </div>
+                
+
                   <div class="col-md-6">
                     <label for="predial" class="form-label">Predial</label>
                     <input type="text" class="form-control" id="predial" name="predial" value="<%= terreno.predial %>">

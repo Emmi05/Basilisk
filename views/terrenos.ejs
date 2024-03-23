@@ -74,7 +74,9 @@
                                                     <td><%= terreno.lote %></td>
                                                     <td><%= terreno.manzana %></td>
                                                     <td><%= terreno.superficie %></td>
-                                                    <td><%= terreno.precio %></td>
+                                                    <!-- <td><%= terreno.precio %></td> -->
+                                                    <td><%= parseFloat(terreno.precio).toLocaleString() %></td>
+
                                                     <td><%= terreno.predial %></td>
                                                     <td><%= terreno.escritura %></td>
                                                     <td><%= terreno.estado %></td>
