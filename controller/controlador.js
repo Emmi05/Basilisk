@@ -897,27 +897,86 @@ export const editarTerrenos = async (req, res) => {
             });
         }
 
-        // Agregar lógica para verificar si el id_interno ha sido modificado
-        const idInternoModificado = req.body.id_interno !== rows[0].id_interno;
-        if (idInternoModificado) {
-            const existinid_interno = await pool.query('SELECT * FROM land WHERE id_interno = ?', id_interno);
-            if (existinid_interno[0].length > 0) {
-                return res.render('terrenosEdit', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "El id_interno ya existe. Por favor, verifique el id",
-                    alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
-                    ruta: '/', 
-                    login: true,
-                    roluser: true,
-                    name: req.session.name,
-                    rol: req.session.rol,
-                    terrenos: rows,
-                });
-            }
+       
+     // Agregar lógica para verificar si el id_interno ha sido modificado
+     const idInternoModificado = req.body.id_interno !== rows[0].id_interno;
+     if (idInternoModificado) {
+         // Validar formato de id_interno
+         const validIdInterno = idInternoRegex.test(id_interno);
+         if (!validIdInterno) {
+             return res.render('terrenosEdit', {
+                 alert: true,
+                 alertTitle: "Error",
+                 alertMessage: "El formato de id_interno es inválido.",
+                 alertIcon: 'error',
+                 showConfirmButton: false,
+                 timer: 3500,
+                 ruta: '/', 
+                 login: true,
+                 roluser: true,
+                 name: req.session.name,
+                 rol: req.session.rol,
+                 terrenos: rows,
+             });
+         }
+
+         const existinid_interno = await pool.query('SELECT * FROM land WHERE id_interno = ?', id_interno);
+         if (existinid_interno[0].length > 0) {
+             return res.render('terrenosEdit', {
+                 alert: true,
+                 alertTitle: "Error",
+                 alertMessage: "El id_interno ya existe. Por favor, verifique el id",
+                 alertIcon: 'error',
+                 showConfirmButton: false,
+                 timer: 3500,
+                 ruta: '/', 
+                 login: true,
+                 roluser: true,
+                 name: req.session.name,
+                 rol: req.session.rol,
+                 terrenos: rows,
+             });
+         }
+     }
+
+        const validAdress=addressRegex.test(calle);
+        if (!validAdress) {
+            return res.render('terrenosEdit', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato de dirección inválido. No debe tener caracteres especiales.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                terrenos: rows,
+            });
         }
+
+        const validLote=loteRegex.test(lote);
+        if (!validLote) {
+            return res.render('terrenosEdit', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El formato de lote inválido. No debe tener caracteres especiales ni cifras mayor a 2 digitos.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                terrenos: rows,
+            });
+        }
+
+       
+
 
         const [result] = await pool.query('UPDATE land SET id_interno  = IFNULL (?, id_interno), calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado)  WHERE id = ?', [id_interno, calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
 
