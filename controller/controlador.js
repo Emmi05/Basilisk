@@ -975,6 +975,46 @@ export const editarTerrenos = async (req, res) => {
             });
         }
 
+           // Agregar lógica para verificar si el id_interno ha sido modificado
+     const manzanaModificado = req.body.manzana !== rows[0].manzana;
+     if (manzanaModificado) {
+         // Validar formato de id_interno
+         const validManzana = manzanaregex.test(manzana);
+         if (!validManzana) {
+             return res.render('terrenosEdit', {
+                 alert: true,
+                 alertTitle: "Error",
+                 alertMessage: "El formato de manzana es inválido.",
+                 alertIcon: 'error',
+                 showConfirmButton: false,
+                 timer: 3500,
+                 ruta: '/', 
+                 login: true,
+                 roluser: true,
+                 name: req.session.name,
+                 rol: req.session.rol,
+                 terrenos: rows,
+             });
+         }
+
+         const existinmanzana = await pool.query('SELECT * FROM land WHERE manzana = ?', manzana);
+         if (existinmanzana[0].length > 0) {
+             return res.render('terrenosEdit', {
+                 alert: true,
+                 alertTitle: "Error",
+                 alertMessage: "La manzana ya existe. Por favor, verifique el id",
+                 alertIcon: 'error',
+                 showConfirmButton: false,
+                 timer: 3500,
+                 ruta: '/', 
+                 login: true,
+                 roluser: true,
+                 name: req.session.name,
+                 rol: req.session.rol,
+                 terrenos: rows,
+             });
+         }
+     }
        
 
 
