@@ -9,6 +9,13 @@ const apellidoRegex = /^[A-Za-zÁ-Úá-ú]+$/;
 const celRegex = /^\d{10}$/;
 const addressRegex = /^[A-Za-z0-9\s.,#-]+$/;
 
+//expresion para terrenos
+const idInternoRegex = /^\d+\.\d+\/\d+$/;
+const loteRegex = /^\d{1,2}$/;
+const manzanaregex = /^[a-zA-Z0-9\s-]+$/;
+const dimensionesregex = /^\d+$/;
+const precioRegex = /\b\d{1,3}(,\d{3})*(\.\d+)?\b/;
+const predialregex = /^\d{3}-\d{3}-\d{3}-\d{3}$/;
 
 
 export const usuarios=  async(req, res) => {
@@ -123,11 +130,10 @@ export const editarUsuario = async (req, res) => {
 }
 
 
-    export const eliminarUsuario = async (req, res) => {
-
-        if (req.session.rol == 'admin') {
-            const { id } = req.params;
-            const [result]=await pool.query('DELETE FROM users WHERE id=?',[id])
+export const eliminarUsuario = async (req, res) => {
+     if (req.session.rol == 'admin') {
+        const { id } = req.params;
+        const [result]=await pool.query('DELETE FROM users WHERE id=?',[id])
         //otro if de si es mayor a 0?
         if (result && result.affectedRows > 0) {
             const [rows]=await pool.query('SELECT * FROM users');
@@ -155,30 +161,31 @@ export const editarUsuario = async (req, res) => {
 
 
     // CLIENTES
-    export const crearCliente = async (req, res) => {
-        try {
-            if (req.session.rol == 'usuario' || req.session.rol == 'admin') {
-                const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
-                console.log(req.body);
-    
-                // Verificar si algún campo está vacío
-                if (!name || !a_paterno || !a_materno || !cel || !adress) {
-                    return res.render('registro', {
-                        alert: true,
-                        alertTitle: "Error",
-                        alertMessage: "Debes rellenar todos los campos!",
-                        alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        ruta: '/', 
-                        login: true,
-                        roluser: true,
-                        name: req.session.name,
-                        rol: req.session.rol,
+export const crearCliente = async (req, res) => {
+    try {
+        if (req.session.rol == 'usuario' || req.session.rol == 'admin') {
+
+            const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
+            console.log(req.body);
+            // Verificar si algún campo está vacío
+            if (!name || !a_paterno || !a_materno || !cel || !adress) {
+
+                return res.render('registro', {
+
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Debes rellenar todos los campos!",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
                     });
                 }
     
-               
                 // Validar el formato del nombre permitiendo espacios en blanco
                 const validName = nombreRegex.test(name);
 
@@ -334,7 +341,7 @@ export const editarUsuario = async (req, res) => {
             res.status(500).send('Error interno del servidor');
         }
     };
-    function renderizarRegistro(req, res) {
+function renderizarRegistro(req, res) {
         const roluser = (req.session.rol == 'admin');
         res.render('registro', {
             alert: true,
@@ -351,9 +358,6 @@ export const editarUsuario = async (req, res) => {
         });
     }
 
-
-    
-    
 
     export const editarClientes = async (req, res) => {
         try {
@@ -655,11 +659,9 @@ export const crearTerreno= async (req, res) => {
         }
 
         // const idInternoRegex = /^\d+(\.\d+)?(\/\d+)?$/;
-        const idInternoRegex = /^\d+\.\d+\/\d+$/;
-
+        // const idInternoRegex = /^\d+\.\d+\/\d+$/;
 
         const validID = idInternoRegex.test(id_interno);
-
         
         if (!validID) {
             return res.render('terrenoAlta', {
@@ -694,7 +696,7 @@ export const crearTerreno= async (req, res) => {
                 rol: req.session.rol,
             });
         }
-        const loteRegex = /^\d{1,2}$/;
+        // const loteRegex = /^\d{1,2}$/;
         const validLote=loteRegex.test(lote);
         if (!validLote) {
             return res.render('terrenoAlta', {
@@ -731,7 +733,7 @@ export const crearTerreno= async (req, res) => {
         }
 
 
-        const manzanaregex = /^[a-zA-Z0-9\s-]+$/;
+        // const manzanaregex = /^[a-zA-Z0-9\s-]+$/;
         const validManzana=manzanaregex.test(manzana);
         if (!validManzana) {
             return res.render('terrenoAlta', {
@@ -749,7 +751,7 @@ export const crearTerreno= async (req, res) => {
             });
         }
 
-        const dimensionesregex = /^\d+$/;
+        // const dimensionesregex = /^\d+$/;
 
         const validDimensiones=dimensionesregex.test(superficie)
         if (!validDimensiones) {
@@ -768,7 +770,7 @@ export const crearTerreno= async (req, res) => {
             });
         }
 
-        const precioRegex = /\b\d{1,3}(,\d{3})*(\.\d+)?\b/;
+        // const precioRegex = /\b\d{1,3}(,\d{3})*(\.\d+)?\b/;
         const validPrecio=precioRegex.test(precio);
            if (!validPrecio) {
             return res.render('terrenoAlta', {
@@ -804,7 +806,7 @@ export const crearTerreno= async (req, res) => {
             });
         }
 
-        const predialregex = /^\d{3}-\d{3}-\d{3}-\d{3}$/;
+        // const predialregex = /^\d{3}-\d{3}-\d{3}-\d{3}$/;
         const validPredial=predialregex.test(predial);
                if (!validPredial) {
             return res.render('terrenoAlta', {
@@ -821,10 +823,6 @@ export const crearTerreno= async (req, res) => {
                 rol: req.session.rol,
             });
         }
-
-
-        
-
 
         await pool.query('INSERT INTO land SET ?', { id_interno, calle, lote, manzana,superficie,precio: precioTerreno,predial,escritura,estado });
         
@@ -847,6 +845,7 @@ export const crearTerreno= async (req, res) => {
         res.status(500).send('Error interno del servidor');
     }
 }
+
 
 export const editarTerrenos = async (req, res) => {
     const id = req.params.id;
@@ -877,7 +876,6 @@ export const editarTerrenos = async (req, res) => {
    }} else if (req.session.rol == 'admin') {
     const { id } = req.params;
         const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
-        const [result] = await pool.query('UPDATE land SET id_interno  = IFNULL (?, id_interno), calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado)  WHERE id = ?', [id_interno, calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
         
         // Agregar lógica para verificar si el id_interno ha sido modificado
         const idInternoModificado = req.body.id_interno !== rows[0].id_interno;
@@ -900,6 +898,9 @@ export const editarTerrenos = async (req, res) => {
                 });
             }
         }
+
+        const [result] = await pool.query('UPDATE land SET id_interno  = IFNULL (?, id_interno), calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado)  WHERE id = ?', [id_interno, calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
+
         
         // Si el id_interno no ha sido modificado o no existe en la base de datos, proceder con la actualización
         if (result && result.affectedRows > 0) {
@@ -921,6 +922,7 @@ export const editarTerrenos = async (req, res) => {
         }
    } 
 }
+
 
 // ELIMINAR TERRENO
 
