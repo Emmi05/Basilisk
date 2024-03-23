@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
 import {methods as authentication} from '../controller/controlador.js'
+import { buildPDF } from "../libs/pdfkit.js";
+
 const router = Router();
 
 
@@ -176,7 +178,7 @@ router.get('/terrenos', async(req, res) => {
     }
 });
 
-router.get('/terrenoedit/:id', async(req, res) => {
+router.get('/editTerreno/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -278,7 +280,7 @@ router.get('/venta/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
-        const [rows] =await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta  FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id  WHERE s.id = ?', [id]);
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta, s.cuotas, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id]);
 
         res.render('ventaEdit', {
             login: true,
@@ -289,7 +291,7 @@ router.get('/venta/:id', async(req, res) => {
         });
     }
     else if (req.session.rol == 'admin') {
-        const [rows] =await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta, s.id  FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id  WHERE s.id = ?', [id]);
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta, s.cuotas, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id]);
         res.render('ventaEdit', {
             login: true,
             roluser: true,
@@ -307,5 +309,108 @@ router.post('/updateventa/:id',authentication.editarVenta);
 
 //  ELIMINAR TERRENO
 router.get('/deleteventa/:id', authentication.eliminarVenta);
+
+
+
+router.get('/credits', async(req, res) => {
+    if (req.session.rol == 'usuario') {
+        res.render('usuarios', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT *FROM users');
+        res.render('usuarios', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows
+        });
+    }
+});
+
+
+
+// MÓDULO DE ABONOS vista
+
+router.get('/abono_view', async(req, res) => {
+    
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT c.name , c.a_paterno, c.a_materno, l.precio, s.id, s.cuotas   FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        res.render('abonos_vista', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.deuda_restante, s.id, s.tipo_venta, s.inicial, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN abonos a ON a.id_sale = s.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito";');
+        res.render('abonos_vista', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+        });
+    }
+});
+
+// ABONOS VISTA FORMULARIO
+
+router.get('/abonosAlta/:id', async (req, res) => {
+
+    const id = req.params.id;
+
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT c.name, c.a_paterno, c.a_materno, l.precio, s.cuotas FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?;', [id]);
+        res.render('abonos_formulario', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+     
+  
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.id, s.tipo_venta, s.inicial, s.deuda_restante, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN abonos a ON a.id_sale = s.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito" && s.id=?;', [id]);
+        res.render('abonos_formulario', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+            
+
+       
+       
+        });
+    }
+});
+
+// crear abono
+
+router.post('/crearAbonos/:id',authentication.crearAbonos);
+
+
+
+// Reportes
+router.get("/reporte", (req, res) => {
+    const stream = res.writeHead(200, {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment; filename=reporte.pdf",
+    });
+  
+    buildPDF(
+      (data) => stream.write(data),
+      () => stream.end()
+    );
+  });
+  
+
 
 export default router;

@@ -72,6 +72,7 @@ app.post('/register', async (req, res) => {
     try {
         const { user, name, rol, pass } = req.body;
         
+        console.log(req.body)
         // Verificar si algún campo está vacío
         if (!user || !name || !rol || !pass) {
             return res.render('register', {
@@ -88,6 +89,42 @@ app.post('/register', async (req, res) => {
                 rol: req.session.rol,
             });
         }
+
+        const existingUser = await pool.query('SELECT * FROM users WHERE user = ?', user);
+        console.log(existingUser)
+        if (existingUser[0].length > 0) {
+            return res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El usuario ya existe. Por favor, elija otro nombre de usuario.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+         // Verificar si la contraseña cumple con los requisitos
+         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+         if (!passwordRegex.test(pass)) {
+             return res.render('register', {
+                 alert: true,
+                 alertTitle: "Error",
+                 alertMessage: "La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.",
+                 alertIcon: 'error',
+                 showConfirmButton: false,
+                 timer: 3500,
+                 ruta: '/', // Redirigir a la página de registro nuevamente
+                 login: true,
+                 roluser: true,
+                 name: req.session.name,
+                 rol: req.session.rol,
+             });
+         }
 
         const passwordHash = await bcrypt.hash(pass, 8);
         await pool.query('INSERT INTO users SET ?', { user, name, rol, pass: passwordHash });
@@ -114,7 +151,6 @@ app.post('/register', async (req, res) => {
         });
     }
 });
-
 
 // 11 - Metodo para la autenticacion
 app.post('/auth', async (req, res) => {
@@ -168,7 +204,15 @@ app.post('/auth', async (req, res) => {
             return res.status(500).send('Error de servidor');
         }
     } else {
-        res.send('Please enter user and Password!');
+        res.render('login', {
+            alert: true,
+            alertTitle: "Advertecia",
+            alertMessage: "Por favor ingrese un usuario y/o contraseña",
+            alertIcon: 'warning',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: 'login'
+        });
         res.end();
     }
 });

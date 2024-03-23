@@ -1,0 +1,189 @@
+
+  <%- include ('layouts/head.ejs') %>
+  <body id="page-top">
+  
+      <!-- Page Wrapper -->
+      <div id="wrapper">
+          <% if (login) { %> 
+          <!-- Sidebar -->
+          <%- include ('layouts/sidebar.ejs') %>
+          <!-- end sidehar -->
+         
+  
+          <!-- Content Wrapper -->
+          <div id="content-wrapper" class="d-flex flex-column">
+  
+              <!-- Main Content -->
+              <div id="content">
+  
+                  <!-- Topbar /header -->
+                  <%- include ('layouts/header.ejs') %>
+                    <!-- header -->
+                    <% } %> 
+          
+         <!-- Begin Page Content -->
+         <% abonos.forEach(abono => { %>
+
+          <div class="container-fluid">
+              <h1>Registro abonos</h1>
+              <form class="row g-3" action="/crearAbonos/<%= abono.id %>" method="POST" autocomplete="off">
+             
+                
+                <!-- CALCULOS DE TERRENO - INICIAL-ENGANCHE  -->
+                <div class="col-md-6">
+                    <label for="cliente" class="form-label">Cliente</label>
+                    <input type="text" class="form-control" id="id_customer" name="id_customer" value=" <%= abono.customer_name %>  <%= abono.customer_paterno %>  <%= abono.customer_materno %>" readonly>
+                </div>
+
+    
+                <div class="col-md-6">
+                  <label for="cliente" class="form-label">Deuda restante</label>
+                  <input type="number" class="form-control" id="precio-inicial" name="deuda_restante" value="<%= abono.deuda_restante%>" readonly>
+              </div>
+              
+        
+        
+            <div class="col-md-6">
+              <label for="faltantes" class="form-label">Cuotas faltantes</label>
+              <input type="number" class="form-control" id="faltantes" name="cuotas_faltantes" value="<%= abono.cuotas_restantes%>"  readonly min="1" >
+          </div>
+
+
+          
+          <!-- AQUI AGARRO PARA PONER EN CP CUOTAS PAGADAS  -->
+          <div class="col-md-6">
+            <label for="n_abono" class="form-label">N_abono</label>
+            <input type="number" class="form-control" id="n_abono" name="n_abono" value="">
+        </div>
+        
+        <div class="col-md-6">
+          <label for="faltantes" class="form-label">CUOTA DE SALE</label>
+          <input type="number" class="form-control" id="cuota" name="cantidadxcuota"  value="<%= abono.cuotas %>" readonly min="1">
+      </div>
+            
+    
+                  
+                    <div class="col-md-6">
+                      <label for="fecha" name="fecha" class="form-label">Fecha abono</label>
+                      <input type="date" class="form-control" id="fecha_abono" name="fecha_abono">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="inicial" name="inicial" class="form-label">Cantidad a abonar</label>
+                      <input type="number" class="form-control" id="cantidadAbono" name="cantidad"  value=`${cantidadAbono}` readonly  min="1">
+                    </div>
+  
+                
+                    <div class="col-md-6">
+                      <label for="vendedor" class="form-label">Vendedor</label>
+                      <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" readonly>
+                  </div>
+                      
+                  
+               
+                <br> <br> <br> <br>
+                  <div class="col-12">
+                    <a href="/" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary"  value="Save">Guardar</button>
+                  </div>
+  
+                </form>
+                <% }); %>
+
+      <!-- Footer -->
+  
+  <!-- End of Footer -->
+  
+  </div>
+  <!-- End of Content Wrapper -->
+  
+  </div>
+  <!-- End of Page Wrapper -->
+  
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+  </a>
+  
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="logout">Logout</a>
+    </div>
+  </div>
+  </div>
+  </div>      
+  
+              <!-- Bootstrap core JavaScript-->
+    <script src="../resources/vendor/jquery/jquery.min.js"></script>
+    <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  
+    <!-- Core plugin JavaScript-->
+    <script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+  
+    <!-- Custom scripts for all pages-->
+    <script src="../resources/scripts/sb-admin-2.min.js"></script>
+  
+    <!-- Page level plugins -->
+    <script src="../resources/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  
+    <!-- Page level custom scripts -->
+    <script src="../resources/scripts/datables.js"></script>
+  
+               
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  
+  <% if (typeof alert != "undefined")  { %>
+   <script>
+   Swal.fire({
+     title:'<%= alertTitle %>',
+     text:'<%= alertMessage %>',
+     icon:'<%= alertIcon %>',
+     showConfirmButton: <%= showConfirmButton %>,
+     timer: <%= timer %>
+   }).then(()=>{
+     window.location='/<%= ruta %>'
+   })
+   </script>
+  <% } %>
+  
+  <script>
+    // Función para calcular y actualizar la cantidad de abono
+    function calcularCantidadAbono() {
+       <% abonos.forEach(abono => { %> 
+        // Obtener el valor de "n_abono" y "abono.cuotas"
+        var nAbonoValue = parseFloat(document.getElementById('n_abono').value) || 0;
+        var cuotasValue = parseFloat(<%= abono.cuotas %>) || 0; // Asegúrate de tener acceso a abono.cuotas
+
+        // Calcular la cantidad de abono
+        var cantidadAbono = nAbonoValue * cuotasValue;
+
+        // Actualizar el valor del campo "cantidadAbono"
+        document.getElementById('cantidadAbono').value = cantidadAbono.toFixed(2);
+    }
+
+    // Agregar un evento "input" al campo "n_abono" para llamar a la función calcularCantidadAbono
+    document.getElementById('n_abono').addEventListener('input', calcularCantidadAbono);
+
+    // Llamar a la función calcularCantidadAbono para que la cantidad de abono se actualice automáticamente al cargar la página
+    calcularCantidadAbono();
+    <% }); %>
+
+</script>
+
+
+  
+  </div>
+  </body>
+  </html>

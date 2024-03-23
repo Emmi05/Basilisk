@@ -50,9 +50,12 @@
                   <ul id="suggestions" class="list-group" ></ul>
               </div> -->
 
+          
+
+
               <div class="col-md-6">
                 <label for="cliente" class="form-label">Cliente</label>
-                <select class="form-select" id="id_customer" name="id_customer">
+                <select class="form-control" id="id_customer" name="id_customer">
                     <option value="" >Seleccione un cliente</option>
                     <% clientes.forEach(cliente => { %>
                         <option value="<%= cliente.id %>"><%= cliente.name %> <%= cliente.a_paterno %> <%= cliente.a_materno %></option>
@@ -61,6 +64,19 @@
             </div>
 
             <div class="col-md-6">
+              <label for="terreno" class="form-label">Terreno</label>
+              <select class="form-control" id="id_land" name="id_land">
+                  <option value="">Seleccione un terreno</option>
+                  <% terrenos.forEach(terreno => { %>
+                      <% if (terreno.estado === 'disponible') { %>
+                          <option value="<%= terreno.id %>">Manzana <%= terreno.manzana %> Lote <%= terreno.lote %></option>
+                      <% } %>
+                  <% }); %>
+              </select>
+          </div>
+          
+
+            <!-- <div class="col-md-6">
               <label for="terreno" class="form-label">Terreno</label>
               <select class="form-select" id="id_land" name="id_land">
                   <option value="">Seleccione un terreno</option>
@@ -71,7 +87,7 @@
                   <% }); %>
               </select>
           </div>
-          
+           -->
           
           <div class="col-md-6">
               <label for="interno" class="form-label">Id_terreno</label>
@@ -80,11 +96,13 @@
           
           <div class="col-md-6">
             <label for="precio" class="form-label">Precio</label>
-            <input type="int" class="form-control" id="precio" name="precio" disabled>
+            <!-- <input type="int" class="form-control" id="precio" name="precio" disabled  min="1"> -->
+            <input type="number" class="form-control" id="precio" name="precio" readonly min="1">
+
         </div>
           
         <!-- Tipo venta -->
-        <div class="form-group">
+        <div class="col-md-6">
           <label for="tipo_venta">Tipo venta:</label>
           <select class="form-control" id="tipo_venta" name="tipo_venta" >
               <option value="">Seleccionar</option>
@@ -99,21 +117,27 @@
                     <input type="date" class="form-control" id="fecha_venta" name="fecha_venta">
                   </div>
                   <div class="col-md-6">
-                    <label for="inicial" name="inicial" class="form-label">Inicial</label>
-                    <input type="int" class="form-control" id="inicial" name="inicial">
+                    <label for="inicial" name="inicial" class="form-label">Enganche</label>
+                    <input type="number" class="form-control" id="inicial" name="inicial"  min="1">
                   </div>
 
                   <div class="col-md-6">
                     <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                    <input type="int" class="form-control" id="n_cuentas" name="n_cuentas">
+                    <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" min="1">
                   </div>
-                
+
                   <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
                   <div class="col-md-6">
-                    <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
-                    <input type="int" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" disabled>
-                  </div>
+                    <label for="vendedor" class="form-label">Vendedor</label>
+                    <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" disabled>
+                </div>
+                    
                 
+                <!-- Cuotas -->
+                <div class="col-md-6">
+                  <label for="cuotas" class="form-label">Cuotas por mes</label>
+                  <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` >
+              </div>
 
               <br> <br> <br> <br>
                 <div class="col-12">
@@ -156,7 +180,7 @@ aria-hidden="true">
   </div>
 </div>
 </div>
-</div>s        
+</div>      
 
     		<!-- Bootstrap core JavaScript-->
   <script src="../resources/vendor/jquery/jquery.min.js"></script>
@@ -233,7 +257,35 @@ aria-hidden="true">
   });
 </script>
 <!-- Después de mostrar el mensaje, redirigir después de un breve tiempo -->
+<script>
+  // Obtener los campos de "inicial", "n_cuentas" y "cuotas"
+  var inicialField = document.getElementById('inicial');
+  var nCuentasField = document.getElementById('n_cuentas');
+  var cuotasField = document.getElementById('cuotas');
+  var saldoPendienteField = document.getElementById('saldo_pendiente'); // Agrega el campo de saldo pendiente
 
+  // Agregar un evento "input" a los campos de "inicial" y "n_cuentas"
+  inicialField.addEventListener('input', calcularCuotas);
+  nCuentasField.addEventListener('input', calcularCuotas);
+
+  function calcularCuotas() {
+      // Obtener el valor de "inicial" y "n_cuentas"
+      var inicialValue = parseFloat(inicialField.value) || 0; // Si no hay valor, asignar cero
+      var nCuentasValue = parseFloat(nCuentasField.value) || 0; // Si no hay valor, asignar cero
+
+      // Obtener el valor de "precio" y calcular "cuotasTotal"
+      var precioTerreno = parseFloat(document.getElementById('precio').value);
+      var saldoPendiente = precioTerreno - inicialValue;
+      var cuotasTotal = saldoPendiente / nCuentasValue;
+
+      // Actualizar el campo "cuotas" con el valor calculado
+      cuotasField.value = isNaN(cuotasTotal) ? '' : cuotasTotal.toFixed(2); // Mostrar el valor solo si es un número válido
+      
+      // Actualizar el campo "saldo_pendiente" con el valor calculado
+      saldoPendienteField.value = isNaN(saldoPendiente) ? '' : saldoPendiente.toFixed(2); // Mostrar el valor solo si es un número válido
+      return cuotasTotal;
+  }
+</script>
 
 
 </div>
