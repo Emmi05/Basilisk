@@ -32,18 +32,40 @@ export const usuarios=  async(req, res) => {
 }
 export const editarUsuario = async (req, res) => {
     const id = req.params.id;
-    //para retornar la vista de formulario 
     const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
 
     if (req.session.rol == 'admin') {
-      const { id } = req.params;
-      const { user, name, rol } = req.body;
-              // Verificar si algún campo está vacío
-              if (!user || !name || !rol) {
+        const { user, name, rol } = req.body;
+
+        // Verificar si algún campo está vacío
+        if (!user || !name || !rol) {
+            return res.render('editar', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos!",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios:rows,
+            });
+        }
+
+        // Verificar si el nombre de usuario ha sido modificado
+        const usuarioModificado = user !== rows[0].user;
+
+        // Si el nombre de usuario ha sido modificado, verificar si ya existe en la base de datos
+        if (usuarioModificado) {
+            const existingUser = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
+            if (existingUser[0].length > 0) {
                 return res.render('editar', {
                     alert: true,
                     alertTitle: "Error",
-                    alertMessage: "Debes rellenar todos los campos!",
+                    alertMessage: "El usuario ya existe. Por favor, elija otro nombre de usuario.",
                     alertIcon: 'error',
                     showConfirmButton: false,
                     timer: 1500,
@@ -55,69 +77,51 @@ export const editarUsuario = async (req, res) => {
                     usuarios:rows,
                 });
             }
-  
-      // Verificar si el usuario ya existe en la base de datos
-      const existingUser = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
-      if (existingUser[0].length > 0) {
-        // Si el usuario ya existe, mostrar un mensaje de errorss
-        return res.render('editar', {
-          alert: true,
-          alertTitle: "Error",
-          alertMessage: "El usuario ya existe. Por favor, elija otro nombre de usuario.",
-          alertIcon: 'error',
-          showConfirmButton: false,
-          timer: 1500,
-          ruta: '/', 
-          login: true,
-          roluser: true,
-          name: req.session.name,
-          rol: req.session.rol,
-          usuarios:rows,
-        });
-      }
-  
-      // Si el usuario no existe en la base de datos, continuar con la actualización
-      const [result] = await pool.query('UPDATE users SET name = IFNULL (?, name), user = IFNULL (?, user), rol = IFNULL (?, rol) WHERE id = ?', [name, user, rol, id]);
-  
-      // Verificar si la actualización fue exitosa
-      if (result && result.affectedRows > 0) {
-        const [rows] = await pool.query('SELECT * FROM users');
-        res.render('usuarios', {
-          alert: true,
-          alertTitle: "Actualización",
-          alertMessage: "¡Actualización Exitosa!",
-          alertIcon: 'success',
-          showConfirmButton: false,
-          timer: 1500,
-          login: true,
-          roluser: true,
-          name: req.session.name,
-          rol: req.session.rol,
-          usuarios: rows,
-          ruta: 'usuarios'
-        });
-      } else {
-        // Si no se actualizó ninguna fila, mostrar un mensaje de error
-        res.render('register', {
-          alert: true,
-          alertTitle: "Error",
-          alertMessage: "No se pudo actualizar el usuario.",
-          alertIcon: 'error',
-          showConfirmButton: false,
-          timer: 1500,
-          ruta: '/', 
-          login: true,
-          roluser: true,
-          name: req.session.name,
-          rol: req.session.rol,
-          usuarios:rows,
-        });
-      }
+        }
+
+        // Si el usuario no ha sido modificado o no existe en la base de datos, continuar con la actualización
+        const [result] = await pool.query('UPDATE users SET name = IFNULL (?, name), user = IFNULL (?, user), rol = IFNULL (?, rol) WHERE id = ?', [name, user, rol, id]);
+
+        // Verificar si la actualización fue exitosa
+        if (result && result.affectedRows > 0) {
+            const [rows] = await pool.query('SELECT * FROM users');
+            res.render('usuarios', {
+                alert: true,
+                alertTitle: "Actualización",
+                alertMessage: "¡Actualización Exitosa!",
+                alertIcon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios: rows,
+                ruta: 'usuarios'
+            });
+        } else {
+            // Si no se actualizó ninguna fila, mostrar un mensaje de error
+            res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "No se pudo actualizar el usuario.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios:rows,
+            });
+        }
     } else {
-      // Manejar el error apropiadamente
-      res.status(500).send('Error interno del servidor');
+        // Manejar el error apropiadamente
+        res.status(500).send('Error interno del servidor');
     }
-  }
+}
+
 
     export const eliminarUsuario = async (req, res) => {
 
@@ -845,6 +849,9 @@ export const crearTerreno= async (req, res) => {
 }
 
 export const editarTerrenos = async (req, res) => {
+    const id = req.params.id;
+    const [rows] = await pool.query('SELECT * FROM land WHERE id=?',[id]);
+
     if (req.session.rol == 'usuario') {
         const { id } = req.params;
         const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
@@ -869,30 +876,50 @@ export const editarTerrenos = async (req, res) => {
 
    }} else if (req.session.rol == 'admin') {
     const { id } = req.params;
-    const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
-    const [result] = await pool.query('UPDATE land SET id_interno  = IFNULL (?, id_interno), calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado) WHERE id = ?', [id_interno, calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
-    //otro if de si es mayor a 0?
-    if (result && result.affectedRows > 0) {
-        const [rows]=await pool.query('SELECT * FROM land');
-    res.render('terrenos', {
-        alert: true,
-        alertTitle: "Actualización",
-        alertMessage: "¡Actualización Exitoso",
-        alertIcon: 'success',
-        showConfirmButton: false,
-        timer: 1500,
-        login: true,
-        roluser: true,
-        name: req.session.name,
-        rol: req.session.rol,
-        terrenos:rows,
-        ruta:'terrenos'
-    });
-} }else{
-   
-        // Manejar el error apropiadamente
-        res.status(500).send('Error interno del servidor');
-    }
+        const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
+        const [result] = await pool.query('UPDATE land SET id_interno  = IFNULL (?, id_interno), calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado)  WHERE id = ?', [id_interno, calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
+        
+        // Agregar lógica para verificar si el id_interno ha sido modificado
+        const idInternoModificado = req.body.id_interno !== rows[0].id_interno;
+        if (idInternoModificado) {
+            const existinid_interno = await pool.query('SELECT * FROM land WHERE id_interno = ?', id_interno);
+            if (existinid_interno[0].length > 0) {
+                return res.render('terrenosEdit', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El id_interno ya existe. Por favor, verifique el id",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    terrenos: rows,
+                });
+            }
+        }
+        
+        // Si el id_interno no ha sido modificado o no existe en la base de datos, proceder con la actualización
+        if (result && result.affectedRows > 0) {
+            const [rows]=await pool.query('SELECT * FROM land');
+            res.render('terrenos', {
+                alert: true,
+                alertTitle: "Actualización",
+                alertMessage: "¡Actualización Exitoso",
+                alertIcon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+                terrenos:rows,
+                ruta:'terrenos'
+            });
+        }
+   } 
 }
 
 // ELIMINAR TERRENO

@@ -178,7 +178,7 @@ router.get('/terrenos', async(req, res) => {
     }
 });
 
-router.get('/terrenoedit/:id', async(req, res) => {
+router.get('/editTerreno/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
