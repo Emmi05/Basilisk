@@ -877,6 +877,26 @@ export const editarTerrenos = async (req, res) => {
     const { id } = req.params;
         const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
         
+        const precioTerreno = parseFloat(precio.replace(',', ''));
+
+        // Verificar si algún campo está vacío
+        if (!id_interno || !calle || !lote || !manzana || !superficie || !precio || !predial || !escritura || !estado) {
+            return res.render('terrenosEdit', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos!",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+                terrenos: rows,
+            });
+        }
+
         // Agregar lógica para verificar si el id_interno ha sido modificado
         const idInternoModificado = req.body.id_interno !== rows[0].id_interno;
         if (idInternoModificado) {
