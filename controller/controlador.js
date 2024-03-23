@@ -1015,11 +1015,89 @@ export const editarTerrenos = async (req, res) => {
              });
          }
      }
+     const validDimensiones=dimensionesregex.test(superficie)
+     if (!validDimensiones) {
+         return res.render('terrenosEdit', {
+             alert: true,
+             alertTitle: "Error",
+             alertMessage: "El formato de superficie / dimensiones inválido. Solo números.",
+             alertIcon: 'error',
+             showConfirmButton: false,
+             timer: 3500,
+             ruta: '/', 
+             login: true,
+             roluser: true,
+             name: req.session.name,
+             rol: req.session.rol,
+             terrenos: rows,
+         });
+     }
+     const validPrecio = precioRegex.test(precio) && !isNaN(parseFloat(precio.replace(',', '')));
+     if (!validPrecio) {
+         return res.render('terrenosEdit', {
+             alert: true,
+             alertTitle: "Error",
+             alertMessage: "El formato de precio inválido. Debe llevar comas y puntos ejemplo 1,000.",
+             alertIcon: 'error',
+             showConfirmButton: false,
+             timer: 3500,
+             ruta: '/', 
+             login: true,
+             roluser: true,
+             name: req.session.name,
+             rol: req.session.rol,
+             terrenos: rows,
+         });
+     }
+     
+       // Agregar lógica para verificar si el id_interno ha sido modificado
+       const predialModificado = req.body.predial !== rows[0].predial;
+       if (predialModificado) {
+         
+           const validpredial = predialregex.test(predial);
+           if (!validpredial) {
+               return res.render('terrenosEdit', {
+                   alert: true,
+                   alertTitle: "Error",
+                   alertMessage: "El formato de predial es inválido.",
+                   alertIcon: 'error',
+                   showConfirmButton: false,
+                   timer: 3500,
+                   ruta: '/', 
+                   login: true,
+                   roluser: true,
+                   name: req.session.name,
+                   rol: req.session.rol,
+                   terrenos: rows,
+               });
+           }
+  
+           const existpredial = await pool.query('SELECT * FROM land WHERE predial = ?', predial);
+           if (existpredial[0].length > 0) {
+               return res.render('terrenosEdit', {
+                   alert: true,
+                   alertTitle: "Error",
+                   alertMessage: "El predial ya existe. Por favor, verifique.",
+                   alertIcon: 'error',
+                   showConfirmButton: false,
+                   timer: 3500,
+                   ruta: '/', 
+                   login: true,
+                   roluser: true,
+                   name: req.session.name,
+                   rol: req.session.rol,
+                   terrenos: rows,
+               });
+           }
+       }
+
+
        
 
 
-        const [result] = await pool.query('UPDATE land SET id_interno  = IFNULL (?, id_interno), calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado)  WHERE id = ?', [id_interno, calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
+        // const [result] = await pool.query('UPDATE land SET id_interno  = IFNULL (?, id_interno), calle = IFNULL (?, calle), lote = IFNULL (?, lote), manzana = IFNULL (?, manzana), superficie = IFNULL (?, superficie), precio= IFNULL (?, precio), predial= IFNULL (?, predial), escritura= IFNULL (?, escritura), estado= IFNULL (?, estado)  WHERE id = ?', [id_interno, calle, lote, manzana,superficie, precio, predial, escritura, estado, id]);
 
+        const [result] = await pool.query('UPDATE land SET id_interno = ?, calle = ?, lote = ?, manzana = ?, superficie = ?, precio = ?, predial = ?, escritura = ?, estado = ? WHERE id = ?', [id_interno, calle, lote, manzana, superficie, precioTerreno, predial, escritura, estado, id]);
         
         // Si el id_interno no ha sido modificado o no existe en la base de datos, proceder con la actualización
         if (result && result.affectedRows > 0) {
