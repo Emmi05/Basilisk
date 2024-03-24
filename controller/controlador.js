@@ -89,6 +89,44 @@ export const editarUsuario = async (req, res) => {
                 });
             }
         }
+        // Verificar nombre de usuario
+        const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+        if(!usernameRegex.test(user)){
+            return res.render('editar', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El usuario no debe llevar caracteres especiales",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', // Redirigir a la página de registro nuevamente
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios:rows,
+
+            }); 
+        }
+        // verifica nombre 
+        const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+        if(!nombreRegex.test(name)){
+            return res.render('editar', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El nombre no debe llevar caracteres especiales",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', // Redirigir a la página de registro nuevamente
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios:rows,
+
+            }); 
+        }
 
         // Si el usuario no ha sido modificado o no existe en la base de datos, continuar con la actualización
         const [result] = await pool.query('UPDATE users SET name = IFNULL (?, name), user = IFNULL (?, user), rol = IFNULL (?, rol) WHERE id = ?', [name, user, rol, id]);
