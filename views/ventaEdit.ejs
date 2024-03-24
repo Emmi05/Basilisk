@@ -95,13 +95,19 @@
                       <input type="date" class="form-control" id="fecha_venta" name="fecha_venta" value="<%= venta.fecha_venta%>" disabled>
                     </div>
                     <div class="col-md-6">
-                      <label for="inicial" name="inicial" class="form-label">Inicial</label>
-                      <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>">
+                      <label for="inicial" name="inicial" class="form-label">Enganche</label>
+                      <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>" placeholder="Enganche">
+                      <div id="rol" class="form-text">
+                        Solo debe tener números.         
+                     </div>
                     </div>
   
                     <div class="col-md-6">
                       <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                      <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>">
+                      <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>" placeholder="plazo">
+                      <div id="rol" class="form-text">
+                        Solo debe tener números.         
+                     </div>
                     </div>
                   
                     <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
@@ -115,7 +121,7 @@
                           <!-- Cuotas -->
                           <div class="col-md-6">
                             <label for="cuotas" class="form-label">Cuotas por mes</label>
-                            <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` >
+                            <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
                         </div>
           
 

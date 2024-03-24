@@ -91,13 +91,13 @@
           
           <div class="col-md-6">
               <label for="interno" class="form-label">Id_terreno</label>
-              <input type="text" class="form-control" id="interno" name="interno" disabled>
+              <input type="text" class="form-control" id="interno" name="interno" disabled placeholder="id terreno">
           </div>
           
           <div class="col-md-6">
             <label for="precio" class="form-label">Precio</label>
             <!-- <input type="int" class="form-control" id="precio" name="precio" disabled  min="1"> -->
-            <input type="number" class="form-control" id="precio" name="precio" readonly min="1">
+            <input type="number" class="form-control" id="precio" name="precio" readonly min="1" placeholder="precio">
 
         </div>
           
@@ -119,13 +119,19 @@
                   
                   <div class="col-md-6">
                     <label for="inicial" name="inicial" class="form-label">Enganche</label>
-                    <input type="number" class="form-control" id="inicial" name="inicial">
+                    <input type="number" class="form-control" id="inicial" name="inicial" placeholder="enganche">
+                    <div id="rol" class="form-text">
+                      Solo debe tener números.         
+                   </div>
                   </div>
                   
 
                   <div class="col-md-6">
                     <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                    <input type="number" class="form-control" id="n_cuentas" name="n_cuentas">
+                    <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" placeholder="plazos">
+                    <div id="rol" class="form-text">
+                      Solo debe tener números.         
+                   </div>
                   </div>
 
                   <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
@@ -138,7 +144,7 @@
                 <!-- Cuotas -->
                 <div class="col-md-6">
                   <label for="cuotas" class="form-label">Cuotas por mes</label>
-                  <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` >
+                  <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
               </div>
 
               <br> <br> <br> <br>
