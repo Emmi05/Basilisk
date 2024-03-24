@@ -108,6 +108,42 @@ app.post('/register', async (req, res) => {
             });
         }
 
+        // Verificar nombre de usuario
+        const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+        if(!usernameRegex.test(user)){
+            return res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El usuario no debe llevar caracteres especiales",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', // Redirigir a la página de registro nuevamente
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            }); 
+        }
+        // verifica nombre 
+        const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+        if(!nombreRegex.test(name)){
+            return res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El nombre no debe llevar caracteres especiales",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', // Redirigir a la página de registro nuevamente
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            }); 
+        }
+
+
          // Verificar si la contraseña cumple con los requisitos
          const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
          if (!passwordRegex.test(pass)) {

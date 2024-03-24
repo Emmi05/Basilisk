@@ -4,6 +4,7 @@ import moment from 'moment';
 
 
 // Expresiones regulares globales
+const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
 const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
 const apellidoRegex = /^[A-Za-zÁ-Úá-ú]+$/;
 const celRegex = /^\d{10}$/;
