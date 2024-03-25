@@ -335,8 +335,8 @@ router.get('/credits', async(req, res) => {
 
 
 // MÓDULO DE ABONOS vista
-
-router.get('/abono_view', authentication.abonoview); /* async(req, res) => {
+// router.get('/abono_view', authentication.abonoview);
+router.get('/abono_view', async(req, res) => {
     
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT c.name , c.a_paterno, c.a_materno, l.precio, s.id, s.cuotas   FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
@@ -348,7 +348,11 @@ router.get('/abono_view', authentication.abonoview); /* async(req, res) => {
             abonos: rows,
         });
     } else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.deuda_restante, s.id, s.tipo_venta, s.inicial, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN abonos a ON a.id_sale = s.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito";');
+
+        // const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.deuda_restante, s.id, s.tipo_venta, s.inicial, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN abonos a ON a.id_sale = s.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito";');
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.deuda_restante, s.id, s.tipo_venta, s.inicial, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN ( SELECT id_sale, MAX(id) AS last_abono_id  FROM abonos  GROUP BY id_sale) AS last_abono ON last_abono.id_sale = s.id JOIN abonos a ON a.id_sale = s.id AND a.id = last_abono.last_abono_id JOIN land l ON s.id_land = l.id  WHERE s.tipo_venta = "credito"')
+
+
         res.render('abonos_vista', {
             login: true,
             roluser: true,
@@ -357,7 +361,7 @@ router.get('/abono_view', authentication.abonoview); /* async(req, res) => {
             abonos: rows,
         });
     }
-}); */
+});
 
 // ABONOS VISTA FORMULARIO
 
@@ -377,8 +381,22 @@ router.get('/abonosAlta/:id', async (req, res) => {
   
         });
     } else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.id, s.tipo_venta, s.inicial, s.deuda_restante, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN abonos a ON a.id_sale = s.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito" && s.id=?;', [id]);
-        res.render('abonos_formulario', {
+        // const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.id, s.tipo_venta, s.inicial, s.deuda_restante, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN abonos a ON a.id_sale = s.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito" && s.id=?;', [id]);
+       const [rows]=await pool.query(`
+       SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.id, s.tipo_venta, s.inicial, 
+       s.deuda_restante, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes 
+       FROM sale s 
+       JOIN customers c ON s.id_customer = c.id 
+       JOIN (
+           SELECT id_sale, MAX(id) AS last_abono_id 
+           FROM abonos 
+           GROUP BY id_sale
+       ) AS last_abono ON last_abono.id_sale = s.id 
+       JOIN abonos a ON a.id_sale = s.id AND a.id = last_abono.last_abono_id
+       JOIN land l ON s.id_land = l.id 
+       WHERE s.tipo_venta = "credito" && s.id=${id}`);
+
+       res.render('abonos_formulario', {
             login: true,
             roluser: true,
             name: req.session.name,

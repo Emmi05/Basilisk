@@ -1510,6 +1510,7 @@ const crearAbonos = async (req, res) => {
     try {
         // Obtener los datos del cuerpo de la solicitud
         const { n_abono, fecha_abono, cantidad } = req.body;
+        const [viewonly] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.deuda_restante, s.id, s.tipo_venta, s.inicial, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN ( SELECT id_sale, MAX(id) AS last_abono_id  FROM abonos  GROUP BY id_sale) AS last_abono ON last_abono.id_sale = s.id JOIN abonos a ON a.id_sale = s.id AND a.id = last_abono.last_abono_id JOIN land l ON s.id_land = l.id  WHERE s.tipo_venta = "credito"')
 
         try {
             const [abonosrows] = await pool.query('SELECT s.id,s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id WHERE s.id = ?;', [id_venta]);
@@ -1588,41 +1589,64 @@ const crearAbonos = async (req, res) => {
                 }
 
                 // Si la validación es exitosa, procede con el resto del código
+             // Si la validación es exitosa, procede con el resto del código
                 const deuda_restante = abonosrows[0].deuda_restante - cantidad;
-                const cuota_pagada = abonosrows[0].cuotas_restantes - n_abono;
-                const cuota_restante = parseFloat(abonosrows[0].cuotas_pagadas) + parseFloat(n_abono);
+                const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono); // Sumar n_abono a las cuotas pagadas
+                const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat (n_abono); // Restar n_abono a las cuotas restantes
+
+                console.log (cuota_restante, "cuota restante")
+                console.log (cuota_pagada, "cuota pagada")
+
                 const id_sale = abonosrows[0].id;
-                const ncuotaspagadas = abonosrows[0].ncuotas_pagadas;
                 const n_cuentas = abonosrows[0].n_cuentas;
+
+               
+                const ncuotaspagadas = abonosrows[0].ncuotas_pagadas;
+              
         
                 // Calcular la cantidad abonada
-               
         
-                // Actualizacion los datos en la tabla sale 
-                if(n_cuentas > ncuotaspagadas ){
-                    const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes ) VALUES (?, ?, ?, ?)', [id_sale, fecha_abono, cuota_pagada, cuota_restante]);
+if (n_cuentas > abonosrows[0].ncuotas_pagadas) { // Verificar si hay cuotas pendientes
+    // const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes) VALUES (?, ?, ?, ?)', [id_sale, fecha_abono, cuota_restante, cuota_pagada]);
+    const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes) VALUES (?, ?, ?, ?)', [id_sale, fecha_abono, cuota_restante, cuota_pagada])
+    .catch(error => {
+        console.error('Error al insertar el abono en la base de datos:', error);
+        throw error; // Relanzar el error para que pueda ser manejado más adelante
+    });
 
-                if(iabono){
-                    const result = await pool.query('UPDATE sale SET ncuotas_pagadas = ?, deuda_restante = ? WHERE id = ?', [cuota_restante, deuda_restante, id_sale]);
-                if(!result){
-                    console.log('no se pudo carnal');
-                }
-            } 
-                       }
+if (iabono) {
+    const result = await pool.query('UPDATE sale SET ncuotas_pagadas = ?, deuda_restante = ? WHERE id = ?', [cuota_restante, deuda_restante, id_sale])
+        .catch(error => {
+            console.error('Error al actualizar las cuotas en la base de datos:', error);
+            throw error; // Relanzar el error para que pueda ser manejado más adelante
+        });
+
+    if (!result) {
+        console.log('Error al actualizar las cuotas en la base de datos');
+    }
+} else {
+    console.log('Error al insertar el abono en la base de datos');
+}
+
+}
+
+                        // Redirigir a la página de creación de abonos después de la actualización exitosa
+                // res.redirect('/abono_view/');
                 // Redirigir a la página principal después de la actualización exitosa
-                res.render('abonos_formulario', {
+                res.render('abonos_vista', {
                     alert: true,
                     alertTitle: "Registro",
                     alertMessage: "¡Registro Exitoso!",
                     alertIcon: 'success',
                     showConfirmButton: false,
                     timer: 1500,
-                    ruta: '/', 
+                    ruta: 'abono_view', 
                     login: true,
                     roluser: true,
                     name: req.session.name,
                     rol: req.session.rol,
-                    abonos: abonosrows,
+                    //  abonos: abonosrows,
+                    abonos:viewonly,
                 });
             }
         } catch (error) {
@@ -1636,7 +1660,7 @@ const crearAbonos = async (req, res) => {
 }
 
 const abonoview = async (req, res) =>{
-    const [abonosview] = ('SELECT * FROM abonos where ')
+    const [abonosview] = ('SELECT * FROM abonos ')
 }
  
 
