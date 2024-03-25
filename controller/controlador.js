@@ -21,6 +21,9 @@ const predialregex = /^\d{3}-\d{3}-\d{3}-\d{3}$/;
 // Ventas
 const cantidades = /^\d*,?\d+$/;
 
+// abonos
+const numeros= /^\d+$/;
+
 
 export const usuarios=  async(req, res) => {
     if (req.session.rol == 'usuario') {
@@ -1509,8 +1512,8 @@ const crearAbonos = async (req, res) => {
         const { n_abono, fecha_abono, cantidad } = req.body;
 
         try {
-            const [abonosrows] = await pool.query('SELECT s.id, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN abonos a ON s.id = a.id_sale WHERE s.id = ?;', [id_venta]);
-        
+            const [abonosrows] = await pool.query('SELECT s.id, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id WHERE s.id = ?;', [id_venta]);
+
             // Verificar si algún campo está vacío
             if (!n_abono || !fecha_abono) {
                 // Renderizar la vista con un mensaje de error si faltan campos
@@ -1523,12 +1526,68 @@ const crearAbonos = async (req, res) => {
                     timer: 1500,
                     ruta: '/',
                     login: true,
-                    roluser: false,
+                    roluser: true,
                     name: req.session.name,
                     rol: req.session.rol,
                     abonos: abonosrows,
                 });
             } else if (abonosrows[0].cuotas_pagadas <= abonosrows[0].n_cuentas) {
+                const cuotasFaltantes = abonosrows[0].cuotas_restantes;
+                
+                // Verificar si n_abono es un número positivo
+                if (!numeros.test(n_abono)) {
+                    return res.render('abonos_formulario', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "El número de abono debe ser un número positivo sin caracteres especiales",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: '/',
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                        abonos: abonosrows,
+                    });
+                }
+
+                if (abonosrows[0].deuda_restante <= 0) {
+                    return res.render('abonos_formulario', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "La deuda restante ya es 0, no se pueden realizar más abonos.",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: '/',
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                        abonos: abonosrows,
+                    });
+                }
+
+                // Validar que n_abono no sea mayor o igual a cuotas_faltantes
+                if (n_abono > cuotasFaltantes) {
+                    return res.render('abonos_formulario', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "El número de abono no puede ser mayor o igual a las cuotas faltantes",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: '/',
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                        abonos: abonosrows,
+                    });
+                }
+
+                // Si la validación es exitosa, procede con el resto del código
                 const deuda_restante = abonosrows[0].deuda_restante - cantidad;
                 const cuota_pagada = abonosrows[0].cuotas_restantes - n_abono;
                 const cuota_restante = parseFloat(abonosrows[0].cuotas_pagadas) + parseFloat(n_abono);

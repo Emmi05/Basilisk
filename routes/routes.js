@@ -384,9 +384,6 @@ router.get('/abonosAlta/:id', async (req, res) => {
             name: req.session.name,
             rol: req.session.rol,
             abonos: rows,
-            
-
-       
        
         });
     }
