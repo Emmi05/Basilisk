@@ -46,6 +46,7 @@
                                             <th>Precio</th>
                                             <th>Fecha</th>
                                             <th>N_cuentas</th>
+                                            <th>N_Pagadas</th>
                                             <th>Venta</th>
                                             <th>Options</th>
                                           
@@ -61,6 +62,7 @@
                                             <th>Precio</th>
                                             <th>Fecha</th>
                                             <th>N_cuentas</th>
+                                            <th>N_Pagadas</th>
                                             <th>Venta</th>
                                             <th>Options</th>
                                           
@@ -80,6 +82,7 @@
                                                 <td><%= venta.precio %></td>
                                                 <td><%= venta.fecha_venta.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: '2-digit' }) %></td>
                                                 <td><%= venta.n_cuentas %></td>
+                                                <td><%= venta.ncuotas_pagadas %></td>
                                                 <td><%= venta.tipo_venta %></td>
 
         

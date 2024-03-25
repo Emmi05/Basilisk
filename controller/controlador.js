@@ -1512,7 +1512,7 @@ const crearAbonos = async (req, res) => {
         const { n_abono, fecha_abono, cantidad } = req.body;
 
         try {
-            const [abonosrows] = await pool.query('SELECT s.id, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id WHERE s.id = ?;', [id_venta]);
+            const [abonosrows] = await pool.query('SELECT s.id,s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id WHERE s.id = ?;', [id_venta]);
 
             // Verificar si algún campo está vacío
             if (!n_abono || !fecha_abono) {
@@ -1592,18 +1592,23 @@ const crearAbonos = async (req, res) => {
                 const cuota_pagada = abonosrows[0].cuotas_restantes - n_abono;
                 const cuota_restante = parseFloat(abonosrows[0].cuotas_pagadas) + parseFloat(n_abono);
                 const id_sale = abonosrows[0].id;
+                const ncuotaspagadas = abonosrows[0].ncuotas_pagadas;
+                const n_cuentas = abonosrows[0].n_cuentas;
         
                 // Calcular la cantidad abonada
-                const cantidad_abonada = parseFloat(n_abono) * parseFloat(cantidad);
+               
         
-                // Actualizar los datos en la tabla abonos y sale
-                const result = await pool.query(`
-                    UPDATE sale AS s
-                    INNER JOIN abonos AS a ON a.id_sale = s.id
-                    SET s.deuda_restante = ?, a.cuotas_restantes = ?, a.cuotas_pagadas = ?, a.fecha_abono = ?, a.cantidad_abonada = ?
-                    WHERE a.id_sale = ?;
-                `, [deuda_restante, cuota_pagada, cuota_restante, fecha_abono, cantidad_abonada, id_sale]);
-        
+                // Actualizacion los datos en la tabla sale 
+                if(n_cuentas > ncuotaspagadas ){
+                    const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes ) VALUES (?, ?, ?, ?)', [id_sale, fecha_abono, cuota_pagada, cuota_restante]);
+
+                if(iabono){
+                    const result = await pool.query('UPDATE sale SET ncuotas_pagadas = ?, deuda_restante = ? WHERE id = ?', [cuota_restante, deuda_restante, id_sale]);
+                if(!result){
+                    console.log('no se pudo carnal');
+                }
+            } 
+                       }
                 // Redirigir a la página principal después de la actualización exitosa
                 res.render('abonos_formulario', {
                     alert: true,
@@ -1630,6 +1635,10 @@ const crearAbonos = async (req, res) => {
     }
 }
 
+const abonoview = async (req, res) =>{
+    const [abonosview] = ('SELECT * FROM abonos where ')
+}
+ 
 
 
 export const methods = {
@@ -1645,6 +1654,7 @@ export const methods = {
     crearVenta,
     editarVenta,
     eliminarVenta,
-    crearAbonos
+    crearAbonos,
+    abonoview,
   }
 

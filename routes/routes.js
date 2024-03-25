@@ -264,7 +264,7 @@ router.get('/abonos', async(req, res) => {
             ventas: rows
         });
     } else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
         res.render('venta', {
             login: true,
             roluser: true,
@@ -336,7 +336,7 @@ router.get('/credits', async(req, res) => {
 
 // MÓDULO DE ABONOS vista
 
-router.get('/abono_view', async(req, res) => {
+router.get('/abono_view', authentication.abonoview); /* async(req, res) => {
     
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT c.name , c.a_paterno, c.a_materno, l.precio, s.id, s.cuotas   FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
@@ -357,7 +357,7 @@ router.get('/abono_view', async(req, res) => {
             abonos: rows,
         });
     }
-});
+}); */
 
 // ABONOS VISTA FORMULARIO
 
