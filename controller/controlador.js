@@ -1213,7 +1213,10 @@ const crearVenta = async (req, res) => {
         const inicialNumber = parseFloat(inicial);
         const nCuentasNumber = parseFloat(n_cuentas);
 
+    
         const deuda_restante = precio - inicial;
+
+        
 
         // Verificar si algún campo está vacío o si los valores de 'inicial' y 'n_cuentas' no son números válidos
         if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
@@ -1554,12 +1557,9 @@ const crearAbonos = async (req, res) => {
             }
 
             // Si la validación es exitosa, procede con el resto del código
-            const deuda_restante = abonosrows[0].deuda_restante - cantidad;
-            
+          
 
-            console.log(deuda_restante, "deuda restante ");
-            console.log("-------------------------------------------------")
-
+        
           
             console.log(n_abono, "abono dado");
             console.log(cuotasFaltantes, "cuotas generales");
@@ -1575,6 +1575,48 @@ const crearAbonos = async (req, res) => {
             console.log(cuota_pagada, "cuota restante");
             
 
+            const deuda_restante = abonosrows[0].deuda_restante - cantidad;
+            console.log(deuda_restante, "deuda restante ");
+            console.log("-------------------------------------------------")
+
+            if(deuda_restante<=1){
+                const deuda_restante=0;
+                const id_sale = abonosrows[0].id;
+            
+                // Insertar el nuevo abono en la base de datos
+                const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes) VALUES (?, ?, ?, ?)',
+                    [id_sale, fecha_abono, cuota_restante, cuota_pagada])
+                    .catch(error => {
+                        console.error('Error al insertar el abono en la base de datos:', error);
+                        throw error;
+                    });
+    
+                // Obtener el ID del último abono insertado
+                const lastInsertedAbonoId = iabono.insertId;
+    
+                // Actualizar la venta con las nuevas cuotas pagadas y la deuda restante
+                const result = await pool.query('UPDATE sale SET ncuotas_pagadas = ?, deuda_restante = ? WHERE id = ?', [cuota_restante, deuda_restante, id_sale])
+                    .catch(error => {
+                        console.error('Error al actualizar las cuotas en la base de datos:', error);
+                        throw error; 
+                    });
+    
+                // Redirigir a la página principal después de la actualización exitosa
+                res.render('abonos_vista', {
+                    alert: true,
+                    alertTitle: "Registro",
+                    alertMessage: "¡Registro Exitoso!",
+                    alertIcon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: 'abono_view', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    abonos: abonosrows,
+                });
+            }else{
             
             // const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat(n_abono);
             // console.log(cuota_pagada, "cuota pagado");
@@ -1615,6 +1657,7 @@ const crearAbonos = async (req, res) => {
                 abonos: abonosrows,
             });
         }
+    }
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
