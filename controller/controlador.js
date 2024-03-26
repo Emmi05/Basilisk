@@ -1553,41 +1553,6 @@ const crearAbonos = async (req, res) => {
                 });
             }
 
-            if (abonosrows[0].deuda_restante <= 0) {
-                return res.render('abonos_formulario', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "La deuda restante ya es 0, no se pueden realizar más abonos.",
-                    alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    ruta: '/',
-                    login: true,
-                    roluser: true,
-                    name: req.session.name,
-                    rol: req.session.rol,
-                    abonos: abonosrows,
-                });
-            }
-
-            // Validar que n_abono no sea mayor o igual a cuotas_faltantes
-            if (n_abono > cuotasFaltantes) {
-                return res.render('abonos_formulario', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "El número de abono no puede ser mayor o igual a las cuotas faltantes",
-                    alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    ruta: '/',
-                    login: true,
-                    roluser: true,
-                    name: req.session.name,
-                    rol: req.session.rol,
-                    abonos: abonosrows,
-                });
-            }
-
             // Si la validación es exitosa, procede con el resto del código
             const deuda_restante = abonosrows[0].deuda_restante - cantidad;
             
@@ -1595,14 +1560,19 @@ const crearAbonos = async (req, res) => {
             console.log(deuda_restante, "deuda restante ");
             console.log("-------------------------------------------------")
 
-            // const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono); // Sumar n_abono a las cuotas pagada
-            // console.log(cuota_restante, "cuota restante");
+          
+            console.log(n_abono, "abono dado");
+            console.log(cuotasFaltantes, "cuotas generales");
 
-            const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono); // Restar n_abono a las cuotas pagadas
-            console.log(cuota_restante, "cuota restante");
+            const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono); // Sumar n_abono a las cuotas pagadas
+
+            // const cuota_restante = abonosrows[0].cuotas - abonosrows[0].ncuotas_pagadas; // Calcula cuotas restantes
+           
+            console.log(cuota_restante, "cuota pagada?");
             
             const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat(n_abono); // Restar n_abono a las cuotas restantes
-            console.log(cuota_pagada, "cuota pagado");
+
+            console.log(cuota_pagada, "cuota restante");
             
 
             
@@ -1651,9 +1621,9 @@ const crearAbonos = async (req, res) => {
     }
 }
 
-const abonoview = async (req, res) =>{
-    const [abonosview] = ('SELECT * FROM abonos ')
-}
+// const abonoview = async (req, res) =>{
+//     const [abonosview] = ('SELECT * FROM abonos ')
+// }
  
 
 
@@ -1671,6 +1641,5 @@ export const methods = {
     editarVenta,
     eliminarVenta,
     crearAbonos,
-    abonoview,
   }
 
