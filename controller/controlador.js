@@ -1,6 +1,9 @@
 import { query } from 'express';
 import { pool} from '../database/db.js'
 import moment from 'moment';
+import PDFDocument from "pdfkit";
+
+
 
 
 // Expresiones regulares globales
@@ -1514,6 +1517,7 @@ const crearAbonos = async (req, res) => {
         // Obtener los datos del cuerpo de la solicitud
         const { n_abono, fecha_abono, cantidad } = req.body;
         
+        const [informacion]=await pool.query('SELECT  s.id AS venta_id, s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas AS abono_cuotas_pagadas, a.cuotas_restantes AS abono_cuotas_restantes, c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno, l.precio AS land_precio FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
         // Consulta para obtener detalles de la venta y el último abono
         const [abonosrows] = await pool.query('SELECT s.id,s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id WHERE s.id = ? ORDER BY a.fecha_abono DESC LIMIT 1;', [id_venta]);
     
@@ -1555,12 +1559,6 @@ const crearAbonos = async (req, res) => {
                     abonos: abonosrows,
                 });
             }
-
-            // Si la validación es exitosa, procede con el resto del código
-          
-
-        
-          
             console.log(n_abono, "abono dado");
             console.log(cuotasFaltantes, "cuotas generales");
 
@@ -1601,21 +1599,25 @@ const crearAbonos = async (req, res) => {
                         throw error; 
                     });
     
-                // Redirigir a la página principal después de la actualización exitosa
-                res.render('abonos_vista', {
-                    alert: true,
-                    alertTitle: "Registro",
-                    alertMessage: "¡Registro Exitoso!",
-                    alertIcon: 'success',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    ruta: 'abono_view', 
-                    login: true,
-                    roluser: true,
-                    name: req.session.name,
-                    rol: req.session.rol,
-                    abonos: abonosrows,
-                });
+                // // Redirigir a la página principal después de la actualización exitosa
+                // res.render('abonos_vista', {
+                //     alert: true,
+                //     alertTitle: "Registro",
+                //     alertMessage: "¡Registro Exitoso!",
+                //     alertIcon: 'success',
+                //     showConfirmButton: false,
+                //     timer: 1500,
+                //     ruta: 'abono_view', 
+                //     login: true,
+                //     roluser: true,
+                //     name: req.session.name,
+                //     rol: req.session.rol,
+                //     abonos: abonosrows,
+                // });
+                // Generar y enviar el PDF
+              
+                generateAndSendPDF(informacion, res)
+
             }else{
             
             // const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat(n_abono);
@@ -1641,21 +1643,24 @@ const crearAbonos = async (req, res) => {
                     throw error; 
                 });
 
-            // Redirigir a la página principal después de la actualización exitosa
-            res.render('abonos_vista', {
-                alert: true,
-                alertTitle: "Registro",
-                alertMessage: "¡Registro Exitoso!",
-                alertIcon: 'success',
-                showConfirmButton: false,
-                timer: 1500,
-                ruta: 'abono_view', 
-                login: true,
-                roluser: true,
-                name: req.session.name,
-                rol: req.session.rol,
-                abonos: abonosrows,
-            });
+            // // Redirigir a la página principal después de la actualización exitosa
+            // res.render('abonos_vista', {
+            //     alert: true,
+            //     alertTitle: "Registro",
+            //     alertMessage: "¡Registro Exitoso!",
+            //     alertIcon: 'success',
+            //     showConfirmButton: false,
+            //     timer: 1500,
+            //     ruta: 'abono_view', 
+            //     login: true,
+            //     roluser: true,
+            //     name: req.session.name,
+            //     rol: req.session.rol,
+            //     abonos: abonosrows,
+            // });
+            generateAndSendPDF(informacion, res)
+
+
         }
     }
     } catch (error) {
@@ -1667,7 +1672,88 @@ const crearAbonos = async (req, res) => {
 // const abonoview = async (req, res) =>{
 //     const [abonosview] = ('SELECT * FROM abonos ')
 // }
- 
+async function generateAndSendPDF(informacion, res) {
+    try {
+        const doc = new PDFDocument();
+        const buffers = [];
+        
+        // Formatear la fecha del último abono
+        const fechaAbono = new Date(informacion[0].fecha_abono);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const fechaAbonoFormateada = fechaAbono.toLocaleDateString('es-ES', options);
+
+
+      // Establecer la posición de la imagen
+      const imgWidth = 100; // Ancho de la imagen
+      const imgHeight = 80; // Alto de la imagen
+      const imgX = doc.page.width - imgWidth - 10; // Posición X de la imagen (10 píxeles desde el borde derecho)
+      const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
+      doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
+
+        // Agregar espacio
+        doc.moveDown();
+
+        const fecha = `Acapulco, Guerrero, a  ${fechaAbonoFormateada}`;
+        doc.text(fecha, {
+            align: 'right' // Alinea el texto a la derecha
+        });
+
+        doc.moveDown();
+
+        // Agregar el párrafo de lorem
+        const lorem = ' apoderado de Basilisk Inmobiliaria Siete S de RL de CV, personalidad y facultades que acredito mediante escritura pública número 45,153 de 19 de Febrero de 2015, otorgada ante la fe del licenciado José Luis Altamirano Quintero, Notario Público número 66 del Distro Federal.';
+        doc.text(`Israel Nogueda Pineda, ${lorem}`, {
+            // width: 410,
+            align: 'justify'
+        });
+        doc.moveDown();
+        // Agregar el párrafo del cliente
+        const customerName = `Recibo de la C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} la cantidad de $  ${informacion[0].cuotas} como pago parcial por el lote ${informacion[0].land_lote} de la manzana ${informacion[0].land_manzana}, operación pactada en $ ${informacion[0].land_precio}, los gasos de escrituración e  impuesto predial con número ${informacion[0].land_predial}, son por cuenta del comprador, según acuerdo entre las partes, ubicado en el Fraccionamiento Fuerza Aérea Mexicana, Municipio de Acapulco, Estado de Guerrero e identificado internamiento con la clave ${informacion[0].land_id_interno}, a fin de llevar a cabo la compravente de dicho lote.  `;
+        doc.text(customerName, {
+            // width: 410,
+            align: 'justify'// Alinea el texto
+        });
+        doc.moveDown();
+        doc.moveDown();
+        const extra = `Basilisk Inmobiliaria Siete, S. de R.l de C.V `;
+        doc.text(extra, {
+            // width: 410,
+            align: 'justify'// Alinea el texto
+        });
+
+        const firma  = `Israel Nogueda Pineda  `;
+        doc.text(firma, {
+            // width: 410,
+            align: 'justify'// Alinea el texto
+        });
+        const apoderado  = `Apoderado.  `;
+        doc.text(apoderado, {
+            // width: 410,
+            align: 'justify'// Alinea el texto
+        });
+
+        // Manejador para agregar datos al buffer
+        doc.on('data', buffers.push.bind(buffers));
+
+        // Manejador para finalizar el documento
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            // Envía el PDF como respuesta
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=reporte.pdf',
+                'Content-Length': pdfData.length
+            });
+            res.end(pdfData);
+        });
+
+        // Finaliza y cierra el documento PDF
+        doc.end();
+    } catch (error) {
+        console.error('Error en la generación del PDF:', error);
+        res.status(500).send('Error interno del servidor al generar el PDF');
+    }
+}
 
 
 export const methods = {
