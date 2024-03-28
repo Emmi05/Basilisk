@@ -412,6 +412,23 @@ router.get('/abonosAlta/:id', async (req, res) => {
 router.post('/crearAbonos/:id',authentication.crearAbonos);
 
 
+// Ruta para generar y enviar el PDF
+// app.post('/generarPDF', async (req, res) => {
+//     try {
+//              // Obtener datos necesarios del cuerpo de la solicitud
+//         const [informacion]=await pool.query('SELECT  s.id AS venta_id, s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas AS abono_cuotas_pagadas, a.cuotas_restantes AS abono_cuotas_restantes, c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno, l.precio AS land_precio FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
+
+   
+//         const cantidad = req.body.cantidad; // Asegúrate de enviar correctamente esta información desde el frontend
+
+//         // Llama a la función para generar y enviar el PDF
+//         await generateAndSendPDF(informacion, cantidad, res);
+//     } catch (error) {
+//         console.error('Error en la generación del PDF:', error);
+//         res.status(500).send('Error interno del servidor al generar el PDF');
+//     }
+// });
+
 
 // Reportes
 router.get("/reporte", (req, res) => {

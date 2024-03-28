@@ -1614,9 +1614,13 @@ const crearAbonos = async (req, res) => {
                 //     rol: req.session.rol,
                 //     abonos: abonosrows,
                 // });
-                // Generar y enviar el PDF
+             
               
-                generateAndSendPDF(informacion, cantidad, res)
+                //  generateAndSendPDF(informacion, cantidad, res)
+                 await generateAndSendPDF(informacion, cantidad, res);
+
+
+
 
             }else{
             
@@ -1643,40 +1647,29 @@ const crearAbonos = async (req, res) => {
                     throw error; 
                 });
 
-            // // Redirigir a la página principal después de la actualización exitosa
-            // res.render('abonos_vista', {
-            //     alert: true,
-            //     alertTitle: "Registro",
-            //     alertMessage: "¡Registro Exitoso!",
-            //     alertIcon: 'success',
-            //     showConfirmButton: false,
-            //     timer: 1500,
-            //     ruta: 'abono_view', 
-            //     login: true,
-            //     roluser: true,
-            //     name: req.session.name,
-            //     rol: req.session.rol,
-            //     abonos: abonosrows,
-            // });
-            generateAndSendPDF(informacion, cantidad,res)
+                // generateAndSendPDF(informacion, cantidad, res)
+                await generateAndSendPDF(informacion, cantidad, res);
 
-
+            }
         }
-    }
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
     }
 }
 
-// const abonoview = async (req, res) =>{
-//     const [abonosview] = ('SELECT * FROM abonos ')
-// }
+
+// metodo para cahcar los datos del onclick 
+
+
+
 async function generateAndSendPDF(informacion,cantidad, res) {
     try {
         const doc = new PDFDocument();
         const buffers = [];
-        
+   
+
+
         // Formatear la fecha del último abono
         const fechaAbono = new Date(informacion[0].fecha_abono);
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -1740,6 +1733,7 @@ async function generateAndSendPDF(informacion,cantidad, res) {
         doc.on('data', buffers.push.bind(buffers));
 
         // Manejador para finalizar el documento
+
         doc.on('end', () => {
             const pdfData = Buffer.concat(buffers);
             // Envía el PDF como respuesta
@@ -1753,11 +1747,15 @@ async function generateAndSendPDF(informacion,cantidad, res) {
 
         // Finaliza y cierra el documento PDF
         doc.end();
+
+    
+
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
         res.status(500).send('Error interno del servidor al generar el PDF');
     }
 }
+
 
 
 export const methods = {
