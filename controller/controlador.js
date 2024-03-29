@@ -2,7 +2,10 @@ import { query } from 'express';
 import { pool} from '../database/db.js'
 import moment from 'moment';
 import PDFDocument from "pdfkit";
+import express from 'express';
 
+import { Router } from 'express';
+const router = Router();
 
 
 
@@ -1598,27 +1601,14 @@ const crearAbonos = async (req, res) => {
                         console.error('Error al actualizar las cuotas en la base de datos:', error);
                         throw error; 
                     });
-    
-                // // Redirigir a la página principal después de la actualización exitosa
-                // res.render('abonos_vista', {
-                //     alert: true,
-                //     alertTitle: "Registro",
-                //     alertMessage: "¡Registro Exitoso!",
-                //     alertIcon: 'success',
-                //     showConfirmButton: false,
-                //     timer: 1500,
-                //     ruta: 'abono_view', 
-                //     login: true,
-                //     roluser: true,
-                //     name: req.session.name,
-                //     rol: req.session.rol,
-                //     abonos: abonosrows,
-                // });
              
               
                 //  generateAndSendPDF(informacion, cantidad, res)
-                 await generateAndSendPDF(informacion, cantidad, res);
+               // Genera y envía el PDF
+        await generateAndSendPDF(informacion, cantidad, res);
 
+        // Después de enviar el PDF, redirige o recarga la página del cliente usando JavaScript
+ 
 
 
 
@@ -1647,14 +1637,20 @@ const crearAbonos = async (req, res) => {
                     throw error; 
                 });
 
-                // generateAndSendPDF(informacion, cantidad, res)
-                await generateAndSendPDF(informacion, cantidad, res);
+               // Llama a la función redirectTo después de enviar el PDF
+            
+               await generateAndSendPDF(informacion, cantidad, res);
+
+              
+       
+           
+
 
             }
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error interno del servidor');
+        // res.status(500).send('Error interno del servidor');
     }
 }
 
@@ -1733,7 +1729,6 @@ async function generateAndSendPDF(informacion,cantidad, res) {
         doc.on('data', buffers.push.bind(buffers));
 
         // Manejador para finalizar el documento
-
         doc.on('end', () => {
             const pdfData = Buffer.concat(buffers);
             // Envía el PDF como respuesta
@@ -1747,13 +1742,17 @@ async function generateAndSendPDF(informacion,cantidad, res) {
 
         // Finaliza y cierra el documento PDF
         doc.end();
-
-    
+      
 
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
-        res.status(500).send('Error interno del servidor al generar el PDF');
+        // res.status(500).send('Error interno del servidor al generar el PDF');
     }
+}
+
+function redirectTo(url) {
+   return  res.redirect(url);
+
 }
 
 
