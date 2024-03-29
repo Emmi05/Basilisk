@@ -1585,8 +1585,8 @@ const crearAbonos = async (req, res) => {
                 const id_sale = abonosrows[0].id;
             
                 // Insertar el nuevo abono en la base de datos
-                const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes) VALUES (?, ?, ?, ?)',
-                    [id_sale, fecha_abono, cuota_restante, cuota_pagada])
+                const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes, cantidad) VALUES (?, ?, ?, ?, ?)',
+                    [id_sale, fecha_abono, cuota_restante, cuota_pagada,cantidad])
                     .catch(error => {
                         console.error('Error al insertar el abono en la base de datos:', error);
                         throw error;
@@ -1607,10 +1607,6 @@ const crearAbonos = async (req, res) => {
                // Genera y envía el PDF
         await generateAndSendPDF(informacion, cantidad, res);
 
-        // Después de enviar el PDF, redirige o recarga la página del cliente usando JavaScript
- 
-
-
 
             }else{
             
@@ -1620,15 +1616,15 @@ const crearAbonos = async (req, res) => {
             const id_sale = abonosrows[0].id;
             
             // Insertar el nuevo abono en la base de datos
-            const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes) VALUES (?, ?, ?, ?)',
-                [id_sale, fecha_abono, cuota_restante, cuota_pagada])
+            const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes,cantidad) VALUES (?, ?, ?, ?, ?)',
+                [id_sale, fecha_abono, cuota_restante, cuota_pagada,cantidad])
                 .catch(error => {
                     console.error('Error al insertar el abono en la base de datos:', error);
                     throw error;
                 });
 
-            // Obtener el ID del último abono insertado
-            const lastInsertedAbonoId = iabono.insertId;
+            // // Obtener el ID del último abono insertado
+            // const lastInsertedAbonoId = iabono.insertId;
 
             // Actualizar la venta con las nuevas cuotas pagadas y la deuda restante
             const result = await pool.query('UPDATE sale SET ncuotas_pagadas = ?, deuda_restante = ? WHERE id = ?', [cuota_restante, deuda_restante, id_sale])
@@ -1655,12 +1651,15 @@ const crearAbonos = async (req, res) => {
 }
 
 
+
 // metodo para cahcar los datos del onclick 
 
 
 
 async function generateAndSendPDF(informacion,cantidad, res) {
+
     try {
+
         const doc = new PDFDocument();
         const buffers = [];
    
@@ -1748,10 +1747,106 @@ async function generateAndSendPDF(informacion,cantidad, res) {
         console.error('Error en la generación del PDF:', error);
         // res.status(500).send('Error interno del servidor al generar el PDF');
     }
+
 }
 
-function redirectTo(url) {
-   return  res.redirect(url);
+import table from 'pdfkit-table'
+
+const crearPdf = async (req, res) => {
+
+    const id_venta = req.params.id;
+
+    // // Consulta para obtener información de sale y abonos
+    // const [rows] = await pool.query('SELECT s.*, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, a.cantidad FROM sale s JOIN abonos a ON s.id = a.id_sale WHERE s.id = ?', [id_venta]);
+
+    const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, l.lote, l.manzana, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, a.cantidad FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id_venta]);
+
+    try {
+
+        const doc = new PDFDocument();
+        const buffers = [];
+
+
+      // Establecer la posición de la imagen
+      const imgWidth = 100; // Ancho de la imagen
+      const imgHeight = 80; // Alto de la imagen
+      const imgX = doc.page.width - imgWidth - 5; // Posición X de la imagen (10 píxeles desde el borde derecho)
+      const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
+      doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
+
+        // Agregar espacio
+        doc.moveDown();
+
+        doc.moveDown();
+
+        // Agregar el párrafo de lorem
+        const lorem = ' A continuación se mostrarán todos los abonos que se han proporcionado.';
+        doc.text(` ${lorem}`, {
+            // width: 410,
+            align: 'justify'
+        });
+        doc.moveDown();
+        doc.moveDown();
+        
+        // Obtener el número de cuotas de la venta
+        const nCuotasVenta = rows[0].n_cuentas;
+
+        // Agregar información del número de cuotas de la venta al PDF
+        doc.text(`Número de Cuotas de la Venta: ${nCuotasVenta}`, { align: 'left' });
+        doc.moveDown(); // Mover el cursor hacia abajo para la siguiente sección
+
+        const cliente =rows[0].customer_name;
+        const apellidopa =rows[0].a_paterno;
+        const apellidoma =rows[0].a_materno;
+      
+         doc.text(`Nombre cliente: ${cliente}, ${apellidopa}, ${apellidoma}`,  { align: 'left' });
+         doc.moveDown(); // 
+
+         const terreno = rows[0].lote;
+         const manzana = rows[0].manzana;
+         
+         doc.text(`Venta del terreno: ${terreno}, Manzana: ${manzana}`, { align: 'left' });
+         doc.moveDown();
+
+
+// Iterar sobre las filas restantes de abonos
+for (let i = 0; i < rows.length; i++) {
+    const abono = rows[i];
+    doc.text(`Fecha de Abono: ${abono.fecha_abono}`, { align: 'left' });
+    doc.text(`Cuotas Pagadas: ${abono.cuotas_pagadas}`, { align: 'left' });
+    doc.text(`Cuotas Restantes: ${abono.cuotas_restantes}`, { align: 'left' });
+    doc.text(`Deuda restante: ${abono.deuda_restante}`, { align: 'left' });
+     doc.text(`Cantidad del Abono: ${abono.cantidad}`, { align: 'left' }); // Aquí deberías reemplazar "cantidadDelAbono" con el valor real que deseas mostrar
+    doc.moveDown(); // Mover el cursor hacia abajo para la siguiente sección
+}
+     
+
+       
+        // Manejador para agregar datos al buffer
+        doc.on('data', buffers.push.bind(buffers));
+
+        // Manejador para finalizar el documento
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            // Envía el PDF como respuesta
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=General.pdf',
+                'Content-Length': pdfData.length
+            });
+            res.end(pdfData);
+        });
+
+        // Finaliza y cierra el documento PDF
+        doc.end();
+      
+
+    } catch (error) {
+        console.error('Error en la generación del PDF:', error);
+        // res.status(500).send('Error interno del servidor al generar el PDF');
+    }
+
+
 
 }
 
@@ -1771,5 +1866,6 @@ export const methods = {
     editarVenta,
     eliminarVenta,
     crearAbonos,
+    crearPdf,
   }
 
