@@ -1750,10 +1750,9 @@ async function generateAndSendPDF(informacion,cantidad, res) {
 
 }
 
-import table from 'pdfkit-table'
+
 
 const crearPdf = async (req, res) => {
-
     const id_venta = req.params.id;
 
     // // Consulta para obtener información de sale y abonos
@@ -1812,14 +1811,27 @@ const crearPdf = async (req, res) => {
 // Iterar sobre las filas restantes de abonos
 for (let i = 0; i < rows.length; i++) {
     const abono = rows[i];
-    doc.text(`Fecha de Abono: ${abono.fecha_abono}`, { align: 'left' });
+    
+    // Crear una instancia de fecha a partir de abono.fecha_abono
+    const fechaAbono = new Date(abono.fecha_abono);
+
+    // Obtener los componentes de la fecha (día, mes, año)
+    const dia = fechaAbono.getDate();
+    const mes = fechaAbono.getMonth() + 1; // Se suma 1 porque los meses van de 0 a 11
+    const año = fechaAbono.getFullYear();
+
+    // Formatear la fecha como dd/mm/yyyy
+    const fechaFormateada = `${dia}/${mes}/${año}`;
+
+    // Ahora puedes usar fechaFormateada en lugar de abono.fecha_abono
+    doc.text(`Fecha de Abono: ${fechaFormateada}`, { align: 'left' });
     doc.text(`Cuotas Pagadas: ${abono.cuotas_pagadas}`, { align: 'left' });
     doc.text(`Cuotas Restantes: ${abono.cuotas_restantes}`, { align: 'left' });
     doc.text(`Deuda restante: ${abono.deuda_restante}`, { align: 'left' });
-     doc.text(`Cantidad del Abono: ${abono.cantidad}`, { align: 'left' }); // Aquí deberías reemplazar "cantidadDelAbono" con el valor real que deseas mostrar
+    doc.text(`Cantidad del Abono: ${abono.cantidad}`, { align: 'left' }); // Aquí deberías reemplazar "cantidadDelAbono" con el valor real que deseas mostrar
     doc.moveDown(); // Mover el cursor hacia abajo para la siguiente sección
 }
-     
+
 
        
         // Manejador para agregar datos al buffer
