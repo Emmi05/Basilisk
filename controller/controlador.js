@@ -1834,10 +1834,10 @@ const crearPdf = async (req, res) => {
 
         // Genera la tabla en el PDF
         doc.table(table, {
-            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(8),
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(10), // Ajusta el tamaño de fuente del encabezado
             prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
-                doc.font("Helvetica").fontSize(8);
-                indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15);
+                doc.font("Helvetica").fontSize(10); // Ajusta el tamaño de fuente de las celdas
+                indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15); // Establece el color de fondo para la primera columna
             },
         });
         
