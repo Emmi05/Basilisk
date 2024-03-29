@@ -1,11 +1,18 @@
 import { query } from 'express';
 import { pool} from '../database/db.js'
 import moment from 'moment';
-import PDFDocument from "pdfkit";
+// import PDFDocument from "pdfkit";
 import express from 'express';
 
 import { Router } from 'express';
 const router = Router();
+  // requires
+  import fs from 'fs';
+  import PDFDocument from "pdfkit-table";
+ 
+//   const PDFDocument = require("pdfkit-table");
+//   
+
 
 
 
@@ -1751,89 +1758,104 @@ async function generateAndSendPDF(informacion,cantidad, res) {
 }
 
 
-
 const crearPdf = async (req, res) => {
     const id_venta = req.params.id;
 
-    // // Consulta para obtener información de sale y abonos
-    // const [rows] = await pool.query('SELECT s.*, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, a.cantidad FROM sale s JOIN abonos a ON s.id = a.id_sale WHERE s.id = ?', [id_venta]);
-
-    const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, l.lote, l.manzana, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, a.cantidad FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id_venta]);
-
     try {
-
+        // Realiza la consulta SQL para obtener la información de la venta y los abonos
+        const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, l.lote, l.manzana, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, a.cantidad FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id_venta]);
+        
+        // Inicializa el documento PDF
         const doc = new PDFDocument();
         const buffers = [];
+        
+        // Agrega la imagen
+        const imgWidth = 100;
+        const imgHeight = 80;
+        const imgX = doc.page.width - imgWidth - 30;
+        const imgY = 10;
+        doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
 
-
-      // Establecer la posición de la imagen
-      const imgWidth = 100; // Ancho de la imagen
-      const imgHeight = 80; // Alto de la imagen
-      const imgX = doc.page.width - imgWidth - 5; // Posición X de la imagen (10 píxeles desde el borde derecho)
-      const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
-      doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
-
-        // Agregar espacio
+        // Agrega espacio y texto de descripción
         doc.moveDown();
-
         doc.moveDown();
-
-        // Agregar el párrafo de lorem
-        const lorem = ' A continuación se mostrarán todos los abonos que se han proporcionado.';
-        doc.text(` ${lorem}`, {
-            // width: 410,
-            align: 'justify'
-        });
+        const lorem = 'A continuación se mostrarán todos los abonos que se han proporcionado.';
+        doc.text(` ${lorem}`, { align: 'justify' });
         doc.moveDown();
         doc.moveDown();
         
-        // Obtener el número de cuotas de la venta
+        // Agrega información de la venta
         const nCuotasVenta = rows[0].n_cuentas;
+        const cliente = rows[0].customer_name;
+        const apellidopa = rows[0].a_paterno;
+        const apellidoma = rows[0].a_materno;
+        const terreno = rows[0].lote;
+        const manzana = rows[0].manzana;
 
-        // Agregar información del número de cuotas de la venta al PDF
         doc.text(`Número de Cuotas de la Venta: ${nCuotasVenta}`, { align: 'left' });
-        doc.moveDown(); // Mover el cursor hacia abajo para la siguiente sección
+        doc.moveDown();
+        doc.text(`Nombre cliente: ${cliente}, ${apellidopa}, ${apellidoma}`,  { align: 'left' });
+        doc.moveDown();
+        doc.text(`Venta del terreno: ${terreno}, Manzana: ${manzana}`, { align: 'left' });
+        doc.moveDown();
 
-        const cliente =rows[0].customer_name;
-        const apellidopa =rows[0].a_paterno;
-        const apellidoma =rows[0].a_materno;
+        const table = {
+            title: "Abonos",
+            subtitle: "Lista de abonos",
+            headers: [
+                { label: "Fecha de Abono", property: 'fecha_abono', width: 100 },
+                { label: "Cuotas Pagadas", property: 'cuotas_pagadas', width: 100 }, 
+                { label: "Cuotas Restantes", property: 'cuotas_restantes', width: 100 }, 
+                { label: "Cantidad del Abono", property: 'cantidad', width: 100 }
+            ],
+            rows: []
+        };
+        
+        // Agrega datos de abonos a la tabla
+        for (let i = 0; i < rows.length; i++) {
+            const abono = rows[i];
+        
+            // Crear una instancia de fecha a partir de abono.fecha_abono
+            const fechaAbono = new Date(abono.fecha_abono);
+        
+            // Formatear la fecha como dd/mm/yyyy
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const fechaFormateada = fechaAbono.toLocaleDateString('es-ES', options); // 'es-ES' es el código de idioma para español
+        
+            // Agregar cada fila de abono a la tabla
+            table.rows.push([
+                fechaFormateada,
+                abono.cuotas_pagadas,
+                abono.cuotas_restantes,
+                abono.cantidad
+            ]);
+        }
       
-         doc.text(`Nombre cliente: ${cliente}, ${apellidopa}, ${apellidoma}`,  { align: 'left' });
-         doc.moveDown(); // 
 
-         const terreno = rows[0].lote;
-         const manzana = rows[0].manzana;
-         
-         doc.text(`Venta del terreno: ${terreno}, Manzana: ${manzana}`, { align: 'left' });
-         doc.moveDown();
+        // Genera la tabla en el PDF
+        doc.table(table, {
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(8),
+            prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+                doc.font("Helvetica").fontSize(8);
+                indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15);
+            },
+        });
+        
+      // Ajusta la posición vertical del pie de página
+      const footerY = doc.page.height - 20;
+
+    // Dibuja la línea horizontal
+        const lineY = footerY - 30; // Ajusta la posición vertical de la línea
+        doc.lineCap('butt')
+            .moveTo(50, lineY)
+            .lineTo(doc.page.width - 50, lineY)
+            .stroke();
 
 
-// Iterar sobre las filas restantes de abonos
-for (let i = 0; i < rows.length; i++) {
-    const abono = rows[i];
+
+
     
-    // Crear una instancia de fecha a partir de abono.fecha_abono
-    const fechaAbono = new Date(abono.fecha_abono);
 
-    // Obtener los componentes de la fecha (día, mes, año)
-    const dia = fechaAbono.getDate();
-    const mes = fechaAbono.getMonth() + 1; // Se suma 1 porque los meses van de 0 a 11
-    const año = fechaAbono.getFullYear();
-
-    // Formatear la fecha como dd/mm/yyyy
-    const fechaFormateada = `${dia}/${mes}/${año}`;
-
-    // Ahora puedes usar fechaFormateada en lugar de abono.fecha_abono
-    doc.text(`Fecha de Abono: ${fechaFormateada}`, { align: 'left' });
-    doc.text(`Cuotas Pagadas: ${abono.cuotas_pagadas}`, { align: 'left' });
-    doc.text(`Cuotas Restantes: ${abono.cuotas_restantes}`, { align: 'left' });
-    doc.text(`Deuda restante: ${abono.deuda_restante}`, { align: 'left' });
-    doc.text(`Cantidad del Abono: ${abono.cantidad}`, { align: 'left' }); // Aquí deberías reemplazar "cantidadDelAbono" con el valor real que deseas mostrar
-    doc.moveDown(); // Mover el cursor hacia abajo para la siguiente sección
-}
-
-
-       
         // Manejador para agregar datos al buffer
         doc.on('data', buffers.push.bind(buffers));
 
@@ -1843,7 +1865,7 @@ for (let i = 0; i < rows.length; i++) {
             // Envía el PDF como respuesta
             res.writeHead(200, {
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': 'attachment; filename=General.pdf',
+                'Content-Disposition': 'attachment; filename=Venta.pdf',
                 'Content-Length': pdfData.length
             });
             res.end(pdfData);
@@ -1851,16 +1873,13 @@ for (let i = 0; i < rows.length; i++) {
 
         // Finaliza y cierra el documento PDF
         doc.end();
-      
-
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
-        // res.status(500).send('Error interno del servidor al generar el PDF');
+        // Envía una respuesta de error al cliente si falla la generación del PDF
+        res.status(500).send('Error interno del servidor al generar el PDF');
     }
-
-
-
 }
+
 
 
 
