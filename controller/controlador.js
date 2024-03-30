@@ -1776,15 +1776,24 @@ const crearPdf = async (req, res) => {
         const imgX = doc.page.width - imgWidth - 30;
         const imgY = 10;
         doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
-
+        
+    // Agregar (fecha de generación del PDF)
+        const fechaActual = new Date().toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
         // Agrega espacio y texto de descripción
         doc.moveDown();
         doc.moveDown();
-        const lorem = 'A continuación se mostrarán todos los abonos que se han proporcionado.';
+        const lorem = `A continuación se mostrarán todos los abonos que se han proporcionado desde la fecha de compra - venta del terreno. (Esto solo es un historial) creado el día ${fechaActual}`;
         doc.text(` ${lorem}`, { align: 'justify' });
         doc.moveDown();
-        doc.moveDown();
-        
+    
+    
         // Agrega información de la venta
         const nCuotasVenta = rows[0].n_cuentas;
         const cliente = rows[0].customer_name;
@@ -1793,21 +1802,21 @@ const crearPdf = async (req, res) => {
         const terreno = rows[0].lote;
         const manzana = rows[0].manzana;
 
-        doc.text(`Número de Cuotas de la Venta: ${nCuotasVenta}`, { align: 'left' });
+        doc.text(`Número de Cuotas Total: ${nCuotasVenta}`, { align: 'left' });
         doc.moveDown();
-        doc.text(`Nombre cliente: ${cliente}, ${apellidopa}, ${apellidoma}`,  { align: 'left' });
+        doc.text(`Nombre cliente: ${cliente} ${apellidopa} ${apellidoma}`,  { align: 'left' });
         doc.moveDown();
         doc.text(`Venta del terreno: ${terreno}, Manzana: ${manzana}`, { align: 'left' });
         doc.moveDown();
 
         const table = {
             title: "Abonos",
-            subtitle: "Lista de abonos",
+            subtitle: "Historial",
             headers: [
-                { label: "Fecha de Abono", property: 'fecha_abono', width: 100 },
-                { label: "Cuotas Pagadas", property: 'cuotas_pagadas', width: 100 }, 
-                { label: "Cuotas Restantes", property: 'cuotas_restantes', width: 100 }, 
-                { label: "Cantidad del Abono", property: 'cantidad', width: 100 }
+                { label: "Fecha", property: 'fecha_abono', width: 120 },
+                { label: "C. Pagadas", property: 'cuotas_pagadas', width: 120 }, 
+                { label: "C. Restantes", property: 'cuotas_restantes', width: 120 }, 
+                { label: "Abono", property: 'cantidad', width: 120 }
             ],
             rows: []
         };
@@ -1835,9 +1844,9 @@ const crearPdf = async (req, res) => {
 
         // Genera la tabla en el PDF
         doc.table(table, {
-            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(10), // Ajusta el tamaño de fuente del encabezado
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(12), // Ajusta el tamaño de fuente del encabezado
             prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
-                doc.font("Helvetica").fontSize(10); // Ajusta el tamaño de fuente de las celdas
+                doc.font("Helvetica").fontSize(12); // Ajusta el tamaño de fuente de las celdas
                 indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15); // Establece el color de fondo para la primera columna
             },
         });
@@ -1852,6 +1861,7 @@ const crearPdf = async (req, res) => {
             .lineTo(doc.page.width - 50, lineY)
             .stroke();
 
+      
 
         // Manejador para agregar datos al buffer
         doc.on('data', buffers.push.bind(buffers));
