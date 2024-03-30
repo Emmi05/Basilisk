@@ -1223,6 +1223,7 @@ const crearVenta = async (req, res) => {
     
     try {
         const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, cuotas, precio} = req.body;
+
         const inicialNumber = parseFloat(inicial);
         const nCuentasNumber = parseFloat(n_cuentas);
 
@@ -1331,7 +1332,7 @@ const crearVenta = async (req, res) => {
             if(ventasearch){
                const [ventasrows] =  await pool.query('SELECT * FROM sale WHERE id_land = ? ', [id_land]);
 
-             await pool.query('INSERT INTO abonos (id_sale, cuotas_restantes ) VALUES (?, ?)', [ventasrows[0].id, n_cuentas]);
+             await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_restantes) VALUES (?, ?, ?)', [ventasrows[0].id, fechaFormateada, n_cuentas ]);
 
             }
         }
@@ -1526,6 +1527,8 @@ const crearAbonos = async (req, res) => {
     try {
         // Obtener los datos del cuerpo de la solicitud
         const { n_abono, fecha_abono, cantidad } = req.body;
+         // Manejar la fecha de abono cuando no está presente
+         const fechaAbono = fecha_abono || new Date();
 
         const [informacion]=await pool.query('SELECT  s.id AS venta_id, s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas AS abono_cuotas_pagadas, a.cuotas_restantes AS abono_cuotas_restantes, c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno, l.precio AS land_precio FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
         // Consulta para obtener detalles de la venta y el último abono
@@ -1592,15 +1595,17 @@ const crearAbonos = async (req, res) => {
                 const id_sale = abonosrows[0].id;
             
                 // Insertar el nuevo abono en la base de datos
+                const fechaAbonoFormateada = moment(fechaAbono).format('YYYY-MM-DD');
+
                 const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes, cantidad) VALUES (?, ?, ?, ?, ?)',
-                    [id_sale, fecha_abono, cuota_restante, cuota_pagada,cantidad])
-                    .catch(error => {
-                        console.error('Error al insertar el abono en la base de datos:', error);
-                        throw error;
-                    });
+                [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada, cantidad])
+                .catch(error => {
+                    console.error('Error al insertar el abono en la base de datos:', error);
+                    throw error;
+                });
     
-                // Obtener el ID del último abono insertado
-                const lastInsertedAbonoId = iabono.insertId;
+                // // Obtener el ID del último abono insertado
+                // const lastInsertedAbonoId = iabono.insertId;
     
                 // Actualizar la venta con las nuevas cuotas pagadas y la deuda restante
                 const result = await pool.query('UPDATE sale SET ncuotas_pagadas = ?, deuda_restante = ? WHERE id = ?', [cuota_restante, deuda_restante, id_sale])
@@ -1610,12 +1615,14 @@ const crearAbonos = async (req, res) => {
                     });
              
               
-                //  generateAndSendPDF(informacion, cantidad, res)
+    
                // Genera y envía el PDF
         await generateAndSendPDF(informacion, cantidad, res);
 
 
             }else{
+                const fechaAbonoFormateada = moment(fechaAbono).format('YYYY-MM-DD');
+
             
             // const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat(n_abono);
             // console.log(cuota_pagada, "cuota pagado");
@@ -1624,7 +1631,7 @@ const crearAbonos = async (req, res) => {
             
             // Insertar el nuevo abono en la base de datos
             const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes,cantidad) VALUES (?, ?, ?, ?, ?)',
-                [id_sale, fecha_abono, cuota_restante, cuota_pagada,cantidad])
+                [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada,cantidad])
                 .catch(error => {
                     console.error('Error al insertar el abono en la base de datos:', error);
                     throw error;
@@ -1642,13 +1649,7 @@ const crearAbonos = async (req, res) => {
 
                // Llama a la función redirectTo después de enviar el PDF
             
-               await generateAndSendPDF(informacion, cantidad, res);
-
-              
-       
-           
-
-
+               await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
             }
         }
     } catch (error) {
@@ -1662,22 +1663,20 @@ const crearAbonos = async (req, res) => {
 // metodo para cahcar los datos del onclick 
 
 
-
-async function generateAndSendPDF(informacion,cantidad, res) {
+async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res) {
 
     try {
 
         const doc = new PDFDocument();
         const buffers = [];
    
+         // Convertir la fecha a un objeto Date usando Moment.js
+         const fechaAbono = moment(fechaAbonoFormateada, 'YYYY-MM-DD').toDate();
 
+         // Formatear la fecha en letras
+         const fechaEnLetras = formatFechaEnLetras(fechaAbono);
 
-        // Formatear la fecha del último abono
-        const fechaAbono = new Date(informacion[0].fecha_abono);
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const fechaAbonoFormateada = fechaAbono.toLocaleDateString('es-ES', options);
-
-
+         
       // Establecer la posición de la imagen
       const imgWidth = 100; // Ancho de la imagen
       const imgHeight = 80; // Alto de la imagen
@@ -1688,7 +1687,7 @@ async function generateAndSendPDF(informacion,cantidad, res) {
         // Agregar espacio
         doc.moveDown();
 
-        const fecha = `Acapulco, Guerrero, a  ${fechaAbonoFormateada}`;
+        const fecha = `Acapulco, Guerrero, a  ${fechaEnLetras}`;
         doc.text(fecha, {
             align: 'right' // Alinea el texto a la derecha
         });
@@ -1756,6 +1755,8 @@ async function generateAndSendPDF(informacion,cantidad, res) {
     }
 
 }
+
+
 
 
 const crearPdf = async (req, res) => {
@@ -1852,10 +1853,6 @@ const crearPdf = async (req, res) => {
             .stroke();
 
 
-
-
-    
-
         // Manejador para agregar datos al buffer
         doc.on('data', buffers.push.bind(buffers));
 
@@ -1900,3 +1897,26 @@ export const methods = {
     crearPdf,
   }
 
+
+
+  // Función para obtener el día en letras
+function getDiaEnLetras(fecha) {
+    const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const dia = fecha.getDay();
+    return dias[dia];
+}
+
+// Función para obtener el mes en letras
+function getMesEnLetras(fecha) {
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const mes = fecha.getMonth();
+    return meses[mes];
+}
+
+// Función para formatear la fecha
+function formatFechaEnLetras(fecha) {
+    const dia = getDiaEnLetras(fecha);
+    const mes = getMesEnLetras(fecha);
+    const año = fecha.getFullYear();
+    return `${dia} ${fecha.getDate()} de ${mes} de ${año}`;
+}
