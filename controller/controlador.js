@@ -1887,6 +1887,356 @@ const crearPdf = async (req, res) => {
     }
 }
 
+const contado = async (req, res) => {
+  
+
+    try {
+        const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, s.fecha_venta, l.precio, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "contado";');
+
+        // Inicializa el documento PDF
+        const doc = new PDFDocument();
+        const buffers = [];
+        
+        // Agrega la imagen
+        const imgWidth = 100;
+        const imgHeight = 80;
+        const imgX = doc.page.width - imgWidth - 30;
+        const imgY = 10;
+        doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
+        
+
+        // Agrega datos de ventas de terrenos a la tabla
+for (let i = 0; i < rows.length; i++) {
+    const venta = rows[i];
+    console.log('Lote:', venta.lote, 'Manzana:', venta.manzana); // Agrega este console.log para verificar los valores de lote y manzana
+    // Resto del código para construir las filas de la tabla...
+}
+
+        // Agregar (fecha de generación del PDF)
+        const fechaActual = new Date().toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        // Agrega espacio y texto de descripción
+        doc.moveDown();
+        doc.moveDown();
+        const lorem = `A continuación se mostrarán todos los terrenos que se han vendido a contado (Esto solo es un historial) creado el día ${fechaActual}`;
+        doc.text(` ${lorem}`, { align: 'justify' });
+        doc.moveDown();
+    
+        const table = {
+            title: "Terrenos Vendidos contado",
+            subtitle: "Historial de compras a contado",
+            headers: [
+                { label: "Fecha", property: 'fecha_venta', width: 70 },
+                { label: "Cliente", property: 'customer_name', width: 200 }, 
+                { label: "Precio", property: 'precio', width: 100 },
+                { label: "L", property: 'lote', width: 50 }, // Debe ser 'lote' en lugar de 'Lote'
+                { label: "M", property: 'manzana', width: 50 } // Debe ser 'manzana' en lugar de 'Manzana'
+            ],
+            rows: []
+        };
+        
+        
+        // Agrega datos de ventas de terrenos a la tabla
+        for (let i = 0; i < rows.length; i++) {
+            const venta = rows[i];
+        
+            // Crear una instancia de fecha a partir de venta.fecha_venta
+            const fechaVenta = new Date(venta.fecha_venta);
+        
+            // Formatear la fecha como dd/mm/yyyy
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const fechaFormateada = fechaVenta.toLocaleDateString('es-ES', options); // 'es-ES' es el código de idioma para español
+        
+            // Agregar cada fila de venta de terreno a la tabla
+            table.rows.push([
+                fechaFormateada,
+                `${venta.customer_name} ${venta.a_paterno} ${venta.a_materno}`,
+                venta.precio,
+                venta.lote, // Agregar el valor del lote
+                venta.manzana // Agregar el valor de la manzana
+            ]);
+        }
+
+        // Genera la tabla en el PDF
+        doc.table(table, {
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(12), // Ajusta el tamaño de fuente del encabezado
+            prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+                doc.font("Helvetica").fontSize(12); // Ajusta el tamaño de fuente de las celdas
+                indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15); // Establece el color de fondo para la primera columna
+            },
+        });
+        
+        // Ajusta la posición vertical del pie de página
+        const footerY = doc.page.height - 20;
+
+        // Dibuja la línea horizontal
+        const lineY = footerY - 30; // Ajusta la posición vertical de la línea
+        doc.lineCap('butt')
+            .moveTo(50, lineY)
+            .lineTo(doc.page.width - 50, lineY)
+            .stroke();
+
+        // Manejador para agregar datos al buffer
+        doc.on('data', buffers.push.bind(buffers));
+
+        // Manejador para finalizar el documento
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            // Envía el PDF como respuesta
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=contado.pdf',
+                'Content-Length': pdfData.length
+            });
+            res.end(pdfData);
+        });
+
+        // Finaliza y cierra el documento PDF
+        doc.end();
+    } catch (error) {
+        console.error('Error en la generación del PDF:', error);
+        // Envía una respuesta de error al cliente si falla la generación del PDF
+        res.status(500).send('Error interno del servidor al generar el PDF');
+    }
+}
+
+const proceso = async (req, res) => {
+  
+
+    try {
+        const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, s.fecha_venta, s.ncuotas_pagadas, l.precio, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito";');
+
+        // Inicializa el documento PDF
+        const doc = new PDFDocument();
+        const buffers = [];
+        
+        // Agrega la imagen
+        const imgWidth = 100;
+        const imgHeight = 80;
+        const imgX = doc.page.width - imgWidth - 30;
+        const imgY = 10;
+        doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
+        
+
+        // Agrega datos de ventas de terrenos a la tabla
+for (let i = 0; i < rows.length; i++) {
+    const venta = rows[i];
+    console.log('Lote:', venta.lote, 'Manzana:', venta.manzana); // Agrega este console.log para verificar los valores de lote y manzana
+    // Resto del código para construir las filas de la tabla...
+}
+
+        // Agregar (fecha de generación del PDF)
+        const fechaActual = new Date().toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        // Agrega espacio y texto de descripción
+        doc.moveDown();
+        doc.moveDown();
+        const lorem = `A continuación se mostrarán todos los terrenos que se han vendido a contado (Esto solo es un historial) creado el día ${fechaActual}`;
+        doc.text(` ${lorem}`, { align: 'justify' });
+        doc.moveDown();
+    
+        const table = {
+            title: "Terrenos Vendidos contado",
+            subtitle: "Historial de compras a contado",
+            headers: [
+                { label: "Fecha", property: 'fecha_venta', width: 70 },
+                { label: "Cliente", property: 'customer_name', width: 200 }, 
+                { label: "Precio", property: 'precio', width: 100 },
+                { label: "L", property: 'lote', width: 50 }, // Debe ser 'lote' en lugar de 'Lote'
+                { label: "M", property: 'manzana', width: 50 } ,
+                { label: "C.P", property: 'ncuotas_pagadas', width: 50 } // Debe ser 'manzana' en lugar de 'Manzana'
+            ],
+            rows: []
+        };
+        
+        
+        // Agrega datos de ventas de terrenos a la tabla
+        for (let i = 0; i < rows.length; i++) {
+            const venta = rows[i];
+        
+            // Crear una instancia de fecha a partir de venta.fecha_venta
+            const fechaVenta = new Date(venta.fecha_venta);
+        
+            // Formatear la fecha como dd/mm/yyyy
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const fechaFormateada = fechaVenta.toLocaleDateString('es-ES', options); // 'es-ES' es el código de idioma para español
+        
+            // Agregar cada fila de venta de terreno a la tabla
+            table.rows.push([
+                fechaFormateada,
+                `${venta.customer_name} ${venta.a_paterno} ${venta.a_materno}`,
+                venta.precio,
+                venta.lote, // Agregar el valor del lote
+                venta.manzana,
+                venta.ncuotas_pagadas // Agregar el valor de la manzana
+            ]);
+        }
+
+        // Genera la tabla en el PDF
+        doc.table(table, {
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(12), // Ajusta el tamaño de fuente del encabezado
+            prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+                doc.font("Helvetica").fontSize(12); // Ajusta el tamaño de fuente de las celdas
+                indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15); // Establece el color de fondo para la primera columna
+            },
+        });
+        
+        // Ajusta la posición vertical del pie de página
+        const footerY = doc.page.height - 20;
+
+        // Dibuja la línea horizontal
+        const lineY = footerY - 30; // Ajusta la posición vertical de la línea
+        doc.lineCap('butt')
+            .moveTo(50, lineY)
+            .lineTo(doc.page.width - 50, lineY)
+            .stroke();
+
+        // Manejador para agregar datos al buffer
+        doc.on('data', buffers.push.bind(buffers));
+
+        // Manejador para finalizar el documento
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            // Envía el PDF como respuesta
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=proceso.pdf',
+                'Content-Length': pdfData.length
+            });
+            res.end(pdfData);
+        });
+
+        // Finaliza y cierra el documento PDF
+        doc.end();
+    } catch (error) {
+        console.error('Error en la generación del PDF:', error);
+        // Envía una respuesta de error al cliente si falla la generación del PDF
+        res.status(500).send('Error interno del servidor al generar el PDF');
+    }
+}
+
+const disponibles = async (req, res) => {
+  
+
+    try {
+        const [rows] = await pool.query('SELECT * FROM LAND WHERE estado = "disponible"');
+
+        // Inicializa el documento PDF
+        const doc = new PDFDocument();
+        const buffers = [];
+        
+        // Agrega la imagen
+        const imgWidth = 100;
+        const imgHeight = 80;
+        const imgX = doc.page.width - imgWidth - 30;
+        const imgY = 10;
+        doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
+  
+        // Agregar (fecha de generación del PDF)
+        const fechaActual = new Date().toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        // Agrega espacio y texto de descripción
+        doc.moveDown();
+        doc.moveDown();
+        const lorem = `A continuación se mostrarán todos los terrenos que estan disponibles (Esto solo es un historial) creado el día ${fechaActual}`;
+        doc.text(` ${lorem}`, { align: 'justify' });
+        doc.moveDown();
+    
+        const table = {
+            title: "Terrenos disponibles",
+            subtitle: "Historial de terrenos disponibles",
+            headers: [
+                { label: "id_Interno", property: 'id_interno', width: 100 },
+                { label: "calle", property: 'calle', width: 100 }, 
+                { label: "l", property: 'lote', width: 50 }, // Debe ser 'lote' en lugar de 'Lote'
+                { label: "M", property: 'manzana', width: 70 } ,
+                { label: "S", property: 'superficie', width: 50 } ,
+                { label: "P", property: 'predial', width:100 } ,
+                { label: "E", property: 'escritura', width: 20 } // Debe ser 'manzana' en lugar de 'Manzana'
+            ],
+            rows: []
+        };
+        
+        
+        // Agrega datos de terrenos disponibles a la tabla
+        for (let i = 0; i < rows.length; i++) {
+            const terreno = rows[i];
+            
+            // Agregar cada fila de terreno disponible a la tabla
+            table.rows.push([
+                terreno.id_interno,
+                terreno.calle,
+                terreno.lote,
+                terreno.manzana,
+                terreno.superficie,
+                terreno.predial,
+                terreno.escritura
+            ]);
+        }
+
+
+        // Genera la tabla en el PDF
+        doc.table(table, {
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(12), // Ajusta el tamaño de fuente del encabezado
+            prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+                doc.font("Helvetica").fontSize(12); // Ajusta el tamaño de fuente de las celdas
+                indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15); // Establece el color de fondo para la primera columna
+            },
+        });
+        
+        // Ajusta la posición vertical del pie de página
+        const footerY = doc.page.height - 20;
+
+        // Dibuja la línea horizontal
+        const lineY = footerY - 30; // Ajusta la posición vertical de la línea
+        doc.lineCap('butt')
+            .moveTo(50, lineY)
+            .lineTo(doc.page.width - 50, lineY)
+            .stroke();
+
+        // Manejador para agregar datos al buffer
+        doc.on('data', buffers.push.bind(buffers));
+
+        // Manejador para finalizar el documento
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            // Envía el PDF como respuesta
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=disponibles.pdf',
+                'Content-Length': pdfData.length
+            });
+            res.end(pdfData);
+        });
+
+        // Finaliza y cierra el documento PDF
+        doc.end();
+    } catch (error) {
+        console.error('Error en la generación del PDF:', error);
+        // Envía una respuesta de error al cliente si falla la generación del PDF
+        res.status(500).send('Error interno del servidor al generar el PDF');
+    }
+}
+
+
 
 
 
@@ -1905,6 +2255,9 @@ export const methods = {
     eliminarVenta,
     crearAbonos,
     crearPdf,
+    contado,
+    proceso,
+    disponibles,
   }
 
 

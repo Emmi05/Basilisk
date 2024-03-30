@@ -413,6 +413,12 @@ router.post('/crearAbonos/:id',authentication.crearAbonos);
 
 router.get('/reporte/:id',authentication.crearPdf);
 
+router.get('/contado/',authentication.contado);
+
+router.get('/proceso/',authentication.proceso);
+
+router.get('/disponibles/',authentication.disponibles);
+
 
 
 // REPORTE GENERAL
