@@ -387,14 +387,9 @@ router.get('/abonosAlta/:id', async (req, res) => {
        s.deuda_restante, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes 
        FROM sale s 
        JOIN customers c ON s.id_customer = c.id 
-       JOIN (
-           SELECT id_sale, MAX(id) AS last_abono_id 
-           FROM abonos 
-           GROUP BY id_sale
-       ) AS last_abono ON last_abono.id_sale = s.id 
-       JOIN abonos a ON a.id_sale = s.id AND a.id = last_abono.last_abono_id
+       JOIN abonos a ON a.id_sale = s.id 
        JOIN land l ON s.id_land = l.id 
-       WHERE s.tipo_venta = "credito" && s.id=${id}`);
+       WHERE s.tipo_venta = "credito" && s.id=${id} ORDER BY cuotas_restantes ASC LIMIT 1`);
 
        res.render('abonos_formulario', {
             login: true,
