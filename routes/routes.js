@@ -350,7 +350,7 @@ router.get('/abono_view',  async(req, res) => {
     } else if (req.session.rol == 'admin') {
 
         // const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.deuda_restante, s.id, s.tipo_venta, s.inicial, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN abonos a ON a.id_sale = s.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito";');
-        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.deuda_restante, s.id, s.tipo_venta, s.inicial, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN ( SELECT id_sale, MAX(id) AS last_abono_id  FROM abonos  GROUP BY id_sale) AS last_abono ON last_abono.id_sale = s.id JOIN abonos a ON a.id_sale = s.id AND a.id = last_abono.last_abono_id JOIN land l ON s.id_land = l.id  WHERE s.tipo_venta = "credito" && cuotas_restantes > 0')
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.estado, l.id_interno, s.n_cuentas, s.deuda_restante, s.id, s.tipo_venta, s.inicial, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes FROM sale s JOIN customers c ON s.id_customer = c.id JOIN  abonos a ON a.id_sale = s.id JOIN land l ON s.id_land = l.id  WHERE s.tipo_venta = "credito" && l.estado = "proceso"  ORDER BY a.cuotas_pagadas DESC LIMIT 1')
 
 
         res.render('abonos_vista', {
