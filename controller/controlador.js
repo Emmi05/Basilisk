@@ -1332,7 +1332,7 @@ const crearVenta = async (req, res) => {
             if(ventasearch){
                const [ventasrows] =  await pool.query('SELECT * FROM sale WHERE id_land = ? ', [id_land]);
 
-             await pool.query('INSERT INTO abonos (id_sale, cuotas_restantes) VALUES (?, ?)', [ventasrows[0].id, n_cuentas ]);
+             await pool.query('INSERT INTO abonos (id_sale, cuotas_restantes, fecha_abono) VALUES (?, ?, ?)', [ventasrows[0].id, n_cuentas, fechaFormateada ]);
 
             }
         }
@@ -1597,8 +1597,8 @@ const crearAbonos = async (req, res) => {
                 // Insertar el nuevo abono en la base de datos
                 const fechaAbonoFormateada = moment(fechaAbono).format('YYYY-MM-DD');
 
-                const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes, cantidad) VALUES (?, ?, ?, ?, ?)',
-                [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada, cantidad])
+                const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes, cantidad, n_abono) VALUES (?, ?, ?, ?, ?, ?)',
+                [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada, cantidad, n_abono])
                 .catch(error => {
                     console.error('Error al insertar el abono en la base de datos:', error);
                     throw error;
@@ -1630,8 +1630,8 @@ const crearAbonos = async (req, res) => {
             const id_sale = abonosrows[0].id;
             
             // Insertar el nuevo abono en la base de datos
-            const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes,cantidad) VALUES (?, ?, ?, ?, ?)',
-                [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada,cantidad])
+            const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes,cantidad, n_abono) VALUES (?, ?, ?, ?, ?, ?)',
+                [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada,cantidad, n_abono])
                 .catch(error => {
                     console.error('Error al insertar el abono en la base de datos:', error);
                     throw error;
