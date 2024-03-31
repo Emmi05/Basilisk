@@ -1332,7 +1332,7 @@ const crearVenta = async (req, res) => {
             if(ventasearch){
                const [ventasrows] =  await pool.query('SELECT * FROM sale WHERE id_land = ? ', [id_land]);
 
-             await pool.query('INSERT INTO abonos (id_sale, cuotas_restantes) VALUES (?, ?)', [ventasrows[0].id, n_cuentas ]);
+             await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_restantes) VALUES (?, ?, ?)', [ventasrows[0].id,fechaFormateada, n_cuentas ]);
 
             }
         }
@@ -1528,11 +1528,11 @@ const crearAbonos = async (req, res) => {
         // Obtener los datos del cuerpo de la solicitud
         const { n_abono, fecha_abono, cantidad } = req.body;
          // Manejar la fecha de abono cuando no está presente
-         const fechaAbono = fecha_abono || new Date();
+         const fechaAbono = fecha_abono;
 
         const [informacion]=await pool.query('SELECT  s.id AS venta_id, s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas AS abono_cuotas_pagadas, a.cuotas_restantes AS abono_cuotas_restantes, c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno, l.precio AS land_precio FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
         // Consulta para obtener detalles de la venta y el último abono
-        const [abonosrows] = await pool.query('SELECT s.id,s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id WHERE s.id = ? ORDER BY a.fecha_abono DESC LIMIT 1;', [id_venta]);
+        const [abonosrows] = await pool.query('SELECT s.id,s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id WHERE s.id = ? ORDER BY a.cuotas_restantes ASC LIMIT 1;', [id_venta]);
     
 
         // Verificar si algún campo está vacío
@@ -1574,6 +1574,7 @@ const crearAbonos = async (req, res) => {
             }
             console.log(n_abono, "abono dado");
             console.log(cuotasFaltantes, "cuotas generales");
+
 
             const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono); // Sumar n_abono a las cuotas pagadas
 
