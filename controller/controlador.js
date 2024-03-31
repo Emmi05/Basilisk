@@ -1332,7 +1332,7 @@ const crearVenta = async (req, res) => {
             if(ventasearch){
                const [ventasrows] =  await pool.query('SELECT * FROM sale WHERE id_land = ? ', [id_land]);
 
-             await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_restantes) VALUES (?, ?, ?)', [ventasrows[0].id, fechaFormateada, n_cuentas ]);
+             await pool.query('INSERT INTO abonos (id_sale, cuotas_restantes) VALUES (?, ?)', [ventasrows[0].id, n_cuentas ]);
 
             }
         }
@@ -1617,7 +1617,7 @@ const crearAbonos = async (req, res) => {
               
     
                // Genera y envía el PDF
-        await generateAndSendPDF(informacion, cantidad, res);
+        await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
 
 
             }else{
