@@ -1532,8 +1532,10 @@ const crearAbonos = async (req, res) => {
 
         const [informacion]=await pool.query('SELECT  s.id AS venta_id, s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas AS abono_cuotas_pagadas, a.cuotas_restantes AS abono_cuotas_restantes, c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno, l.precio AS land_precio FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
         // Consulta para obtener detalles de la venta y el último abono
-        const [abonosrows] = await pool.query('SELECT s.id,s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id WHERE s.id = ? ORDER BY a.cuotas_restantes ASC LIMIT 1;', [id_venta]);
+
+        const [abonosrows] = await pool.query('SELECT s.id,s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.id_land, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.id  FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id  JOIN land l ON l.id = s.id_land WHERE s.id = ? ORDER BY a.cuotas_restantes ASC LIMIT 1;', [id_venta]);
     
+        
 
         // Verificar si algún campo está vacío
         if (!n_abono || !fecha_abono) {
@@ -1575,6 +1577,11 @@ const crearAbonos = async (req, res) => {
             console.log(n_abono, "abono dado");
             console.log(cuotasFaltantes, "cuotas generales");
 
+          
+
+            const id_land=abonosrows[0].id_land;
+
+
             const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono); // Sumar n_abono a las cuotas pagadas
 
             // const cuota_restante = abonosrows[0].cuotas - abonosrows[0].ncuotas_pagadas; // Calcula cuotas restantes
@@ -1591,6 +1598,7 @@ const crearAbonos = async (req, res) => {
             console.log(deuda_restante, "deuda restante ");
             console.log("-------------------------------------------------")
 
+            ///aqui se valida los decimales 
             if(deuda_restante<=1){
                 const deuda_restante=0;
                 const id_sale = abonosrows[0].id;
@@ -1600,6 +1608,10 @@ const crearAbonos = async (req, res) => {
 
                 const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes, cantidad, n_abono) VALUES (?, ?, ?, ?, ?, ?)',
                 [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada, cantidad, n_abono])
+
+                   // Marcar el terreno como "proceso"
+                  await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_land])
+
                 .catch(error => {
                     console.error('Error al insertar el abono en la base de datos:', error);
                     throw error;
@@ -1815,8 +1827,8 @@ const crearPdf = async (req, res) => {
             subtitle: "Historial",
             headers: [
                 { label: "Fecha", property: 'fecha_abono', width: 120 },
-                { label: "N. Cuotas", property: 'n_abono', width: 120 }, 
-                { label: "C. Pagadas", property: 'cuotas_pagadas', width: 120 }, 
+                { label: "N. Cuotas", property: 'n_abono', width: 50 }, 
+                { label: "C. Pagadas", property: 'cuotas_pagadas', width: 50 }, 
                 { label: "C. Restantes", property: 'cuotas_restantes', width: 120 }, 
                 { label: "Abono", property: 'cantidad', width: 120 }
             ],
