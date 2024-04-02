@@ -1150,17 +1150,17 @@ export const crearTerreno= async (req, res) => {
             });
         }
 
-        const existmanzana = await pool.query('SELECT * FROM land WHERE manzana = ?', manzana);
-        console.log(existmanzana)
-        if (existmanzana[0].length > 0) {
+        const existTerreno = await pool.query('SELECT * FROM land WHERE lote = ? AND manzana = ?', [lote, manzana]);
+
+        if (existTerreno[0].length > 0) {
             return res.render('terrenoAlta', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "La manzana ya existe. Por favor, verifique manzana",
+                alertMessage: "Ya existe un terreno con el mismo lote y manzana. Por favor, verifique.",
                 alertIcon: 'error',
                 showConfirmButton: false,
                 timer: 3500,
-                ruta: '/', 
+                ruta: '/',
                 login: true,
                 roluser: true,
                 name: req.session.name,
@@ -1369,8 +1369,23 @@ export const crearTerreno= async (req, res) => {
                 rol: req.session.rol,
             });
         }
+        const existTerreno = await pool.query('SELECT * FROM land WHERE lote = ? AND manzana = ?', [lote, manzana]);
 
- 
+        if (existTerreno[0].length > 0) {
+            return res.render('terrenoAlta', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Ya existe un terreno con el mismo lote y manzana. Por favor, verifique.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/',
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
 
 
         // const manzanaregex = /^[a-zA-Z0-9\s-]+$/;
