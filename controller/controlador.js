@@ -1616,12 +1616,38 @@ export const editarTerrenos = async (req, res) => {
             });
         }
 
-        const validLote=loteRegex.test(lote);
-        if (!validLote) {
-            return res.render('terrenosEdit', {
+      
+            // Verificar si el lote o la manzana han sido modificados
+        const loteModificado = req.body.lote !== rows[0].lote;
+        if (loteModificado) {
+            const validLote=loteRegex.test(lote);
+            if (!validLote) {
+                return res.render('terrenosEdit', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El formato de lote inválido. No debe tener caracteres especiales ni cifras mayor a 2 digitos.",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    terrenos: rows,
+                });
+            }
+            
+            
+        }
+        const manzanaModificada = req.body.manzana !== rows[0].manzana;
+        if (manzanaModificada) {
+            const validManzana=manzanaregex.test(manzana);
+        if (!validManzana) {
+            return res.render('terrenoAlta', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "El formato de lote inválido. No debe tener caracteres especiales ni cifras mayor a 2 digitos.",
+                alertMessage: "El formato de manzana inválido. No debe tener caracteres especiales.",
                 alertIcon: 'error',
                 showConfirmButton: false,
                 timer: 3500,
@@ -1630,50 +1656,34 @@ export const editarTerrenos = async (req, res) => {
                 roluser: true,
                 name: req.session.name,
                 rol: req.session.rol,
-                terrenos: rows,
             });
         }
+        const existTerreno = await pool.query('SELECT * FROM land WHERE lote = ? AND manzana = ?', [lote, manzana]);
 
-           // Agregar lógica para verificar si el id_interno ha sido modificado
-     const manzanaModificado = req.body.manzana !== rows[0].manzana;
-     if (manzanaModificado) {
-         // Validar formato de id_interno
-         const validManzana = manzanaregex.test(manzana);
-         if (!validManzana) {
-             return res.render('terrenosEdit', {
-                 alert: true,
-                 alertTitle: "Error",
-                 alertMessage: "El formato de manzana es inválido.",
-                 alertIcon: 'error',
-                 showConfirmButton: false,
-                 timer: 3500,
-                 ruta: '/', 
-                 login: true,
-                 roluser: true,
-                 name: req.session.name,
-                 rol: req.session.rol,
-                 terrenos: rows,
-             });
-         }
+// Realizar la validación solo si el lote o la manzana han sido modificados
+if (existTerreno[0].length > 0) {
+    return res.render('terrenosEdit', {
+        alert: true,
+        alertTitle: "Error",
+        alertMessage: "Ya existe un terreno con el mismo lote y manzana. Por favor, verifique.",
+        alertIcon: 'error',
+        showConfirmButton: false,
+        timer: 3500,
+        ruta: '/', 
+        login: true,
+        roluser: true,
+        name: req.session.name,
+        rol: req.session.rol,
+        terrenos: rows,
+    });
+}
 
-         const existinmanzana = await pool.query('SELECT * FROM land WHERE manzana = ?', manzana);
-         if (existinmanzana[0].length > 0) {
-             return res.render('terrenosEdit', {
-                 alert: true,
-                 alertTitle: "Error",
-                 alertMessage: "La manzana ya existe. Por favor, verifique el id",
-                 alertIcon: 'error',
-                 showConfirmButton: false,
-                 timer: 3500,
-                 ruta: '/', 
-                 login: true,
-                 roluser: true,
-                 name: req.session.name,
-                 rol: req.session.rol,
-                 terrenos: rows,
-             });
-         }
-     }
+        }
+
+  
+
+
+
      const validDimensiones=dimensionesregex.test(superficie)
      if (!validDimensiones) {
          return res.render('terrenosEdit', {
