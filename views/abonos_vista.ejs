@@ -39,8 +39,8 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Cliente</th>
-                                            <th>Paterno</th>
-                                            <th>Materno</th>
+                                            <th>A.P</th>
+                                            <th>A.M</th>
                                             <th>Venta</th>
                                             <th>Inicial</th>
                                             <th>D.R</th>
@@ -54,8 +54,8 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Cliente</th>
-                                            <th>Paterno</th>
-                                            <th>Materno</th>
+                                            <th>A.P</th>
+                                            <th>A.M</th>
                                             <th>Venta</th>
                                             <th>Inicial</th>
                                             <th>D.R</th>
@@ -80,8 +80,8 @@
                                                     <td><%= abono.cuotas_pagadas %></td>
                                                     <td><%= abono.cuotas_restantes %></td>
                                                     <td>
-                                                        <a href="/abonosAlta/<%= abono.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
-                                                        <a href="/reporte/<%= abono.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                        <a href="/abonosAlta/<%= abono.id %>" class="btn btn-sm btn-success"><i class="fas fa-money-bill"></i></a>
+                                                        <a href="/reporte/<%= abono.id %>" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a>
                                                     </td> 
                                                 </tr>
                                         <% }); %>
@@ -195,15 +195,15 @@ aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Listo para salir?</h5>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
         </button>
     </div>
-    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+    <div class="modal-body">Seleccione "Cerrar sesión" a continuación si está listo para finalizar su sesión actual.</div>
     <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="logout">Logout</a>
+        <a class="btn btn-danger" href="logout">Logout</a>
     </div>
 </div>
 </div>

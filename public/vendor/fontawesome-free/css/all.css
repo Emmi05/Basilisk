@@ -2748,6 +2748,9 @@ readers do not read off random characters that represent icons */
 .fa-monero:before {
   content: "\f3d0"; }
 
+.fa-money-check-dollar:before {
+    content: "\f53d"; }
+
 .fa-money-bill:before {
   content: "\f0d6"; }
 
@@ -4565,6 +4568,22 @@ readers do not read off random characters that represent icons */
 
 .fa-zhihu:before {
   content: "\f63f"; }
+
+
+.fa-user:before {
+    content: "\f007"; }
+  
+.fa-users:before {
+    content: "\f0c0"; }
+
+.fa-landmark:before {
+    content: "\f66f"; }
+
+.fa-hand-holding-dollar:before {
+    content: "\f4c0"; }
+  
+
+  
 
 .sr-only {
   border: 0;
