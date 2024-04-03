@@ -2503,14 +2503,10 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
 
         const doc = new PDFDocument();
         const buffers = [];
-   
-         // Convertir la fecha a un objeto Date usando Moment.js
          const fechaAbono = moment(fechaAbonoFormateada, 'YYYY-MM-DD').toDate();
-
-         // Formatear la fecha en letras
          const fechaEnLetras = formatFechaEnLetras(fechaAbono);
 
-         
+             
       // Establecer la posición de la imagen
       const imgWidth = 100; // Ancho de la imagen
       const imgHeight = 80; // Alto de la imagen
@@ -2539,6 +2535,7 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
         doc.moveDown();
         doc.moveDown();
         // Agregar el párrafo del cliente
+       
         const customerName = `Recibo de la C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} la cantidad de $ ${cantidad}  como pago parcial por el lote ${informacion[0].land_lote} de la manzana ${informacion[0].land_manzana}, operación pactada en $ ${informacion[0].land_precio}, los gasos de escrituración e  impuesto predial con número ${informacion[0].land_predial}, son por cuenta del comprador, según acuerdo entre las partes, ubicado en el Fraccionamiento Fuerza Aérea Mexicana, Municipio de Acapulco, Estado de Guerrero e identificado internamiento con la clave ${informacion[0].land_id_interno}, a fin de llevar a cabo la compra venta de dicho lote.  `;
         doc.text(customerName, {
             // width: 410,
@@ -2546,23 +2543,54 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
         });
         doc.moveDown();
         doc.moveDown();
-        const extra = `Basilisk Inmobiliaria Siete, S. de R.l de C.V `;
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        const extra = `Basilisk Inmobiliaria Siete, S. de R.L de C.V `;
         doc.text(extra, {
-            // width: 410,
             align: 'justify'// Alinea el texto
         });
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
         doc.moveDown();
         doc.moveDown();
         const firma  = `Israel Nogueda Pineda  `;
         doc.text(firma, {
-            // width: 410,
-            align: 'justify'// Alinea el texto
+            align: 'justify'
         });
         const apoderado  = `Apoderado.  `;
         doc.text(apoderado, {
-            // width: 410,
-            align: 'justify'// Alinea el texto
+            align: 'justify'
         });
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+     
+        const nombrelogo  = `B A S I L I S K  `;
+        doc.text(nombrelogo, {
+            align: 'center'
+        });// Ajusta la posición vertical del pie de página
+      const footerY = doc.page.height - 20;
+
+      // Dibuja la línea horizontal
+          const lineY = footerY - 30; // Ajusta la posición vertical de la línea
+          doc.lineCap('butt')
+              .moveTo(50, lineY)
+              .lineTo(doc.page.width - 50, lineY)
+              .stroke();
+  
 
         // Manejador para agregar datos al buffer
         doc.on('data', buffers.push.bind(buffers));
@@ -2598,7 +2626,7 @@ const crearPdf = async (req, res) => {
 
     try {
         // Realiza la consulta SQL para obtener la información de la venta y los abonos
-        const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, l.lote, l.manzana, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, a.n_abono, a.cantidad FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id_venta]);
+        const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, l.lote, l.manzana, l.precio, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, a.n_abono, a.cantidad FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id_venta]);
         
         // Inicializa el documento PDF
         const doc = new PDFDocument();
@@ -2635,6 +2663,10 @@ const crearPdf = async (req, res) => {
         const apellidoma = rows[0].a_materno;
         const terreno = rows[0].lote;
         const manzana = rows[0].manzana;
+        const precio = rows[0].precio;
+        const deuda = rows[0].deuda_restante;
+        const precioFormateado = precio.toLocaleString();
+
 
         doc.text(`Número de Cuotas Total: ${nCuotasVenta}`, { align: 'left' });
         doc.moveDown();
@@ -2643,14 +2675,19 @@ const crearPdf = async (req, res) => {
         doc.text(`Venta del terreno: ${terreno}, Manzana: ${manzana}`, { align: 'left' });
         doc.moveDown();
 
+        doc.text(`Precio terreno: ${precioFormateado}`, { align: 'left' });
+        doc.moveDown();
+        doc.text(`Deuda actual: ${deuda}`, { align: 'left' });
+        doc.moveDown();
+
+
         const table = {
             title: "Abonos",
             subtitle: "Historial",
             headers: [
                 { label: "Fecha", property: 'fecha_abono', width: 120 },
-                { label: "N. Cuotas", property: 'n_abono', width: 50 }, 
-                { label: "C. Pagadas", property: 'cuotas_pagadas', width: 50 }, 
-                { label: "C. Restantes", property: 'cuotas_restantes', width: 120 }, 
+                { label: "N.Cuotas", property: 'n_abono', width: 120 }, 
+                { label: "C.Restantes", property: 'cuotas_restantes', width: 120 }, 
                 { label: "Abono", property: 'cantidad', width: 120 }
             ],
             rows: []
@@ -2659,11 +2696,7 @@ const crearPdf = async (req, res) => {
         // Agrega datos de abonos a la tabla
         for (let i = 0; i < rows.length; i++) {
             const abono = rows[i];
-        
-            // Crear una instancia de fecha a partir de abono.fecha_abono
             const fechaAbono = new Date(abono.fecha_abono);
-        
-            // Formatear la fecha como dd/mm/yyyy
             const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
             const fechaFormateada = fechaAbono.toLocaleDateString('es-ES', options); // 'es-ES' es el código de idioma para español
         
@@ -2671,9 +2704,9 @@ const crearPdf = async (req, res) => {
             table.rows.push([
                 fechaFormateada,
                 abono.n_abono,
-                abono.cuotas_pagadas,
                 abono.cuotas_restantes,
                 abono.cantidad
+
             ]);
         }
       
