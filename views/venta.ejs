@@ -22,7 +22,7 @@
                   <% } %> 
         
        <!-- Begin Page Content -->
-
+       <% if(roluser){ %>
         <div class="container-fluid">
 
             <!-- Page Heading -->
@@ -101,7 +101,83 @@
 
                 </div>
         <!-- /.container-fluid -->
-       
+        <%}else{%> 
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">Venta</h1>
+                <!--  -->
+    
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Ventas</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>A.P</th>
+                                                <th>A.M</th>
+                                                <th>L</th>
+                                                <th>M</th>
+                                                <th>Precio</th>
+                                                <th>Fecha</th>
+                                                <th>N_Cuentas</th>
+                                                <th>N_Pagadas</th>
+                                                <th>Tipo</th>
+                                                <th>Opciones</th>
+                                              
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>A.P</th>
+                                                <th>A.M</th>
+                                                <th>L</th>
+                                                <th>M</th>
+                                                <th>Precio</th>
+                                                <th>Fecha</th>
+                                                <th>N_Cuentas</th>
+                                                <th>N_Pagadas</th>
+                                                <th>Tipo</th>
+                                                <th>Opciones</th>
+                                              
+                                               
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                           
+                                            <% ventas.forEach(function(venta) { %>
+                                              
+                                                <tr>
+                                                    <td><%= venta.customer_name %></td>
+                                                    <td><%= venta.customer_paterno %></td>
+                                                    <td><%= venta.customer_materno %></td>
+                                                    <td><%= venta.lote %></td>
+                                                    <td><%= venta.manzana %></td>
+                                                    <td><%= venta.precio %></td>
+                                                    <td><%= venta.fecha_venta.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: '2-digit' }) %></td>
+                                                    <td><%= venta.n_cuentas %></td>
+                                                    <td><%= venta.ncuotas_pagadas %></td>
+                                                    <td><%= venta.tipo_venta %></td>
+    
+            
+                                                    <td>
+                                                        <a href="/venta/<%= venta.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>                                                        
+                                                    </td> 
+                                                </tr>
+                                        <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                    <% } %>
 
     </div>
     <!-- /.container-fluid -->

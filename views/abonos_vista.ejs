@@ -98,13 +98,7 @@
 
 
             <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-                    For more information about DataTables, please visit the <a target="_blank"
-                        href="https://datatables.net">official DataTables documentation</a>.</p>
-    
+                <h1 class="h3 mb-2 text-gray-800">Abonos</h1>
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Usuarios</h6>
@@ -116,8 +110,8 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Cliente</th>
-                                                <th>Paterno</th>
-                                                <th>Materno</th>
+                                                <th>A.P</th>
+                                                <th>A.M</th>
                                                 <th>Venta</th>
                                                 <th>Inicial</th>
                                                 <th>D.R</th>
@@ -131,8 +125,8 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Cliente</th>
-                                                <th>Paterno</th>
-                                                <th>Materno</th>
+                                                <th>A.P</th>
+                                                <th>A.M</th>
                                                 <th>Venta</th>
                                                 <th>Inicial</th>
                                                 <th>D.R</th>
@@ -152,15 +146,13 @@
                                                         <td><%= abono.customer_materno %></td>
                                                         <td><%= abono.precio %></td>
                                                         <td><%= abono.inicial %></td>
-                                                        <td><%= abono.precio - abono.inicial %></td>
+                                                        <td><%= abono.deuda_restante.toFixed(2) %></td>
                                                         <td><%= abono.n_cuentas %></td>
                                                         <td><%= abono.cuotas_pagadas %></td>
                                                         <td><%= abono.cuotas_restantes %></td>
                                                         <td>
-                                                            <a href="/abonosAlta/<%= abono.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
-                                                            <!-- <a onclick="eliminar(<%= abono.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a> -->
-                                                            <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
-                                                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
+                                                            <a href="/abonosAlta/<%= abono.id %>" class="btn btn-sm btn-success"><i class="fas fa-money-bill"></i></a>
+                                                            <a href="/reporte/<%= abono.id %>" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a>
                                                         </td> 
                                                     </tr>
                                             <% }); %>
