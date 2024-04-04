@@ -2666,20 +2666,14 @@ const crearPdf = async (req, res) => {
         const precio = rows[0].precio;
         const deuda = rows[0].deuda_restante;
         const precioFormateado = precio.toLocaleString();
+        const inicial = rows[0].inicial;
+        const inicialFormateado=inicial.toLocaleString();
 
+        // Concatena las variables en una sola cadena
+const infoVenta = `Número de Cuotas Total: ${nCuotasVenta} | Nombre cliente: ${cliente} ${apellidopa} ${apellidoma} | Venta del terreno: ${terreno}, Manzana: ${manzana} | Precio terreno: ${precioFormateado} | Enganche: ${inicialFormateado} | Deuda actual: ${deuda}`;
 
-        doc.text(`Número de Cuotas Total: ${nCuotasVenta}`, { align: 'left' });
-        doc.moveDown();
-        doc.text(`Nombre cliente: ${cliente} ${apellidopa} ${apellidoma}`,  { align: 'left' });
-        doc.moveDown();
-        doc.text(`Venta del terreno: ${terreno}, Manzana: ${manzana}`, { align: 'left' });
-        doc.moveDown();
-
-        doc.text(`Precio terreno: ${precioFormateado}`, { align: 'left' });
-        doc.moveDown();
-        doc.text(`Deuda actual: ${deuda}`, { align: 'left' });
-        doc.moveDown();
-
+// Agrega el texto al documento
+doc.text(infoVenta, { align: 'left' });
 
         const table = {
             title: "Abonos",
@@ -2713,9 +2707,9 @@ const crearPdf = async (req, res) => {
 
         // Genera la tabla en el PDF
         doc.table(table, {
-            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(12), // Ajusta el tamaño de fuente del encabezado
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(11), 
             prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
-                doc.font("Helvetica").fontSize(12); // Ajusta el tamaño de fuente de las celdas
+                doc.font("Helvetica").fontSize(11); 
                 indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15); // Establece el color de fondo para la primera columna
             },
         });
@@ -3106,6 +3100,116 @@ const disponibles = async (req, res) => {
 }
 
 
+const pagados = async (req, res) => {
+  
+
+    try {
+        const [rows] = await pool.query('SELECT * FROM LAND WHERE estado = "pagado"');
+
+        // Inicializa el documento PDF
+        const doc = new PDFDocument();
+        const buffers = [];
+        
+        // Agrega la imagen
+        const imgWidth = 100;
+        const imgHeight = 80;
+        const imgX = doc.page.width - imgWidth - 30;
+        const imgY = 10;
+        doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
+  
+        // Agregar (fecha de generación del PDF)
+        const fechaActual = new Date().toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        // Agrega espacio y texto de descripción
+        doc.moveDown();
+        doc.moveDown();
+        const lorem = `A continuación se mostrarán todos los terrenos que estan pagados (Esto solo es un historial) creado el día ${fechaActual}`;
+        doc.text(` ${lorem}`, { align: 'justify' });
+        doc.moveDown();
+    
+        const table = {
+            title: "Terrenos Pagados",
+            subtitle: "Historial de terrenos pagados",
+            headers: [
+                { label: "id_Interno", property: 'id_interno', width: 100 },
+                { label: "calle", property: 'calle', width: 100 }, 
+                { label: "L", property: 'lote', width: 50 }, // Debe ser 'lote' en lugar de 'Lote'
+                { label: "M", property: 'manzana', width: 70 } ,
+                { label: "S", property: 'superficie', width: 50 } ,
+                { label: "P", property: 'predial', width:100 } ,
+                { label: "E", property: 'escritura', width: 20 } // Debe ser 'manzana' en lugar de 'Manzana'
+            ],
+            rows: []
+        };
+        
+        
+        // Agrega datos de terrenos disponibles a la tabla
+        for (let i = 0; i < rows.length; i++) {
+            const terreno = rows[i];
+            
+            // Agregar cada fila de terreno disponible a la tabla
+            table.rows.push([
+                terreno.id_interno,
+                terreno.calle,
+                terreno.lote,
+                terreno.manzana,
+                terreno.superficie,
+                terreno.predial,
+                terreno.escritura
+            ]);
+        }
+
+
+        // Genera la tabla en el PDF
+        doc.table(table, {
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(11), // Ajusta el tamaño de fuente del encabezado
+            prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+                doc.font("Helvetica").fontSize(11); // Ajusta el tamaño de fuente de las celdas
+                indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15); // Establece el color de fondo para la primera columna
+            },
+        });
+        
+        // Ajusta la posición vertical del pie de página
+        const footerY = doc.page.height - 20;
+
+        // Dibuja la línea horizontal
+        const lineY = footerY - 30; // Ajusta la posición vertical de la línea
+        doc.lineCap('butt')
+            .moveTo(50, lineY)
+            .lineTo(doc.page.width - 50, lineY)
+            .stroke();
+
+        // Manejador para agregar datos al buffer
+        doc.on('data', buffers.push.bind(buffers));
+
+        // Manejador para finalizar el documento
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            // Envía el PDF como respuesta
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=pagados.pdf',
+                'Content-Length': pdfData.length
+            });
+            res.end(pdfData);
+        });
+
+        // Finaliza y cierra el documento PDF
+        doc.end();
+    } catch (error) {
+        console.error('Error en la generación del PDF:', error);
+        // Envía una respuesta de error al cliente si falla la generación del PDF
+        res.status(500).send('Error interno del servidor al generar el PDF');
+    }
+}
+
+
 
 
 
@@ -3127,6 +3231,7 @@ export const methods = {
     contado,
     proceso,
     disponibles,
+    pagados,
   }
 
 

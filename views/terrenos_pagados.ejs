@@ -1,0 +1,249 @@
+<%- include ('layouts/head.ejs') %>
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <% if (login) { %> 
+        <!-- Sidebar -->
+        <%- include ('layouts/sidebar.ejs') %>
+        <!-- end sidehar -->
+       
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar /header -->
+                <%- include ('layouts/header.ejs') %>
+                  <!-- header -->
+                  <% } %> 
+        
+       <!-- Begin Page Content -->
+       <% if(roluser){ %>
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <h1 class="h3 mb-2 text-gray-800">Pagados</h1>
+         
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Pagados terrenos</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>A.P</th>
+                                            <th>A.M</th>
+                                            <th>L</th>
+                                            <th>M</th>
+                                            <th>E</th>
+                                            <th>Reporte</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>A.P</th>
+                                            <th>A.M</th>
+                                            <th>L</th>
+                                            <th>M</th>
+                                            <th>E</th>
+                                            <th>Reporte</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        <% pagados.forEach(function(pagado) { %>
+                                          
+                                                <tr>
+                                                    <td><%= pagado.id_interno %></td>
+                                                    <td><%= pagado.name %></td>
+                                                    <td><%= pagado.a_paterno %></td>
+                                                    <td><%= pagado.a_materno %></td>
+                                                    <td><%= pagado.lote %></td>
+                                                    <td><%= pagado.manzana %></td>
+                                                    <td><%= pagado.escritura %></td>
+                                                   
+                                                    <td>
+                                                        <a href="#" class="btn btn-sm btn-success"><i class="fas fa-money-bill"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a>
+                                                    </td> 
+                                                </tr>
+                                        <% }); %>
+                                  
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+        <!-- /.container-fluid -->
+        <%}else{%> 
+
+
+            <div class="container-fluid">
+                <h1 class="h3 mb-2 text-gray-800">Abonos</h1>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Usuarios</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Cliente</th>
+                                                <th>A.P</th>
+                                                <th>A.M</th>
+                                                <th>L</th>
+                                                <th>M</th>
+                                                <th>E</th>
+                                                <th>Reporte</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>A.P</th>
+                                            <th>A.M</th>
+                                            <th>L</th>
+                                            <th>M</th>
+                                            <th>E</th>
+                                            <th>Reporte</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <% pagados.forEach(function(pagado) { %>
+                                              
+                                                    <tr>
+                                                        <td><%= pagado.id_interno %></td>
+                                                        <td><%= pagado.customer_name %></td>
+                                                        <td><%= pagado.customer_paterno %></td>
+                                                        <td><%= pagado.lote %></td>
+                                                        <td><%= pagado.manzana %></td>
+                                                        <td><%= pagado.escritura %></td>
+                                                       
+                                                        <td>
+                                                            <a href="#" class="btn btn-sm btn-success"><i class="fas fa-money-bill"></i></a>
+                                                            <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a>
+                                                        </td> 
+                                                    </tr>
+                                            <% }); %>
+                                      
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+            <!-- /.container-fluid -->
+            <% } %>
+
+
+    </div>
+   
+
+<!-- End of Main Content -->
+
+
+</div>
+<!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Listo para salir?</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">Seleccione "Cerrar sesión" a continuación si está listo para finalizar su sesión actual.</div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-danger" href="logout">Logout</a>
+    </div>
+</div>
+</div>
+</div>
+
+
+<!-- LINKS -->
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="../resources/vendor/jquery/jquery.min.js"></script>
+  <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="../resources/scripts/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="../resources/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="../resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="../resources/scripts/datables.js"></script>
+   		
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  <% if (typeof alert != "undefined")  { %>
+   <script>
+   Swal.fire({
+     title:'<%= alertTitle %>',
+     text:'<%= alertMessage %>',
+     icon:'<%= alertIcon %>',
+     showConfirmButton: <%= showConfirmButton %>,
+     timer: <%= timer %>
+   }).then(()=>{
+     window.location='/<%= ruta %>'
+   })
+   </script>
+  <% } %>
+  
+
+  <script>
+    function eliminar(id) {
+     Swal.fire({
+         title: "¿Estás seguro?",
+         text: "¡No podrás revertir esto!",
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#d33",
+         cancelButtonColor: "#3085d6",
+         confirmButtonText: "Sí, eliminarlo"
+     }).then((result) => {
+         if (result.isConfirmed) {
+             // Redirigir a la ruta de eliminación
+             window.location.href = `/deleteabono/${id}`;
+         }
+     });
+ }
+   </script>
+
+ 
+
+</body>
+
+</html>
+</body>
+</html>

@@ -353,6 +353,33 @@ router.get('/abono_view',  async(req, res) => {
     }
 });
 
+router.get('/terrenos_pagados',  async(req, res) => {
+    
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT s.* , l.* FROM  sale s JOIN  land l ON s.id_land = l.id WHERE  l.estado = "pagado"');
+    
+        res.render('terrenos_pagados', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            pagados: rows,
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
+    
+
+        res.render('terrenos_pagados', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            pagados: rows,
+        });
+    }
+});
+
+
 // ABONOS VISTA FORMULARIO
 
 router.get('/abonosAlta/:id', async (req, res) => {
@@ -400,6 +427,7 @@ router.get('/abonosAlta/:id', async (req, res) => {
     }
 });
 
+
 // crear abono
 
 router.post('/crearAbonos/:id',authentication.crearAbonos);
@@ -407,6 +435,9 @@ router.post('/crearAbonos/:id',authentication.crearAbonos);
 router.get('/reporte/:id',authentication.crearPdf);
 
 router.get('/contado/',authentication.contado);
+
+router.get('/pagados/',authentication.pagados);
+
 
 router.get('/proceso/',authentication.proceso);
 
