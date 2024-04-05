@@ -4,6 +4,10 @@ import moment from 'moment';
 import { Router } from 'express';
 import PDFDocument from "pdfkit-table";
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import {promisify} from 'util';
+
+
 
 // Expresiones regulares globales
 const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
@@ -46,10 +50,24 @@ export const auth=  async(req, res) => {
                     ruta: 'login'
                 });
             } else {
+                 //inicio de sesión OK
                 req.session.loggedin = true;
                 req.session.name = results[0].name;
                 req.session.rol = results[0].rol;
-                
+                 
+                  const id = results[0].id
+                  const token = jwt.sign({id:id}, process.env.JWT_SECRETO, {
+                      expiresIn: process.env.JWT_TIEMPO_EXPIRA
+                  })
+                  //generamos el token SIN fecha de expiracion
+                 //const token = jwt.sign({id: id}, process.env.JWT_SECRETO)
+                 console.log("TOKEN: "+token+" para el USUARIO : "+user)
+
+                 const cookiesOptions = {
+                      expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
+                      httpOnly: true
+                 }
+                 res.cookie('jwt', token, cookiesOptions)
                 if (req.session.rol == 'usuario') {
                     res.render('login', {
                         alert: true,
@@ -61,6 +79,7 @@ export const auth=  async(req, res) => {
                         ruta: ''
                     });
                 } else {
+                      
                     res.render('login', {
                         alert: true,
                         alertTitle: "Eres larry",

@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
 import {methods as authentication} from '../controller/controlador.js'
-import { buildPDF } from "../libs/pdfkit.js";
 
 const router = Router();
 router.get('/', (req, res) => {
@@ -30,16 +29,45 @@ router.get('/', (req, res) => {
     }
 });
 
+// Logout
+router.get('/logout', function(req, res) {
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
+});
 
+
+
+
+router.get('/login', (req, res) => {
+    res.render('login');
+});
 router.post('/auth', authentication.auth)
+
+
+router.get('/register', async(req, res) => {
+    if (req.session.rol == 'usuario') {
+        res.render('register', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    } else if (req.session.rol == 'admin') {
+        
+        res.render('register', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+    
+        });
+    }    
+});
 
 
 router.post('/register',authentication.register);
 
-// 9 - establecemos las rutas
-router.get('/login', (req, res) => {
-    res.render('login');
-});
 
 //ver usuarios
  router.get('/usuarios', async(req, res) => {
