@@ -4,9 +4,42 @@ import {methods as authentication} from '../controller/controlador.js'
 import { buildPDF } from "../libs/pdfkit.js";
 
 const router = Router();
+router.get('/', (req, res) => {
+    if (req.session.loggedin) {
+        if (req.session.rol == 'usuario') {
+            res.render('home', {
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol
+            });
+        } else if (req.session.rol == 'admin') {
+            res.render('home', {
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol
+            });
+        }
+        res.end();
+    } else {
+        res.render('index', {
+            login: false,
+            name: 'Debe iniciar sesión',
+        });
+    }
+});
 
 
-// router.get('/usuarios',authentication.usuarios);
+router.post('/auth', authentication.auth)
+
+
+router.post('/register',authentication.register);
+
+// 9 - establecemos las rutas
+router.get('/login', (req, res) => {
+    res.render('login');
+});
 
 //ver usuarios
  router.get('/usuarios', async(req, res) => {

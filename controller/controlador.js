@@ -1,15 +1,10 @@
 import { query } from 'express';
 import { pool} from '../database/db.js'
 import moment from 'moment';
-// import PDFDocument from "pdfkit";
-import express from 'express';
-
 import { Router } from 'express';
-const router = Router();
-  // requires
-  import fs from 'fs';
-  import PDFDocument from "pdfkit-table";
- 
+import PDFDocument from "pdfkit-table";
+import bcrypt from 'bcryptjs';
+
 // Expresiones regulares globales
 const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
 const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
@@ -31,7 +26,208 @@ const cantidades = /^\d*,?\d+$/;
 // abonos
 const numeros= /^\d+$/;
 
-// vista usua
+export const auth=  async(req, res) => {
+    const user = req.body.user;
+    const pass = req.body.pass;
+
+    if (user && pass) {
+        try {
+            const [results, fields] = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
+            
+            if (results.length == 0 || !(await bcrypt.compare(pass, results[0].pass))) {
+                console.log('Usuario y/o contraseña incorrectos');
+                return res.render('login', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Usuario y/o contraseña incorrectos",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'login'
+                });
+            } else {
+                req.session.loggedin = true;
+                req.session.name = results[0].name;
+                req.session.rol = results[0].rol;
+                
+                if (req.session.rol == 'usuario') {
+                    res.render('login', {
+                        alert: true,
+                        alertTitle: "Propiedad:",
+                        alertMessage: "¡SARAHI!",
+                        alertIcon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: ''
+                    });
+                } else {
+                    res.render('login', {
+                        alert: true,
+                        alertTitle: "Eres larry",
+                        alertMessage: "Ata Papa",
+                        alertIcon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: ''
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Error al ejecutar la consulta SQL:', error);
+            return res.status(500).send('Error de servidor');
+        }
+    } else {
+        res.render('login', {
+            alert: true,
+            alertTitle: "Advertecia",
+            alertMessage: "Por favor ingrese un usuario y/o contraseña",
+            alertIcon: 'warning',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: 'login'
+        });
+        res.end();
+    }
+
+}
+export const register=  async(req, res) => {
+    try {
+        if (req.session.rol == 'admin') {
+        const { user, name, rol, pass } = req.body;
+        
+        console.log(req.body)
+        // Verificar si algún campo está vacío
+        if (!user || !name || !rol || !pass) {
+            return res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos!",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+        const existingUser = await pool.query('SELECT * FROM users WHERE user = ?', user);
+        console.log(existingUser)
+        if (existingUser[0].length > 0) {
+            return res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El usuario ya existe. Por favor, elija otro nombre de usuario.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            });
+        }
+
+        // Verificar nombre de usuario
+        const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+        if(!usernameRegex.test(user)){
+            return res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El usuario no debe llevar caracteres especiales",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', // Redirigir a la página de registro nuevamente
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            }); 
+        }
+        // verifica nombre 
+        const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+        if(!nombreRegex.test(name)){
+            return res.render('register', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El nombre no debe llevar caracteres especiales",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: '/', // Redirigir a la página de registro nuevamente
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+            }); 
+        }
+
+
+         // Verificar si la contraseña cumple con los requisitos
+         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+         if (!passwordRegex.test(pass)) {
+             return res.render('register', {
+                 alert: true,
+                 alertTitle: "Error",
+                 alertMessage: "La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.",
+                 alertIcon: 'error',
+                 showConfirmButton: false,
+                 timer: 3500,
+                 ruta: '/', // Redirigir a la página de registro nuevamente
+                 login: true,
+                 roluser: true,
+                 name: req.session.name,
+                 rol: req.session.rol,
+             });
+         }
+
+        const passwordHash = await bcrypt.hash(pass, 8);
+        await pool.query('INSERT INTO users SET ?', { user, name, rol, pass: passwordHash });
+        
+        res.render('register', {
+            alert: true,
+            alertTitle: "Registro",
+            alertMessage: "¡Registro Exitoso!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: '/', 
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+        });
+    }else{
+        res.render('register', {
+            alert: true,
+            alertTitle: "ERROR",
+            alertMessage: "NO TIENES ACCESO!",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: '/', 
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+        });
+    }
+    } catch (error) {
+        console.error(error);
+        // Manejar el error apropiadamente
+        res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor'
+        });
+    }
+}
+
+
+
+// vista 
 export const usuarios=  async(req, res) => {
     if (req.session.rol == 'usuario') {
         res.render('usuarios', {
@@ -3214,6 +3410,8 @@ const pagados = async (req, res) => {
 
 
 export const methods = {
+    register,
+    auth,
     usuarios,
     editarUsuario,
     eliminarUsuario,
