@@ -94,10 +94,8 @@
                 <div class="col-md-6">
                 <label for="rol">Estado</label>
                 <select class="form-control" id="estado" name="estado" >
-                    <option value="">Seleccionar</option>
-                    <option <%= terreno.estado=='pagado' ? "selected" : '' %> value="pagado">Pagado</option>
+                    
                     <option <%= terreno.estado=='disponible' ? "selected" : '' %> value="disponible">Disponible</option>
-                    <option <%= terreno.estado=='proceso' ? "selected" : '' %> value="proceso">En pago</option>
                 </select>
               </div>
 

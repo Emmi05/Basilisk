@@ -1,3 +1,4 @@
+import helmet from 'helmet';
 import rutas from './routes/routes.js';
 // 1 - Invocamos a Express
 import express from 'express';
@@ -70,6 +71,7 @@ app.get('/register', async(req, res) => {
 // 10 - Método para la REGISTRACIÓN
 app.post('/register', async (req, res) => {
     try {
+        if (req.session.rol == 'admin') {
         const { user, name, rol, pass } = req.body;
         
         console.log(req.body)
@@ -178,6 +180,21 @@ app.post('/register', async (req, res) => {
             name: req.session.name,
             rol: req.session.rol,
         });
+    }else{
+        res.render('register', {
+            alert: true,
+            alertTitle: "ERROR",
+            alertMessage: "NO TIENES ACCESO!",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: '/', 
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+        });
+    }
     } catch (error) {
         console.error(error);
         // Manejar el error apropiadamente
@@ -187,6 +204,7 @@ app.post('/register', async (req, res) => {
         });
     }
 });
+
 
 // 11 - Metodo para la autenticacion
 app.post('/auth', async (req, res) => {
@@ -281,6 +299,8 @@ app.get('/', (req, res) => {
     }
 });
 
+
+
 // función para limpiar la caché luego del logout
 app.use(function(req, res, next) {
     if (!req.user)
@@ -288,6 +308,7 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.use(helmet());
 // Logout
 app.get('/logout', function(req, res) {
     req.session.destroy(() => {
