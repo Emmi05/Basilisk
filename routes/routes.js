@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { pool} from '../database/db.js'
 import {methods as authentication} from '../controller/controlador.js'
 
-const router = Router();
-router.get('/', (req, res) => {
+const router = Router();// Definición de la ruta '/'
+router.get('/', authentication.auth, (req, res) => {
     if (req.session.loggedin) {
         if (req.session.rol == 'usuario') {
             res.render('home', {
@@ -31,6 +31,7 @@ router.get('/', (req, res) => {
 
 // Logout
 router.get('/logout', function(req, res) {
+    res.clearCookie('jwt')  
     req.session.destroy(() => {
         res.redirect('/');
     });
@@ -42,7 +43,7 @@ router.get('/logout', function(req, res) {
 router.get('/login', (req, res) => {
     res.render('login');
 });
-router.post('/auth', authentication.auth)
+router.post('/login', authentication.login)
 
 
 router.get('/register', async(req, res) => {

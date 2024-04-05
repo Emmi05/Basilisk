@@ -30,7 +30,7 @@ const cantidades = /^\d*,?\d+$/;
 // abonos
 const numeros= /^\d+$/;
 
-export const auth=  async(req, res) => {
+export const login=  async(req, res) => {
     const user = req.body.user;
     const pass = req.body.pass;
 
@@ -109,6 +109,29 @@ export const auth=  async(req, res) => {
     }
 
 }
+
+export const auth = async (req, res, next) => {
+    if (req.cookies.jwt) {
+        try {
+            const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
+            const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
+            
+            if (results.length > 0) {
+                req.user = results[0];
+                return next();
+            } else {
+                throw new Error('Usuario no encontrado');
+            }
+        } catch (error) {
+            console.error(error);
+            res.redirect('/login');
+        }
+    } else {
+        res.redirect('/login');
+    }
+};
+
+
 export const register=  async(req, res) => {
     try {
         if (req.session.rol == 'admin') {
@@ -243,8 +266,6 @@ export const register=  async(req, res) => {
         });
     }
 }
-
-
 
 // vista 
 export const usuarios=  async(req, res) => {
@@ -3430,6 +3451,7 @@ const pagados = async (req, res) => {
 
 export const methods = {
     register,
+    login,
     auth,
     usuarios,
     editarUsuario,
