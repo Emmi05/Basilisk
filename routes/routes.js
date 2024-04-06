@@ -4,6 +4,7 @@ import {methods as authentication} from '../controller/controlador.js'
 
 const router = Router();// Definición de la ruta '/'
 router.get('/', authentication.auth, (req, res) => {
+    //firt VALIDATE IF LOGGED OR AUTH SO IF IS NOT RETURN TO MY "HOME IT THIS CASE MY STATIC PAGE"
     if (req.session.loggedin) {
         if (req.session.rol == 'usuario') {
             res.render('home', {
