@@ -29,45 +29,57 @@
 
                 <div class="col-md-6">
                   <label for="id_interno" name="id_interno" class="form-label">Id Interno</label>
-                  <input type="text" class="form-control" id="id_interno" name="id_interno">
+                  <input type="text" class="form-control" id="id_interno" name="id_interno" placeholder="id interno">
                 </div>
 
                 <div class="col-md-6">
                   <label for="calle" class="form-label">Calle</label>
-                  <input type="text" class="form-control" id="calle" name="calle" placeholder="Calle">
+                  <input type="text" class="form-control" id="calle" name="calle" placeholder="calle">
               </div>
 
 
                 <div class="col-md-6">
                   <label for="lote" name="lote" class="form-label">Lote</label>
-                  <input type="text" class="form-control" id="name" name="lote">
+                  <input type="text" class="form-control" id="name" name="lote" placeholder="lote">
+                  <div id="rol" class="form-text">
+                    Solo debe tener números        
+                 </div>
                 </div>
 
                 <div class="col-md-6">
                   <label for="manzana" class="form-label">Manzana</label>
-                  <input type="text" class="form-control" id="manzana" name="manzana">
+                  <input type="text" class="form-control" id="manzana" name="manzana" placeholder="manzana">
+                  <div id="rol" class="form-text">
+                    Solo debe tener números        
+                 </div>
                 </div>
 
                  <div class="col-12">
                   <label for="superficie" class="form-label">Superficie</label>
-                  <input type="number" class="form-control" id="superficie" placeholder="300" name="superficie">
+                  <input type="number" class="form-control" id="superficie" placeholder="superficie" name="superficie">
+                  <div id="rol" class="form-text">
+                    Solo debe tener números (150, 300).         
+                 </div>
                 </div> 
                 <!-- <div class="col-md-6">
                   <label for="inputCity" class="form-label">City</label>
                   <input type="text" class="form-control" id="inputCity">
                 </div> -->
                 <div class="col-md-6">
-                    <label for="precio" name="precio" class="form-label">precio</label>
+                    <label for="precio" name="precio" class="form-label">Precio</label>
                     <!-- <input type="int" class="form-control" id="precio" name="precio"> -->
-                    <input type="text" class="form-control" id="precio" name="precio">
+                    <input type="text" class="form-control" id="precio" name="precio" placeholder="precio">
 
                     <!-- <input type="number" class="form-control" id="precio" name="precio"> -->
+                    <div id="rol" class="form-text">
+                      Solo debe tener números separados por coma (200,000, 150,000).         
+                   </div>
                     
                   </div>
   
                   <div class="col-md-6">
                     <label for="predial" class="form-label">Predial</label>
-                    <input type="text" class="form-control" id="predial" name="predial">
+                    <input type="text" class="form-control" id="predial" name="predial" placeholder="predial">
                   </div>
                
                   <div class="col-md-6">
@@ -85,9 +97,9 @@
                 <label for="rol">Estado</label>
                 <select class="form-control" id="estado" name="estado" >
                     <option value="">Seleccionar</option>
-                    <option value="pagado">Pagado</option>
+                    <!-- <option value="pagado">Pagado</option> -->
                     <option value="disponible">Disponible</option>
-                    <option value="proceso">En pago</option>
+                    <!-- <option value="proceso">En pago</option> -->
                     
                 </select>
               </div>
@@ -102,9 +114,9 @@
        
             
     <!-- Footer -->
-<footer class="sticky-footer bg-white">
+<!-- <footer class="sticky-footer bg-white">
   <%- include ('layouts/footer.ejs') %>
-</footer>
+</footer> -->
 <!-- End of Footer -->
 
 </div>
@@ -114,29 +126,12 @@
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
+<!-- <a class="scroll-to-top rounded" href="#page-top">
 <i class="fas fa-angle-up"></i>
-</a>
+</a> -->
 
 <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-aria-hidden="true">
-<div class="modal-dialog" role="document">
-<div class="modal-content">
-  <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-      </button>
-  </div>
-  <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-  <div class="modal-footer">
-      <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-      <a class="btn btn-primary" href="logout">Logout</a>
-  </div>
-</div>
-</div>
-</div>s        
+<%- include ('layouts/logout.ejs') %>
 
     		<!-- Bootstrap core JavaScript-->
   <script src="../resources/vendor/jquery/jquery.min.js"></script>

@@ -43,15 +43,6 @@
         <div class="container-fluid">
             <h1>Registro ventas</h1>
             <form class="row g-3" action="/venta" method="POST" autocomplete="off">
-                
-                <!-- <div class="col-md-6">
-                  <label for="myInput" class="form-label">Cliente</label>
-                  <input type="text" class="form-control" id="myInput" name="cliente" placeholder="cliente" >
-                  <ul id="suggestions" class="list-group" ></ul>
-              </div> -->
-
-          
-
 
               <div class="col-md-6">
                 <label for="cliente" class="form-label">Cliente</label>
@@ -91,13 +82,13 @@
           
           <div class="col-md-6">
               <label for="interno" class="form-label">Id_terreno</label>
-              <input type="text" class="form-control" id="interno" name="interno" disabled>
+              <input type="text" class="form-control" id="interno" name="interno" disabled placeholder="id terreno">
           </div>
           
           <div class="col-md-6">
             <label for="precio" class="form-label">Precio</label>
             <!-- <input type="int" class="form-control" id="precio" name="precio" disabled  min="1"> -->
-            <input type="number" class="form-control" id="precio" name="precio" readonly min="1">
+            <input type="number" class="form-control" id="precio" name="precio" readonly min="1" placeholder="precio">
 
         </div>
           
@@ -116,14 +107,22 @@
                     <label for="fecha" name="fecha" class="form-label">Fecha</label>
                     <input type="date" class="form-control" id="fecha_venta" name="fecha_venta">
                   </div>
+                  
                   <div class="col-md-6">
                     <label for="inicial" name="inicial" class="form-label">Enganche</label>
-                    <input type="number" class="form-control" id="inicial" name="inicial"  min="1">
+                    <input type="number" class="form-control" id="inicial" name="inicial" placeholder="enganche">
+                    <div id="rol" class="form-text">
+                      Solo debe tener números.         
+                   </div>
                   </div>
+                  
 
                   <div class="col-md-6">
                     <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                    <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" min="1">
+                    <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" placeholder="plazos">
+                    <div id="rol" class="form-text">
+                      Solo debe tener números.         
+                   </div>
                   </div>
 
                   <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
@@ -136,7 +135,7 @@
                 <!-- Cuotas -->
                 <div class="col-md-6">
                   <label for="cuotas" class="form-label">Cuotas por mes</label>
-                  <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` >
+                  <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
               </div>
 
               <br> <br> <br> <br>
@@ -163,24 +162,7 @@
 </a>
 
 <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-aria-hidden="true">
-<div class="modal-dialog" role="document">
-<div class="modal-content">
-  <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-      </button>
-  </div>
-  <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-  <div class="modal-footer">
-      <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-      <a class="btn btn-primary" href="logout">Logout</a>
-  </div>
-</div>
-</div>
-</div>      
+<%- include ('layouts/logout.ejs') %>    
 
     		<!-- Bootstrap core JavaScript-->
   <script src="../resources/vendor/jquery/jquery.min.js"></script>
@@ -286,6 +268,8 @@ aria-hidden="true">
       return cuotasTotal;
   }
 </script>
+
+
 
 
 </div>

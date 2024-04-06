@@ -38,7 +38,7 @@
     
                 <div class="col-md-6">
                   <label for="cliente" class="form-label">Deuda restante</label>
-                  <input type="number" class="form-control" id="precio-inicial" name="deuda_restante" value="<%= abono.deuda_restante%>" readonly>
+                  <input type="number" class="form-control" id="precio-inicial" name="deuda_restante" value="<%= abono.deuda_restante.toFixed(2) %>" readonly>
               </div>
               
         
@@ -82,10 +82,13 @@
                
                 <br> <br> <br> <br>
                   <div class="col-12">
+                    <!-- <a href="/abono_view" class="btn btn-secondary">Regresar</a> -->
+                    <a href="/abono_view" class="btn btn-sm btn-info"><i class="fas fa-money-bill"></i></a>
+
                     <a href="/" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-primary"  value="Save">Guardar</button>
+
+                    <button type="submit" class="btn btn-primary"  id="guardarBtn"  value="Save">Guardar</button>
                   </div>
-  
                 </form>
                 <% }); %>
 
@@ -105,24 +108,8 @@
   </a>
   
   <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-        </button>
-    </div>
-    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-    <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="logout">Logout</a>
-    </div>
-  </div>
-  </div>
-  </div>      
+  <%- include ('layouts/logout.ejs') %>
+
   
               <!-- Bootstrap core JavaScript-->
     <script src="../resources/vendor/jquery/jquery.min.js"></script>
@@ -178,12 +165,66 @@
 
     // Llamar a la función calcularCantidadAbono para que la cantidad de abono se actualice automáticamente al cargar la página
     calcularCantidadAbono();
-    <% }); %>
+
 
 </script>
 
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('guardarBtn').addEventListener('click', async function(event) {
+        event.preventDefault(); // Prevenir el comportamiento por defecto del botón (enviar el formulario)
+
+        const id_venta = <%= abono.id %>; 
+        const cantidad = parseFloat(document.getElementById('cantidadAbono').value); // Obtener la cantidad de abono del campo correspondiente
+
+        // Realizar una solicitud AJAX al servidor
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/crearAbonos/:id', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+      
+                // Redireccionar al usuario una vez que han cerrado el mensaje de éxito
+                Swal.fire({
+                    title: '¡Registro Exitoso!',
+                    icon: 'success',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Continuar',
+                    allowOutsideClick: false
+                }).then(() => {
+                    window.location = '/abono_view';
+                });
+
+            } else {
+                console.error('Error en la solicitud:', xhr.statusText);
+            }
+          }
+        })
+
+        xhr.onerror = function() {
+            console.error('Error en la solicitud');
+        };
+
+        // Enviar los datos al servidor en formato JSON
+        const data = JSON.stringify({
+            id_venta: id_venta,
+            cantidad: cantidad,
+            n_abono: n_abono,
+            fecha_abono: fecha_abono,
+            cantidad:cantidad,
+
+        });
+        xhr.send(data);
+    });
+      
+  });
+    </script>
+<% }); %>
 
   
   </div>
+  
   </body>
   </html>

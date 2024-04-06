@@ -95,13 +95,19 @@
                       <input type="date" class="form-control" id="fecha_venta" name="fecha_venta" value="<%= venta.fecha_venta%>" disabled>
                     </div>
                     <div class="col-md-6">
-                      <label for="inicial" name="inicial" class="form-label">Inicial</label>
-                      <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>">
+                      <label for="inicial" name="inicial" class="form-label">Enganche</label>
+                      <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>" placeholder="Enganche">
+                      <div id="rol" class="form-text">
+                        Solo debe tener números.         
+                     </div>
                     </div>
   
                     <div class="col-md-6">
                       <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                      <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>">
+                      <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>" placeholder="plazo">
+                      <div id="rol" class="form-text">
+                        Solo debe tener números.         
+                     </div>
                     </div>
                   
                     <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
@@ -109,14 +115,12 @@
                       <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
                       <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" readonly>
                     </div>
-                  
-              
-                  
+     
                           <!-- Cuotas -->
-                          <div class="col-md-6">
-                            <label for="cuotas" class="form-label">Cuotas por mes</label>
-                            <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` >
-                        </div>
+                     <div class="col-md-6">
+                      <label for="cuotas" class="form-label">Cuotas por mes</label>
+                      <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
+                     </div>
           
 
 
@@ -146,24 +150,7 @@
   </a>
   
   <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-        </button>
-    </div>
-    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-    <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="logout">Logout</a>
-    </div>
-  </div>
-  </div>
-  </div>s        
+  <%- include ('layouts/logout.ejs') %>   
   
               <!-- Bootstrap core JavaScript-->
     <script src="../resources/vendor/jquery/jquery.min.js"></script>

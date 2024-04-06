@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+<title>Basilisk</title>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link rel="stylesheet" href="resources/css/layout.css">
+<link rel="stylesheet" href="resources/css/estilos.css">
+
+
+<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+<style>
+   #webchat {
+      /* height: 100%; */
+      margin: 0;
+      transition-duration: 0.5s;
+      transition-property: margin;
+      z-index: 1000;
+      background-color: white;
+    }
+    a{
+      color: rgb(33, 67, 179);
+    }
+
+
+    .webchat__chat {
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      /* height: 100%;  */
+      margin: auto;
+      max-width: 360px;
+      min-width: 360px;
+      transition-duration: 0.5s;
+      transition-property: max-width, min-width, width;
+    }
+
+    @media (min-width: 720px) {
+      #webchat {
+        margin: 0 10px;
+      }
+
+      .webchat__chat {
+        max-width: 480px;
+        min-width: 480px;
+        width: 600px;
+      }
+    }
+    @media (max-width: 460px) {
+#webchat {
+margin: 0;
+width: 100%;
+}
+
+.webchat__chat {
+max-width: none;
+min-width: 0;
+width: 100%;
+}
+}
+@media (max-width: 300px) {
+#webchat {
+margin: 0;
+width: 100%;
+}
+
+.webchat__chat {
+max-width: none;
+min-width: 0;
+width: 100%;
+}
+}
+</style>
+</head>
+<body id="top">
+
+<!-- Top Background Image Wrapper -->
+<div class="bgded overlay" style="background-image:url('resources/img/demo/backgrounds/vista.jpg');"> 
+  <!-- -->
+  <div class="wrapper row0">
+    <div id="topbar" class="hoc clear">
+      <div class="fl_left"> 
+        <ul class="nospace">
+          <li><i class="fas fa-phone rgtspace-5"></i> 7441318629</li>
+          <li><i class="far fa-envelope rgtspace-5"></i> info@basilisk.com</li>
+        </ul>
+
+      </div>
+      <div class="fl_right"> 
+
+      </div>
+    </div>
+  </div>
+ 
+  <!--  -->
+  <div class="wrapper row1">
+    <header id="header" class="hoc clear">
+      <div id="logo" class="fl_left"> 
+        <!-- ################################################################################################ -->
+        <h1><a href="/">Basilisk</a></h1>
+        <!-- ################################################################################################ -->
+      </div>
+      <nav id="mainav" class="fl_right"> 
+        <!-- ################################################################################################ -->
+        <ul class="clear">
+          <li class="active"><a href="/services">Inicio</a></li>
+          <li class="active"><a href="/servicesterrenos">Terrenos</a></li>
+     
+         
+          <li><a href="/login">Iniciar Sesión</a></li>
+        
+        </ul>
+      </nav>
+    </header>
+  </div>
+  
+  <div id="pageintro" class="hoc clear"> 
+ 
+    <article>
+      <h3 class="heading">Basilisk Inmobiliaria 7 </h3>
+      <p>Asociación enfocada al área de Pie de la cuesta, Fuerza área Mexicana desde el 2010</p>
+      <footer>
+        <ul class="nospace inline pushright">
+          <li><a class="btn" href="#">Terrenos</a></li>
+          <li><a class="btn inverse" href="#">Contactanos</a></li>
+        </ul>
+      </footer>
+    </article>
+    <!-- ################################################################################################ -->
+  </div>
+  <!-- ################################################################################################ -->
+</div>
+<!-- End Top Background Image Wrapper -->
+
+<!-- ################################################################################################ -->
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <section id="introblocks">
+      <ul class="nospace group btmspace-80">
+        <li class="one_third first">
+          <figure><a class="imgover" href="#"><img src="resources/img/demo/terreno1.jpg" alt=""></a>
+            <figcaption>
+              <h6 class="heading"> 300mts²</h6>
+              <p> <b>Papeles: </b>Cuenta con escrituras ✍🏼 <br> 
+               
+            </figcaption>
+          </figure>
+        </li>
+        <li class="one_third">
+          <figure><a class="imgover" href="#"><img src="resources/img/demo/terreno1_1.jpg" alt=""></a>
+            <figcaption>
+              <h6 class="heading"> 300mts²</h6>
+              <p>  <b>  Beneficios: </b>a pie de laguna, ideal para vacacionar con tu familia. 🛶 <br></p>
+            </figcaption>
+          </figure>
+        </li>
+        <li class="one_third">
+          <figure><a class="imgover" href="#"><img src="resources/img/demo/terreno1_2.jpg" alt=""></a>
+            <figcaption>
+              <h6 class="heading"> 300mts²</h6>
+              <p> <b> Ubicación: </b>Dentro de la colonia Fuerza Aérea Mexicana, Acapulco de Juárez, Guerrero.</p>
+            </figcaption>
+          </figure>
+        </li>
+      </ul>
+    </section>
+    <!-- ################################################################################################ -->
+    <hr class="btmspace-80">
+    <!-- ################################################################################################ -->
+    <section id="overview">
+      <div class="sectiontitle">
+        <p class="nospace font-xs">Acerca de Basilisk</p>
+        <p class="heading underline font-x2">Valores</p>
+      </div>
+      <ul class="nospace group btmspace-80">
+        <li class="one_third">
+          <article>
+            <div class="clear"><a href="#"><i class="fas fa-home"></i></a>
+              <h6 class="heading">Transparencia</h6>
+            </div>
+            <p>Asesoramos y vendemos inmuebles con profesionalidad, trasparencia y responsabilidad.</p>
+          </article>
+        </li>
+        <li class="one_third">
+          <article>
+            <div class="clear"><a href="#"><i class="fas fa-handshake"></i></a>
+              <h6 class="heading">Ética – Honestidad</h6>
+            </div>
+            <p>Ponemos todos nuestros recursos, tanto materiales como técnicos y humanos, al servicio de nuestros Clientes</p>
+          </article>
+        </li>
+        <li class="one_third">
+          <article>
+            <div class="clear"><a href="#"><i class="fas fa-star"></i></a>
+              <h6 class="heading">Responsabilidad Social</h6>
+            </div>
+            <p>Trabajamos de forma personalizada.</p>
+          </article>
+        </li>
+      </ul>
+      <!-- <footer class="center"><a class="btn" href="#">Mattis vestibulum</a></footer> -->
+    </section>
+    <!-- ################################################################################################ -->
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="bgded overlay" style="background-image:url('resources/img/demo/backgrounds/fondo.jpg');">
+  <section id="splitfifty" class="hoc container clear">
+    <div class="sectiontitle">
+      <p class="nospace font-xs">Somos una empresa 100% legal</p>
+      <p class="heading underline font-x2">Fuerza Área Mexicana</p>
+    </div>
+    <div class="bgded clear" style="background-image:url('/img/demo/backgrounds/terreno1.jpg');"> 
+      <!-- ################################################################################################ -->
+      <article>
+        <h6 class="heading font-x2">Empeñados en la mejora</h6>
+        <p>A la fecha hemos logrado más de 796 acercamientos con clientes en proceso o finalización de regularización.</p>
+        <!-- <footer><a class="btn" href="#">Fermentum felis</a></footer> -->
+      </article>
+      <!-- ################################################################################################ -->
+    </div>
+  </section>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row2">
+  <div class="hoc container clear"> 
+    <!-- ################################################################################################ -->
+    <div class="sectiontitle">
+      <p class="nospace font-xs">Más terrenos</p>
+      <p class="heading underline font-x2">Terrenos en venta</p>
+    </div>
+    <ul class="nospace group team">
+      <li class="one_quarter first">
+        <figure><a class="imgover" href="#"><img src="resources/img/demo/300.jpg" alt=""></a>
+          <figcaption><strong>Construcción </strong> <em>Terrenos con construcción</em></figcaption>
+        </figure>
+      </li>
+      <li class="one_quarter">
+        <figure><a class="imgover" href="#"><img src="resources/img/demo/3002.jpg" alt=""></a>
+          <figcaption><strong>Contrucción</strong> <em>Terrenos al raz de la carretera</em></figcaption>
+        </figure>
+      </li>
+      <li class="one_quarter">
+        <figure><a class="imgover" href="#"><img src="resources/img/demo/3003.jpg" alt=""></a>
+          <figcaption><strong>Construcción</strong> <em>Terrenos con bardas</em></figcaption>
+        </figure>
+      </li>
+      <li class="one_quarter">
+        <figure><a class="imgover" href="#"><img src="resources/img/demo/3004.jpg" alt=""></a>
+          <figcaption><strong>Construcción</strong> <em>Terrenos con construcción</em></figcaption>
+        </figure>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+
+<div class="wrapper bgded" style="background-image:url('resources/img/demo/backgrounds/regularizar-terreno.jpeg');">
+  <section id="testimonials" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <div class="one_half overlay">
+      <ul class="nospace">
+        <li>
+          <blockquote>La regularización de terrenos es el primer paso para convertir sueños en realidades tangibles.”.</blockquote>
+          <figure class="clear"><img class="circle" src="/img/logo.png" alt="">
+            <figcaption>
+              <h6 class="heading">Basilisk</h6>
+              <em>Empresa</em></figcaption>
+          </figure>
+        </li>
+        <li>
+          <footer><a class="btn inverse" href="#">View More</a></footer>
+        </li>
+      </ul>
+    </div>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row3">
+  <section class="hoc container clear"> 
+    <!-- ################################################################################################ -->
+    <div class="sectiontitle">
+      <p class="nospace font-xs">Terrenos</p>
+      <p class="heading underline font-x2">Más terrenos</p>
+    </div>
+    <ul id="latest" class="nospace group">
+      <li class="one_third first">
+        <article><a class="imgover" href="#"><img src="resources/img/demo/terrenosmas.jpg" alt=""></a>
+          <ul class="nospace meta group">
+            <li><i class="fas fa-user"></i> <a href="#">Basilisk</a></li>
+            <li><i class="far fa-clock"></i>
+              <time datetime="2045-04-06T08:15+00:00">2023</time>
+            </li>
+          </ul>
+          <div class="excerpt">
+            <h6 class="heading">Terrenos con contrucción</h6>
+            <p>¡Todavía tenemos disponible! Súper precios.</p>
+            <footer><a class="btn" href="#">Más terrenos</a></footer>
+          </div>
+        </article>
+      </li>
+      <li class="one_third">
+        <article><a class="imgover" href="#"><img src="resources/img/demo/terrenosmas2.jpg" alt=""></a>
+          <ul class="nospace meta group">
+            <li><i class="fas fa-user"></i> <a href="#">Basilisk</a></li>
+            <li><i class="far fa-clock"></i>
+              <time datetime="2045-04-05T08:15+00:00">2024</time>
+            </li>
+          </ul>
+          <div class="excerpt">
+            <h6 class="heading">Terrenos con construcción</h6>
+            <p>¡Todavía tenemos disponible! Súper precios.</p>
+            <footer><a class="btn" href="#">Más terrenos</a></footer>
+          </div>
+        </article>
+      </li>
+      <li class="one_third">
+        <article><a class="imgover" href="#"><img src="resources/img/demo/terrenosmas3.jpg" alt=""></a>
+          <ul class="nospace meta group">
+            <li><i class="fas fa-user"></i> <a href="#">Basilisk</a></li>
+            <li><i class="far fa-clock"></i>
+              <time datetime="2045-04-04T08:15+00:00">2024</time>
+            </li>
+          </ul>
+          <div class="excerpt">
+            <h6 class="heading">Terrenos con construcción</h6>
+            <p>¡Todavía tenemos disponible! Súper precios</p>
+            <footer><a class="btn" href="#">Más terrenos</a></footer>
+          </div>
+        </article>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="bgded overlay row4" style="background-image:url('resources/img/demo/backgrounds/');">
+  <footer id="footer" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    
+      <!-- ################################################################################################ -->
+    <!-- </div> -->
+    <div id="ctdetails" class="clear">
+      <ul class="nospace clear">
+        <li class="one_quarter first">
+          <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Llamanos:</strong> 7441318629</span></div>
+        </li>
+        <li class="one_quarter">
+          <div class="block clear"><a href="#"><i class="fas fa-envelope"></i></a> <span><strong>Envianos un correo:</strong> basilisk@gmail.com</span></div>
+        </li>
+        <li class="one_quarter">
+          <div class="block clear"><a href="#"><i class="fas fa-clock"></i></a> <span><strong> Lunes - Sabado:</strong> 08.00am - 2.00pm</span></div>
+        </li>
+        <li class="one_quarter">
+          <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Ven a conocernos:</strong> Dirección <a href="https://www.google.com.mx/maps/dir/16.8461145,-99.8471637/Tr%C3%A1mites+de+Regularizaciones+Basilisk,+Av.+Pie+de+la+Cuesta+s%2Fn,+Mozimba,+39460+Acapulco+de+Ju%C3%A1rez,+Gro./@16.8677641,-99.9294142,14.19z/data=!4m10!4m9!1m1!4e1!1m5!1m1!1s0x85caf8214f8b625b:0x490b79742f5fdbc9!2m2!1d-99.9290705!2d16.8647528!3e0?entry=ttu">nuestras oficinas</a></span></div>
+        </li>
+      </ul>
+    </div>
+    <!-- ################################################################################################ -->
+  </footer>
+</div>
+
+<span class="u-text-highlight"> <a  class="floating-button" onclick="toggleChat()" id="b">✉️</a></span>
+    <p class="texto links" onclick="" style="width: fit-content;"> Envía un mensaje!
+        <div  id="webchat" role="main"  class="texto" style="display: none; width: fit-content;"></div>
+    </p>
+
+    
+<!-- Contenedor del chat (inicialmente oculto) -->
+<div id="chatContainer">
+  <button id="minimizeButton" onclick="minimizarChat()"><i class=""></i></button>
+</div>
+
+<!-- JAVASCRIPTS -->
+
+
+
+<script src="resources/scripts/jquery.min.js"></script>
+
+<script src="resources/scripts/jquery.mobilemenu.js"></script>
+<script src="resources/scripts/chatbot.js"></script>
+
+</body>
+</html>

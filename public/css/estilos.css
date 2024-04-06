@@ -1,0 +1,65 @@
+#chatContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: none;
+    border-radius: 15px; /* Agrega bordes redondeados al contenedor */
+    padding: 2px;
+} 
+
+/* Estilo para el botón flotante */
+.floating-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgb(247, 39, 73), rgb(247, 131, 32));
+    box-shadow: rgba(2, 6, 16, 0.2) 0px 2px 16px;
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    color: white;
+    text-align: center;
+    line-height: 60px;
+    font-size: 24px;
+    z-index: 100;
+    transition: transform .2s;
+    text-decoration: none;
+}
+
+.floating-button:hover {
+    transform: scale(1.1);
+    background: #007bff; /* Cambia el color de fondo del botón cuando el cursor está sobre él */
+}
+
+/* Estilo para el botón de minimizar */
+#minimizeButton {
+    background-color: #007bff; /* Cambia el color de fondo del botón */
+    color: white; /* Cambia el color del ícono */
+    border: none; /* Elimina el borde del botón */
+    border-radius: 5px; /* Agrega bordes redondeados al botón */
+    cursor: pointer; /* Cambia el cursor a un puntero cuando está sobre el botón */
+}
+/* h1 {
+    color: whitesmoke;
+    font-family: Segoe UI;
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0;
+    padding: 0 20px;
+  } */
+
+  .texto{
+    position: fixed;
+    bottom: 25px;
+    width: 250px;
+    right: 100px;
+    color: rgb(0, 0, 0);
+    background-color: beige;
+    border-radius: 15px;
+    padding: 5px;
+    z-index: 100;
+  }
+  .emoji{
+    width: 20px;
+}
