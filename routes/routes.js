@@ -36,8 +36,7 @@ router.get('/login', (req, res) => {
 router.post('/login', authentication.login)
 
 
-
-// Logout
+// LOGOUT
 router.get('/logout', function(req, res) {
     res.clearCookie('jwt')  
     req.session.destroy(() => {
