@@ -22,12 +22,19 @@ router.get('/', authentication.auth, (req, res) => {
         }
         res.end();
     } else {
-        res.render('index', {
+        res.render('terrenos_index', {
             login: false,
             name: 'Debe iniciar sesión',
         });
     }
 });
+
+router.get('/login', (req, res) => {
+    res.render('login');
+});
+router.post('/login', authentication.login)
+
+
 
 // Logout
 router.get('/logout', function(req, res) {
@@ -37,31 +44,30 @@ router.get('/logout', function(req, res) {
     });
 });
 
-
-
-
-router.get('/login', (req, res) => {
-    res.render('login');
+router.get('/services', (req, res) => {
+    res.render('terrenos_index');
 });
-router.post('/login', authentication.login)
+
+router.get('/servicesterrenos', (req, res) => {
+    res.render('vista_terrenos');
+});
+
 
 
 router.get('/register', async(req, res) => {
     if (req.session.rol == 'usuario') {
-        res.render('register', {
+        res.render('denegado', {
             login: true,
             roluser: false,
             name: req.session.name,
             rol: req.session.rol
         });
     } else if (req.session.rol == 'admin') {
-        
         res.render('register', {
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-    
         });
     }    
 });
@@ -73,11 +79,12 @@ router.post('/register',authentication.register);
 //ver usuarios
  router.get('/usuarios', async(req, res) => {
         if (req.session.rol == 'usuario') {
-            res.render('usuarios', {
+            res.render('denegado', {
                 login: true,
                 roluser: false,
                 name: req.session.name,
-                rol: req.session.rol
+                rol: req.session.rol,
+
             });
         } else if (req.session.rol == 'admin') {
             const [rows] = await pool.query('SELECT *FROM users');
@@ -101,6 +108,13 @@ router.get('/editar/:id', async(req, res) => {
             name: req.session.name,
             rol: req.session.rol,
             usuarios: rows,
+        });
+    }else{
+        res.render('denegado', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
         });
     }
 });
