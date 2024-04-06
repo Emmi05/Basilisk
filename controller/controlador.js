@@ -2721,25 +2721,25 @@ const crearAbonos = async (req, res) => {
             
                await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
                  // Renderizar la vista con un mensaje de error si faltan campos
-                 return res.render('abonos_formulario', {
-                alert: true,
-                alertTitle: "exito",
-                alertMessage: "yup",
-                alertIcon: 'success',
-                showConfirmButton: false,
-                timer: 1500,
-                ruta: '/',
-                login: true,
-                roluser: true,
-                name: req.session.name,
-                rol: req.session.rol,
-                abonos: abonosrows,
-            });
-            }
-        }
+            //      return res.render('abonos_formulario', {
+            //     alert: true,
+            //     alertTitle: "exito",
+            //     alertMessage: "yup",
+            //     alertIcon: 'success',
+            //     showConfirmButton: false,
+            //     timer: 1500,
+            //     ruta: '/',
+            //     login: true,
+            //     roluser: true,
+            //     name: req.session.name,
+            //     rol: req.session.rol,
+            //     abonos: abonosrows,
+            // });
+      }
+     }
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error interno del servidor');
+        // res.status(500).send('Error interno del servidor');
     }
 }
 
