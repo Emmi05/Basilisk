@@ -75,7 +75,7 @@ export const login=  async(req, res) => {
                         alertMessage: "¡SARAHI!",
                         alertIcon: 'success',
                         showConfirmButton: false,
-                        timer: 1500,
+                        timer: 3000,
                         ruta: ''
                     });
                 } else {
@@ -86,7 +86,7 @@ export const login=  async(req, res) => {
                         alertMessage: "Ata Papa",
                         alertIcon: 'success',
                         showConfirmButton: false,
-                        timer: 1500,
+                        timer: 3000,
                         ruta: ''
                     });
                 }
@@ -2707,9 +2707,7 @@ const crearAbonos = async (req, res) => {
                     throw error;
                 });
 
-            // // Obtener el ID del último abono insertado
-            // const lastInsertedAbonoId = iabono.insertId;
-
+      
             // Actualizar la venta con las nuevas cuotas pagadas y la deuda restante
             const result = await pool.query('UPDATE sale SET ncuotas_pagadas = ?, deuda_restante = ? WHERE id = ?', [cuota_restante, deuda_restante, id_sale])
                 .catch(error => {
@@ -2718,7 +2716,8 @@ const crearAbonos = async (req, res) => {
                 });
 
                // Llama a la función redirectTo después de enviar el PDF
-            
+            //    window.location.redirect= "/abono_view"
+
                await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
                  // Renderizar la vista con un mensaje de error si faltan campos
             //      return res.render('abonos_formulario', {
@@ -2735,6 +2734,7 @@ const crearAbonos = async (req, res) => {
             //     rol: req.session.rol,
             //     abonos: abonosrows,
             // });
+            // window.location.redirect= "/abono_view"
       }
      }
     } catch (error) {
@@ -2855,6 +2855,7 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
                 'Content-Disposition': 'attachment; filename=reporte.pdf',
                 'Content-Length': pdfData.length
             });
+            // alert("hola");
             res.end(pdfData);
         });
 
