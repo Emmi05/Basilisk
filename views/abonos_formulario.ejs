@@ -172,6 +172,18 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('guardarBtn').addEventListener('click', async function(event) {
+
+      Swal.fire({
+                    title: '¡Registro Exitoso!',
+                    icon: 'success',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Continuar',
+                    allowOutsideClick: false
+                }).then(() => {
+                    window.location = '/abono_view';
+                });
+
+        
         event.preventDefault(); // Prevenir el comportamiento por defecto del botón (enviar el formulario)
 
         const id_venta = <%= abono.id %>; 
@@ -179,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Realizar una solicitud AJAX al servidor
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/reciboticket/:id', true);
+        xhr.open('POST', '/reciboticket/<%= abono.id %>', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onload = function() {

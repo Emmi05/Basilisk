@@ -520,7 +520,7 @@ router.get('/proceso/',authentication.proceso);
 router.get('/disponibles/',authentication.disponibles);
 
 
-router.get('/reciboticket/',authentication.createticket);
+router.get('/reciboticket/:id',authentication.createticket);
 
 
 
