@@ -2717,12 +2717,24 @@ const crearAbonos = async (req, res) => {
                     throw error; 
                 });
 
-             
-
-            //    await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
-
-            //    res.render('/')
-        
+               // Llama a la función redirectTo después de enviar el PDF
+            
+               await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
+                 // Renderizar la vista con un mensaje de error si faltan campos
+            //      return res.render('abonos_formulario', {
+            //     alert: true,
+            //     alertTitle: "exito",
+            //     alertMessage: "yup",
+            //     alertIcon: 'success',
+            //     showConfirmButton: false,
+            //     timer: 1500,
+            //     ruta: '/',
+            //     login: true,
+            //     roluser: true,
+            //     name: req.session.name,
+            //     rol: req.session.rol,
+            //     abonos: abonosrows,
+            // });
       }
      }
     } catch (error) {
@@ -2733,135 +2745,129 @@ const crearAbonos = async (req, res) => {
 
 
 
-
 // metodo para cahcar los datos del onclick 
 
-const createticket =async (req,res) => {
-    function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res) {
 
-        try {
-    
-            const doc = new PDFDocument();
-            const buffers = [];
-             const fechaAbono = moment(fechaAbonoFormateada, 'YYYY-MM-DD').toDate();
-             const fechaEnLetras = formatFechaEnLetras(fechaAbono);
-    
-                 
-          // Establecer la posición de la imagen
-          const imgWidth = 100; // Ancho de la imagen
-          const imgHeight = 80; // Alto de la imagen
-          const imgX = doc.page.width - imgWidth - 5; // Posición X de la imagen (10 píxeles desde el borde derecho)
-          const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
-          doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
-    
-            // Agregar espacio
-            doc.moveDown();
-    
-            const fecha = `Acapulco, Guerrero, a  ${fechaEnLetras}`;
-            doc.text(fecha, {
-                align: 'right' // Alinea el texto a la derecha
+async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res) {
+
+    try {
+
+        const doc = new PDFDocument();
+        const buffers = [];
+         const fechaAbono = moment(fechaAbonoFormateada, 'YYYY-MM-DD').toDate();
+         const fechaEnLetras = formatFechaEnLetras(fechaAbono);
+
+             
+      // Establecer la posición de la imagen
+      const imgWidth = 100; // Ancho de la imagen
+      const imgHeight = 80; // Alto de la imagen
+      const imgX = doc.page.width - imgWidth - 5; // Posición X de la imagen (10 píxeles desde el borde derecho)
+      const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
+      doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
+
+        // Agregar espacio
+        doc.moveDown();
+
+        const fecha = `Acapulco, Guerrero, a  ${fechaEnLetras}`;
+        doc.text(fecha, {
+            align: 'right' // Alinea el texto a la derecha
+        });
+
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+
+        // Agregar el párrafo de lorem
+        const lorem = ' apoderado de Basilisk Inmobiliaria Siete S de RL de CV, personalidad y facultades que acredito mediante escritura pública número 45,153 de 19 de Febrero de 2015, otorgada ante la fe del licenciado José Luis Altamirano Quintero, Notario Público número 66 del Distro Federal.';
+        doc.text(`Israel Nogueda Pineda, ${lorem}`, {
+            // width: 410,
+            align: 'justify'
+        });
+        doc.moveDown();
+        doc.moveDown();
+        // Agregar el párrafo del cliente
+       
+        const customerName = `Recibo de la C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} la cantidad de $ ${cantidad}  como pago parcial por el lote ${informacion[0].land_lote} de la manzana ${informacion[0].land_manzana}, operación pactada en $ ${informacion[0].land_precio}, los gasos de escrituración e  impuesto predial con número ${informacion[0].land_predial}, son por cuenta del comprador, según acuerdo entre las partes, ubicado en el Fraccionamiento Fuerza Aérea Mexicana, Municipio de Acapulco, Estado de Guerrero e identificado internamiento con la clave ${informacion[0].land_id_interno}, a fin de llevar a cabo la compra venta de dicho lote.  `;
+        doc.text(customerName, {
+            // width: 410,
+            align: 'justify'// Alinea el texto
+        });
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        const extra = `Basilisk Inmobiliaria Siete, S. de R.L de C.V `;
+        doc.text(extra, {
+            align: 'justify'// Alinea el texto
+        });
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        const firma  = `Israel Nogueda Pineda  `;
+        doc.text(firma, {
+            align: 'justify'
+        });
+        const apoderado  = `Apoderado.  `;
+        doc.text(apoderado, {
+            align: 'justify'
+        });
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+     
+        const nombrelogo  = `B A S I L I S K  `;
+        doc.text(nombrelogo, {
+            align: 'center'
+        });// Ajusta la posición vertical del pie de página
+      const footerY = doc.page.height - 20;
+
+      // Dibuja la línea horizontal
+          const lineY = footerY - 30; // Ajusta la posición vertical de la línea
+          doc.lineCap('butt')
+              .moveTo(50, lineY)
+              .lineTo(doc.page.width - 50, lineY)
+              .stroke();
+  
+
+        // Manejador para agregar datos al buffer
+        doc.on('data', buffers.push.bind(buffers));
+
+        // Manejador para finalizar el documento
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            // Envía el PDF como respuesta
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=reporte.pdf',
+                'Content-Length': pdfData.length
             });
-    
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-    
-            // Agregar el párrafo de lorem
-            const lorem = ' apoderado de Basilisk Inmobiliaria Siete S de RL de CV, personalidad y facultades que acredito mediante escritura pública número 45,153 de 19 de Febrero de 2015, otorgada ante la fe del licenciado José Luis Altamirano Quintero, Notario Público número 66 del Distro Federal.';
-            doc.text(`Israel Nogueda Pineda, ${lorem}`, {
-                // width: 410,
-                align: 'justify'
-            });
-            doc.moveDown();
-            doc.moveDown();
-            // Agregar el párrafo del cliente
-           
-            const customerName = `Recibo de la C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} la cantidad de $ ${cantidad}  como pago parcial por el lote ${informacion[0].land_lote} de la manzana ${informacion[0].land_manzana}, operación pactada en $ ${informacion[0].land_precio}, los gasos de escrituración e  impuesto predial con número ${informacion[0].land_predial}, son por cuenta del comprador, según acuerdo entre las partes, ubicado en el Fraccionamiento Fuerza Aérea Mexicana, Municipio de Acapulco, Estado de Guerrero e identificado internamiento con la clave ${informacion[0].land_id_interno}, a fin de llevar a cabo la compra venta de dicho lote.  `;
-            doc.text(customerName, {
-                // width: 410,
-                align: 'justify'// Alinea el texto
-            });
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            const extra = `Basilisk Inmobiliaria Siete, S. de R.L de C.V `;
-            doc.text(extra, {
-                align: 'justify'// Alinea el texto
-            });
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            const firma  = `Israel Nogueda Pineda  `;
-            doc.text(firma, {
-                align: 'justify'
-            });
-            const apoderado  = `Apoderado.  `;
-            doc.text(apoderado, {
-                align: 'justify'
-            });
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
-         
-            const nombrelogo  = `B A S I L I S K  `;
-            doc.text(nombrelogo, {
-                align: 'center'
-            });// Ajusta la posición vertical del pie de página
-          const footerY = doc.page.height - 20;
-    
-          // Dibuja la línea horizontal
-              const lineY = footerY - 30; // Ajusta la posición vertical de la línea
-              doc.lineCap('butt')
-                  .moveTo(50, lineY)
-                  .lineTo(doc.page.width - 50, lineY)
-                  .stroke();
+            res.end(pdfData);
+        });
+
+        // Finaliza y cierra el documento PDF
+        doc.end();
       
-    
-            // Manejador para agregar datos al buffer
-            doc.on('data', buffers.push.bind(buffers));
-    
-            // Manejador para finalizar el documento
-            doc.on('end', () => {
-                const pdfData = Buffer.concat(buffers);
-                // Envía el PDF como respuesta
-                res.writeHead(200, {
-                    'Content-Type': 'application/pdf',
-                    'Content-Disposition': 'attachment; filename=reporte.pdf',
-                    'Content-Length': pdfData.length
-                });
-                // aqui envio la otra solcitud?
-                res.end(pdfData);
-            });
-    
-            // Finaliza y cierra el documento PDF
-            doc.end();
-          
-    
-        } catch (error) {
-            console.error('Error en la generación del PDF:', error);
-            // res.status(500).send('Error interno del servidor al generar el PDF');
-        }
-    
+
+    } catch (error) {
+        console.error('Error en la generación del PDF:', error);
+        // res.status(500).send('Error interno del servidor al generar el PDF');
     }
-    
 
 }
-
 
 
 
@@ -3480,7 +3486,6 @@ export const methods = {
     proceso,
     disponibles,
     pagados,
-    createticket,
   }
 
 
@@ -3506,5 +3511,3 @@ function formatFechaEnLetras(fecha) {
     const año = fecha.getFullYear();
     return `${dia} ${fecha.getDate()} de ${mes} de ${año}`;
 }
-
-

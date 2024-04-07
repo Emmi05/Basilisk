@@ -170,32 +170,22 @@
 </script>
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('guardarBtn').addEventListener('click', async function(event) {
-
-      Swal.fire({
-                    title: '¡Registro Exitoso!',
-                    icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Continuar',
-                    allowOutsideClick: false
-                }).then(() => {
-                    window.location = '/abono_view';
-                });
-
-        
         event.preventDefault(); // Prevenir el comportamiento por defecto del botón (enviar el formulario)
 
         const id_venta = <%= abono.id %>; 
-        const cantidad = parseFloat(document.getElementById('cantidadAbono').value);// Obtener la cantidad de abono del campo correspondiente
+        const cantidad = parseFloat(document.getElementById('cantidadAbono').value); // Obtener la cantidad de abono del campo correspondiente
 
         // Realizar una solicitud AJAX al servidor
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/reciboticket/<%= abono.id %>', true);
+        xhr.open('POST', '/crearAbonos/:id', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onload = function() {
-            if (xhr.status === 200) {
+          if (xhr.status === 200) {
+      
                 // Redireccionar al usuario una vez que han cerrado el mensaje de éxito
                 Swal.fire({
                     title: '¡Registro Exitoso!',
@@ -210,11 +200,14 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 console.error('Error en la solicitud:', xhr.statusText);
             }
-        };
+          }
+        })
 
         xhr.onerror = function() {
             console.error('Error en la solicitud');
         };
+
+        // Enviar los datos al servidor en formato JSON
         const data = JSON.stringify({
             id_venta: id_venta,
             cantidad: cantidad,
@@ -222,11 +215,12 @@ document.addEventListener('DOMContentLoaded', function() {
             fecha_abono: fecha_abono,
             cantidad:cantidad,
 
-          });
+        });
         xhr.send(data);
     });
-});
-</script>
+      
+  });
+    </script>
 <% }); %>
 
   
