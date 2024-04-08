@@ -83,7 +83,6 @@
                 <br> <br> <br> <br>
                   <div class="col-12">
                     <!-- <a href="/abono_view" class="btn btn-secondary">Regresar</a> -->
-                    <a href="/abono_view" class="btn btn-sm btn-info"><i class="fas fa-money-bill"></i></a>
 
                     <a href="/" class="btn btn-secondary">Cancelar</a>
 
@@ -174,62 +173,50 @@
 
 </script>
 
+
 <script>
-
-  
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('guardarBtn').addEventListener('click',  function() {
-      alert("hola") 
-        event.preventDefault();
-      
-
-        const id_venta = <%= abono.id %>; 
-        const cantidad = parseFloat(document.getElementById('cantidadAbono').value); // Obtener la cantidad de abono del campo correspondiente
-
-        // Realizar una solicitud AJAX al servidor
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/crearAbonos/:id', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-      
-                // Redireccionar al usuario una vez que han cerrado el mensaje de éxito
-                Swal.fire({
-                    title: '¡Registro Exitoso!',
-                    icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Continuar',
-                    allowOutsideClick: false
-                }).then(() => {
-                    window.location = '/abono_view';
-                });
-
-            } else {
-                console.error('Error en la solicitud:', xhr.statusText);
-            }
-          }
-        })
-
-        xhr.onerror = function() {
-            console.error('Error en la solicitud');
-        };
-
-        // Enviar los datos al servidor en formato JSON
-        const data = JSON.stringify({
-            id_venta: id_venta,
-            cantidad: cantidad,
-            n_abono: n_abono,
-            fecha_abono: fecha_abono,
-            cantidad:cantidad,
-
-        });
-        xhr.send(data);
+        function generarPDF() {
+            // Hacer una solicitud AJAX para generar el PDF
+            fetch('/crearAbonos/:id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: '<%= abono.id %>' }) // Reemplaza 'tu_id_aqui' con el ID deseado
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Verificar si la generación del PDF fue exitosa
+                if (data.success) {
+                    // Mostrar una notificación al usuario
+                    alert('El PDF se ha generado exitosamente.');
+                } else {
+                    // Mostrar un mensaje de error si la generación falló
+                    alert('Hubo un error al generar el PDF.');
+                }
+            })
+            .catch(error => {
+    // Mostrar un mensaje de error si hubo un problema con la solicitud AJAX
+    console.error('Error al generar el PDF:', error);
+    Swal.fire({
+        title: 'Exito',
+        text: 'Abono creado',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+    }).then((result) => {
+        // Redirigir al usuario a otra página después de que haga clic en el botón "Aceptar"
+        if (result.isConfirmed) {
+            window.location.href = '/'; // URL de la página a la que deseas redirigir
+        }
     });
-      
-  });
+});
+        }
+
+
+        document.getElementById('guardarBtn').addEventListener('click', generarPDF);
     </script>
+
+
 <% }); %>
 
   

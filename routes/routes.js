@@ -379,7 +379,6 @@ router.get('/venta/:id', async(req, res) => {
 });
 
 
-
 router.post('/updateventa/:id',authentication.editarVenta);
 
 
@@ -518,6 +517,7 @@ router.get('/pagados/',authentication.pagados);
 router.get('/proceso/',authentication.proceso);
 
 router.get('/disponibles/',authentication.disponibles);
+
 
 
 

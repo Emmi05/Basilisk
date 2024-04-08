@@ -8,7 +8,6 @@ import session from 'express-session';
 import cookieParser from'cookie-parser';
 
 
-
 const app = express();
 app.use(urlencoded({ extended: false }));
 app.use(json());
@@ -18,6 +17,11 @@ dotenv.config({ path: './env/.env' });
 
 app.use('/resources', expressStatic('public'));
 app.set('view engine', 'ejs');
+
+
+
+
+
 
 
 app.use(session({
