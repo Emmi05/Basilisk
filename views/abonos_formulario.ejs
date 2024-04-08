@@ -176,20 +176,30 @@
 
 <script>
         function generarPDF() {
-            // Hacer una solicitud AJAX para generar el PDF
             fetch('/crearAbonos/:id', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id: '<%= abono.id %>' }) // Reemplaza 'tu_id_aqui' con el ID deseado
+                body: JSON.stringify({ id: '<%= abono.id %>' })
             })
             .then(response => response.json())
             .then(data => {
                 // Verificar si la generación del PDF fue exitosa
-                if (data.success) {
+                if (data.ok) {
                     // Mostrar una notificación al usuario
                     alert('El PDF se ha generado exitosamente.');
+                        Swal.fire({
+                        title: 'Ok',
+                        text: 'Abono creado',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then((result) => {
+
+                        if (result.isConfirmed) {
+                            window.location.href = '/'; 
+                        }
+                    });
                 } else {
                     // Mostrar un mensaje de error si la generación falló
                     alert('Hubo un error al generar el PDF.');
@@ -198,21 +208,19 @@
             .catch(error => {
     // Mostrar un mensaje de error si hubo un problema con la solicitud AJAX
     console.error('Error al generar el PDF:', error);
-    Swal.fire({
-        title: 'Exito',
-        text: 'Abono creado',
-        icon: 'success',
-        confirmButtonText: 'Aceptar'
-    }).then((result) => {
-        // Redirigir al usuario a otra página después de que haga clic en el botón "Aceptar"
-        if (result.isConfirmed) {
-            window.location.href = '/'; // URL de la página a la que deseas redirigir
-        }
-    });
+              Swal.fire({
+                  title: 'Error',
+                  text: 'No exito',
+                  icon: 'error',
+                  confirmButtonText: 'ok'
+              }).then((result) => {
+
+                  if (result.isConfirmed) {
+                      window.location.href = '/'; 
+                  }
+              });
 });
         }
-
-
         document.getElementById('guardarBtn').addEventListener('click', generarPDF);
     </script>
 

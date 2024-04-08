@@ -2720,7 +2720,8 @@ const crearAbonos = async (req, res) => {
             
 
             await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
-    
+            // res.json({ success: true });
+
         
       }
      }
@@ -2839,7 +2840,7 @@ const crearAbonos = async (req, res) => {
                 });
                 // alert("hola");
                 res.end(pdfData);
-   
+              
 
             });
 
