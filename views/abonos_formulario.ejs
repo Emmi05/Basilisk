@@ -15,7 +15,7 @@
   
               <!-- Main Content -->
               <div id="content">
-  
+               
                   <!-- Topbar /header -->
                   <%- include ('layouts/header.ejs') %>
                     <!-- header -->
@@ -23,7 +23,7 @@
           
          <!-- Begin Page Content -->
          <% abonos.forEach(abono => { %>
-
+     
           <div class="container-fluid">
               <h1>Registro abonos</h1>
               <form class="row g-3"  action="/crearAbonos/<%= abono.id %>" method="POST">
@@ -91,8 +91,9 @@
       
                       <button type="submit" class="btn btn-primary" id="guardarBtn" >Guardar</button>
                 
-          
+                   
                   </div>
+               
                 </form>
                 <% }); %>
 
@@ -100,7 +101,7 @@
   <!-- HTML -->
 
   <!-- End of Footer -->
-  
+
   </div>
   <!-- End of Content Wrapper -->
   
@@ -114,6 +115,7 @@
   
   <!-- Logout Modal-->
   <%- include ('layouts/logout.ejs') %>
+<!-- -- Contenedor de la alerta SweetAlert --> -->
 
   
               <!-- Bootstrap core JavaScript-->
@@ -191,7 +193,9 @@
         })
         .then(html => {
      // Inserta el HTML de la respuesta en el contenedor de alerta
-    document.getElementById('alertContainer').innerHTML = html;
+    // document.getElementById('alertContainer').innerHTML = html;
+    document.body.innerHTML += html;
+
     
  
     Swal.fire({
@@ -227,7 +231,7 @@
 
 <% }); %>
 
-<div id="alertContainer"></div>
+
 
   </div>
   </body>
