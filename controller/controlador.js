@@ -121,7 +121,8 @@ export const auth = async (req, res, next) => {
 
             if (results.length > 0) {
                 req.user = results[0];
-                    req.id = results[0].id; // Este podría ser el problema
+                console.log( "esto es" , req.user); // Agregar esta línea para verificar
+
 
 
                 return next();
@@ -138,7 +139,7 @@ export const auth = async (req, res, next) => {
 };
 
 export const perfil = async (req, res) => {
-    const userId = req.user.id; // Accediendo al ID de usuario desde req.user
+    const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
     console.log(userId); // Solo para verificar en la consola
     
     if (req.session.rol == 'usuario') {

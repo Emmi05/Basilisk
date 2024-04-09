@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
-import {methods as authentication} from '../controller/controlador.js'
+import {auth, methods as authentication} from '../controller/controlador.js'
 
 const router = Router();// Definición de la ruta '/'
 router.get('/', authentication.auth, (req, res) => {
@@ -123,7 +123,7 @@ router.post('/update/:id',authentication.editarUsuario);
 router.get('/delete/:id', authentication.eliminarUsuario);
 
 // PROFILE
-router.get('/profile', authentication.perfil);
+router.get('/profile', authentication.auth, authentication.perfil);
     
 
 // ruta clientes
