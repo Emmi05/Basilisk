@@ -2776,7 +2776,7 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
           // Establecer la posición de la imagen
           const imgWidth = 100; // Ancho de la imagen
           const imgHeight = 80; // Alto de la imagen
-          const imgX = doc.page.width - imgWidth - 5; // Posición X de la imagen (10 píxeles desde el borde derecho)
+          const imgX = doc.page.width - imgWidth - 30; // Posición X de la imagen (10 píxeles desde el borde derecho)
           const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
           doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
     
@@ -3480,7 +3480,6 @@ const pagados = async (req, res) => {
 
 const finiquito =async (req,res)=>{
     const id_venta = req.params.id;
-    // const [rows] = await pool.query('SELECT s.id AS sale_id, s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
 
     const [informacion]=await pool.query('SELECT  s.id AS venta_id, MAX(a.fecha_abono) AS ultima_fecha_abono,  c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
    
@@ -3495,7 +3494,7 @@ const finiquito =async (req,res)=>{
       // Establecer la posición de la imagen
       const imgWidth = 100; // Ancho de la imagen
       const imgHeight = 80; // Alto de la imagen
-      const imgX = doc.page.width - imgWidth - 5; // Posición X de la imagen (10 píxeles desde el borde derecho)
+      const imgX = doc.page.width - imgWidth - 30; // Posición X de la imagen (10 píxeles desde el borde derecho)
       const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
       doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
 
