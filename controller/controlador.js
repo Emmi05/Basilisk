@@ -117,9 +117,13 @@ export const auth = async (req, res, next) => {
         try {
             const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
             const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
-            
+            console.log(results)
+
             if (results.length > 0) {
                 req.user = results[0];
+                    req.id = results[0].id; // Este podría ser el problema
+
+
                 return next();
             } else {
                 throw new Error('Usuario no encontrado');
@@ -133,6 +137,32 @@ export const auth = async (req, res, next) => {
     }
 };
 
+export const perfil = async (req, res) => {
+    const userId = req.user.id; // Accediendo al ID de usuario desde req.user
+    console.log(userId); // Solo para verificar en la consola
+    
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+
+        res.render('profile', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows,
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+
+        res.render('profile', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows,
+        });
+    }
+};
 
 export const register=  async(req, res) => {
     try {
@@ -3475,8 +3505,8 @@ export const methods = {
     contado,
     proceso,
     disponibles,
-    pagados,
-    
+    pagados,    
+    perfil,
   }
 
 

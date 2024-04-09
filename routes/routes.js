@@ -122,6 +122,10 @@ router.post('/update/:id',authentication.editarUsuario);
 
 router.get('/delete/:id', authentication.eliminarUsuario);
 
+// PROFILE
+router.get('/profile', authentication.perfil);
+    
+
 // ruta clientes
 
 router.get('/cliente', async(req, res) => {
