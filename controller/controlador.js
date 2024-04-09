@@ -2763,7 +2763,7 @@ const crearAbonos = async (req, res) => {
     }
 }
 
-    async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res) {
+async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res) {
 
         try {
     
@@ -2888,9 +2888,6 @@ const crearAbonos = async (req, res) => {
     
     }
  
-
-
-
 
 
 const crearPdf = async (req, res) => {
@@ -3481,7 +3478,141 @@ const pagados = async (req, res) => {
     }
 }
 
+const finiquito =async (req,res)=>{
+    const id_venta = req.params.id;
+    // const [rows] = await pool.query('SELECT s.id AS sale_id, s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
 
+    const [informacion]=await pool.query('SELECT  s.id AS venta_id, MAX(a.fecha_abono) AS ultima_fecha_abono,  c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
+   
+    try{
+
+   console.log(informacion)
+
+    // Inicializa el documento PDF
+    const doc = new PDFDocument();
+    const buffers = [];
+ 
+      // Establecer la posición de la imagen
+      const imgWidth = 100; // Ancho de la imagen
+      const imgHeight = 80; // Alto de la imagen
+      const imgX = doc.page.width - imgWidth - 5; // Posición X de la imagen (10 píxeles desde el borde derecho)
+      const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
+      doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
+
+      // Obtenemos la fecha en formato de objeto Date
+    const fechaAbono = new Date(informacion[0].ultima_fecha_abono);
+
+    // Formateamos la fecha en letras
+    const fechaFormateada = formatFechaEnLetras(fechaAbono);
+    
+    const tipo = `CARTA FINIQUITO`;
+      doc.text(tipo, {
+          align: 'left' // Alinea el texto a la derecha
+      });
+      doc.moveDown();
+   
+      const fecha = `Acapulco, Guerrero, a   ${fechaFormateada}`;
+      doc.text(fecha, {
+          align: 'right' // Alinea el texto a la derecha
+      });
+      doc.moveDown();
+      doc.moveDown();
+    
+        // Agregar el párrafo de lorem
+        const lorem = ' apoderado de Basilisk Inmobiliaria Siete S de RL de CV, personalidad y facultades que acredito mediante escritura pública número 45,153 de 19 de Febrero de 2015, otorgada ante la fe del licenciado José Luis Altamirano Quintero, Notario Público número 66 del Distro Federal.';
+        doc.text(`Israel Nogueda Pineda, ${lorem}`, {
+            // width: 410,
+            align: 'justify'
+        });
+
+        doc.moveDown();
+        doc.moveDown();
+        // Agregar el párrafo del cliente
+        const finiquito = `Por este conducto manifiesto, a nombre de mi representada, que  C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} ha cumplido a plena satisfacción de mi representada con los pagos convenidos en el contrato privado de compra venta establecido entre las partes respecto al inmueble con clave  ${informacion[0].land_id_interno}, manzana  ${informacion[0].land_manzana} lote  ${informacion[0].land_lote}, ubicado en el Fraccionamiento Fuerza Área Mexicana, municipio de Acapulco de Juáres, Estado de Guerrero.   `;
+
+        doc.text(finiquito, {
+            // width: 410,
+            align: 'justify'// Alinea el texto
+        });
+        doc.moveDown();
+    
+               // Agregar el párrafo del cliente
+        const texto = `De conformidad con la claúsula QUINTA Y SEXTA del Contrato, en cuestión, Basilisk Inmobiliaira Siete S de RL de CV, ratifica, la obligatoriedad de firmar la escritura pública ante la fe del Notario Público que haya sido elegido por C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno}, obligándose a entregar la documentación necesaria para la celebración de la misma, quedando a cargo de C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} los honorarios, gastos, impuestos y derechos que genere la escritura pública, así como también todos los gastos e impuestos anteriores y posteriores por concepto de predial con cuenta catastral   ${informacion[0].land_predial} y derechos por servicios de agua, luz o cualquier otro servicio que se tenga que cubrir por lote materia de compraventa, para llevar a cabo la escrituración respectiva.   `;
+
+        doc.text(texto, {
+         align: 'justify'// Alinea el texto
+               });
+               doc.moveDown();
+               doc.moveDown();
+            doc.moveDown();
+        
+            doc.moveDown();
+            const extra = `Basilisk Inmobiliaria Siete, S. de R.L de C.V `;
+            doc.text(extra, {
+                align: 'justify'// Alinea el texto
+            });
+            doc.moveDown();
+            doc.moveDown();
+            doc.moveDown();
+         
+            doc.moveDown();
+            doc.moveDown();
+            const firma  = `Israel Nogueda Pineda  `;
+            doc.text(firma, {
+                align: 'justify'
+            });
+            const apoderado  = `Apoderado.  `;
+            doc.text(apoderado, {
+                align: 'justify'
+            });
+            doc.moveDown();
+            doc.moveDown();
+        
+            doc.moveDown();
+            doc.moveDown();
+            doc.moveDown();
+         
+            const nombrelogo  = `B A S I L I S K  `;
+            doc.text(nombrelogo, {
+                align: 'center'
+            });// Ajusta la posición vertical del pie de página
+          const footerY = doc.page.height - 20;
+    
+          // Dibuja la línea horizontal
+              const lineY = footerY - 30; // Ajusta la posición vertical de la línea
+              doc.lineCap('butt')
+                  .moveTo(50, lineY)
+                  .lineTo(doc.page.width - 50, lineY)
+                  .stroke();
+    
+        
+   
+        // Manejador para agregar datos al buffer
+        doc.on('data', buffers.push.bind(buffers));
+
+        // Manejador para finalizar el documento
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            // Envía el PDF como respuesta
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename=finalizacion.pdf',
+                'Content-Length': pdfData.length
+            });
+            // alert("hola");
+            res.end(pdfData);
+        
+        });
+
+        // Finaliza y cierra el documento PDF
+        doc.end();
+        // res.json({ success: true, message: 'PDF generado exitosamente.' });
+    } catch (error) {
+        console.error('Error en la generación del PDF:', error);
+        // res.status(500).send('Error interno del servidor al generar el PDF');
+    }
+
+}
 
 
 
@@ -3508,6 +3639,7 @@ export const methods = {
     disponibles,
     pagados,    
     perfil,
+    finiquito,
   }
 
 
