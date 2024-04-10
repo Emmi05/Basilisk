@@ -35,7 +35,7 @@ const numeros= /^\d+$/;
 export const login=  async(req, res) => {
     const user = req.body.user;
     const pass = req.body.pass;
-
+    
     if (user && pass) {
         try {
             const [results, fields] = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
@@ -52,7 +52,6 @@ export const login=  async(req, res) => {
                     ruta: 'login'
                 });
             } else {
-                 //inicio de sesión OK
                 req.session.loggedin = true;
                 req.session.name = results[0].name;
                 req.session.rol = results[0].rol;
@@ -61,8 +60,6 @@ export const login=  async(req, res) => {
                   const token = jwt.sign({id:id}, process.env.JWT_SECRETO, {
                       expiresIn: process.env.JWT_TIEMPO_EXPIRA
                   })
-                  //generamos el token SIN fecha de expiracion
-                 //const token = jwt.sign({id: id}, process.env.JWT_SECRETO)
                  console.log("TOKEN: "+token+" para el USUARIO : "+user)
 
                  const cookiesOptions = {
