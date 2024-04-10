@@ -490,7 +490,6 @@ export const crearCliente = async (req, res) => {
             const validCel = celRegex.test(cel);
             const validAdress = addressRegex.test(adress);
 
-
             if (req.session.rol == 'admin') {
 
                 // console.log(req.body);
@@ -664,7 +663,7 @@ export const crearCliente = async (req, res) => {
                         });
                     }
                 }
-            }  if (req.session.rol == 'usuario') {
+            }  else if (req.session.rol == 'usuario') {
 
          
                 if (!name || !a_paterno || !a_materno || !cel || !adress) {
@@ -847,7 +846,7 @@ export const crearCliente = async (req, res) => {
         }
     };
     
-    export const editarClientes = async (req, res) => {
+ export const editarClientes = async (req, res) => {
         try {
 
             const id = req.params.id;
@@ -1259,7 +1258,7 @@ export const crearCliente = async (req, res) => {
     };
 
     
-    export const eliminarCliente = async (req, res) => {
+export const eliminarCliente = async (req, res) => {
         if (req.session.rol == 'admin') {
             const { id } = req.params;
             try {
