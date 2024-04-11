@@ -333,7 +333,7 @@ router.post('/venta', authentication.crearVenta)
 
 //VER VENTAS
 
-router.get('/abonos', async(req, res) => {
+router.get('/view_venta', async(req, res) => {
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
         res.render('venta', {
@@ -405,7 +405,7 @@ router.get('/credits', async(req, res) => {
 });
 
 
-router.get('/abono_view',  async(req, res) => {
+router.get('/abono',  async(req, res) => {
     
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT  c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.estado, l.id_interno, s.n_cuentas,  s.deuda_restante,  s.id, s.tipo_venta, s.inicial, s.cuotas, MAX(a.cuotas_pagadas) as cuotas_pagadas,  (SELECT a2.cuotas_restantes FROM abonos a2 WHERE a2.id_sale = s.id AND a2.cuotas_pagadas = MAX(a.cuotas_pagadas)) as cuotas_restantes FROM   sale s  JOIN customers c ON s.id_customer = c.id  JOIN  abonos a ON a.id_sale = s.id JOIN   land l ON s.id_land = l.id  WHERE  s.tipo_venta = "credito" && l.estado = "proceso" GROUP BY  s.id ORDER BY  a.cuotas_pagadas DESC; ');
@@ -459,7 +459,7 @@ router.get('/terrenos_pagados',  async(req, res) => {
 
 // ABONOS VISTA FORMULARIO
 
-router.get('/abonosAlta/:id', async (req, res) => {
+router.get('/abonos/:id', async (req, res) => {
 
     const id = req.params.id;
 
@@ -507,7 +507,7 @@ router.get('/abonosAlta/:id', async (req, res) => {
 
 // crear abono
 
-router.post('/crearAbonos/:id',authentication.crearAbonos);
+router.post('/crear_abonos/:id',authentication.crearAbonos);
 
 router.get('/reporte/:id',authentication.crearPdf);
 

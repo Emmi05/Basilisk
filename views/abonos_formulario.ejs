@@ -26,7 +26,7 @@
      
           <div class="container-fluid">
               <h1>Registro abonos</h1>
-              <form class="row g-3"  action="/crearAbonos/<%= abono.id %>" method="POST">
+              <form class="row g-3"  action="/crear_abonos/<%= abono.id %>" method="POST">
              
          
 
@@ -179,7 +179,7 @@
 
 <script>
     function generarPDF() {
-        fetch('/crearAbonos/:id', {
+        fetch('/crear_abonos/:id', {
             method: 'POST',
             body: JSON.stringify({ id: '<%= abono.id %>' })
         })
