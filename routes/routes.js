@@ -181,7 +181,7 @@ router.get('/clientes', async(req, res) => {
 
 
 // editar cambiar ruta se pone la misma / en el boton y cambiar rows debo darle permiso a mi usuario y cambiar el rol a false en usuario
-router.get('/clienteEdit/:id', async(req, res) => {
+router.get('/edit_cliente/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -258,7 +258,7 @@ router.get('/terrenos', async(req, res) => {
     }
 });
 
-router.get('/editTerreno/:id', async(req, res) => {
+router.get('/edit_terreno/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
