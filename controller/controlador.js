@@ -162,11 +162,12 @@ export const perfil = async (req, res) => {
     }
 };
 
-export const password=async(req,res) =>{
-    const {pass, newpass} = req.body;
+export const password = async (req, res) => {
+    const { pass, newpass } = req.body;
 
     const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
-    if (req.session.rol == 'usuario') {
+
+    if (req.session.rol === 'usuario') {
         const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
         res.render('profile', {
@@ -176,16 +177,75 @@ export const password=async(req,res) =>{
             rol: req.session.rol,
             usuarios: rows,
         });
-    } else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+    } else if (req.session.rol === 'admin') {
+        try {
+            const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
-        res.render('profile', {
-            login: true,
-            roluser: true,
-            name: req.session.name,
-            rol: req.session.rol,
-            usuarios: rows,
-        });
+            // Obtener la contraseña actual del usuario desde la base de datos
+            const storedPassword = rows[0].pass;
+
+            // Comparar la contraseña actual con la que el usuario está proporcionando
+            const passwordMatch = await bcrypt.compare(pass, storedPassword);
+
+            if (!passwordMatch) {
+                return res.render('profile', {
+                    alert: true,
+                    alertTitle: "Error",
+                    login: true,
+                    roluser: true,
+                    alertMessage: "Contraseña vieja incorrecta",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'login',
+                    usuarios: rows,
+                });
+            } else {
+                // La contraseña actual es correcta, puedes proceder con el cambio de contraseña
+                const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+                if (!passwordRegex.test(newpass)) {
+                    return res.render('profile', {
+                        alert: true,
+                        alertTitle: "Error",
+                        alertMessage: "La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.",
+                        alertIcon: 'error',
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: '/', // Redirigir a la página de registro nuevamente
+                        login: true,
+                        roluser: true,
+                        name: req.session.name,
+                        rol: req.session.rol,
+                        usuarios: rows,
+                    });
+                }
+         // Aquí deberías agregar la lógica para cambiar la contraseña en la base de datos
+         const passwordHash = await bcrypt.hash(newpass, 8); // Hash de la nueva contraseña, no de la contraseña actual
+
+         await pool.query('UPDATE users SET pass = ? WHERE id = ?', [passwordHash, userId]);
+         
+               res.render('profile', {
+                alert: true,
+                alertTitle: "Registro",
+                alertMessage: "¡Registro Exitoso!",
+                alertIcon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios: rows,
+            });
+
+              
+            }
+
+        } catch (error) {
+            console.error('Error al ejecutar la consulta SQL:', error);
+            return res.status(500).send('Error de servidor');
+        }
     }
 }
 
