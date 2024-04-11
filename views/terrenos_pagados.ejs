@@ -38,7 +38,6 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>ID</th>
                                             <th>Cliente</th>
                                             <th>A.P</th>
                                             <th>A.M</th>
@@ -50,7 +49,6 @@
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>ID</th>
                                             <th>ID</th>
                                             <th>Cliente</th>
                                             <th>A.P</th>
@@ -66,7 +64,7 @@
                                           
                                                 <tr>
                                                     <td><%= pagado.id_interno %></td>
-                                                    <td><%= pagado.id %></td>
+                                                 
                                                     <td><%= pagado.name %></td>
                                                     <td><%= pagado.a_paterno %></td>
                                                     <td><%= pagado.a_materno %></td>
@@ -75,7 +73,7 @@
                                                     <td><%= pagado.escritura %></td>
                                                    
                                                     <td>
-                                                        <a href="/finalizacion/<%= pagado.sale_id %>" class="btn btn-sm btn-success"><i class="fas fa-money-bill"></i></a>
+                                                        <a href="/finalizacion/<%= pagado.sale_id %>" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a>
                                                         <!-- <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a> -->
                                                     </td> 
                                                 </tr>
@@ -130,15 +128,17 @@
                                               
                                                     <tr>
                                                         <td><%= pagado.id_interno %></td>
-                                                        <td><%= pagado.customer_name %></td>
-                                                        <td><%= pagado.customer_paterno %></td>
+                                                     
+                                                        <td><%= pagado.name %></td>
+                                                        <td><%= pagado.a_paterno %></td>
+                                                        <td><%= pagado.a_materno %></td>
                                                         <td><%= pagado.lote %></td>
                                                         <td><%= pagado.manzana %></td>
                                                         <td><%= pagado.escritura %></td>
                                                        
                                                         <td>
-                                                            <a href="#" class="btn btn-sm btn-success"><i class="fas fa-money-bill"></i></a>
-                                                            <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a>
+                                                            <a href="/finalizacion/<%= pagado.sale_id %>" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a>
+                                                            <!-- <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></a> -->
                                                         </td> 
                                                     </tr>
                                             <% }); %>

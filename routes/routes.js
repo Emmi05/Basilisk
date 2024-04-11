@@ -435,8 +435,7 @@ router.get('/abono_view',  async(req, res) => {
 router.get('/terrenos_pagados',  async(req, res) => {
     
     if (req.session.rol == 'usuario') {
-        // const [rows] = await pool.query('SELECT s.* , l.* FROM  sale s JOIN  land l ON s.id_land = l.id WHERE  l.estado = "pagado"');
-        const [rows] = await pool.query('SELECT s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
+        const [rows] = await pool.query('SELECT s.id AS sale_id, s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
     
         res.render('terrenos_pagados', {
             login: true,
@@ -447,8 +446,6 @@ router.get('/terrenos_pagados',  async(req, res) => {
         });
     } else if (req.session.rol == 'admin') {
         const [rows] = await pool.query('SELECT s.id AS sale_id, s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
-    
-
         res.render('terrenos_pagados', {
             login: true,
             roluser: true,
