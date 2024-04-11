@@ -232,7 +232,7 @@ INSERT INTO `abonos` (`id`, `id_sale`, `fecha_abono`, `cuotas_pagadas`, `cuotas_
 --
 -- Estructura de tabla para la tabla `customers`
 --
-
+--al final hice cel de varchar (20)
 DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
   `id` int NOT NULL AUTO_INCREMENT,

@@ -114,11 +114,11 @@ export const auth = async (req, res, next) => {
         try {
             const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
             const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
-            console.log(results)
+            // console.log(results)
 
             if (results.length > 0) {
                 req.user = results[0];
-                console.log( "esto es" , req.user); // Agregar esta línea para verificar
+                // console.log( "esto es" , req.user); // Agregar esta línea para verificar
 
 
 
