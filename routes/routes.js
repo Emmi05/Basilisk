@@ -124,6 +124,8 @@ router.get('/delete/:id', authentication.eliminarUsuario);
 
 // PROFILE
 router.get('/profile', authentication.auth, authentication.perfil);
+
+router.post('/profile', authentication.auth, authentication.password);
     
 
 // ruta clientes

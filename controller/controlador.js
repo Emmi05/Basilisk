@@ -70,8 +70,8 @@ export const login=  async(req, res) => {
                 if (req.session.rol == 'usuario') {
                     res.render('login', {
                         alert: true,
-                        alertTitle: "Propiedad:",
-                        alertMessage: "¡SARAHI!",
+                        alertTitle: "Usuario normal:",
+                        alertMessage: "Usuario",
                         alertIcon: 'success',
                         showConfirmButton: false,
                         timer: 3000,
@@ -81,8 +81,8 @@ export const login=  async(req, res) => {
                       
                     res.render('login', {
                         alert: true,
-                        alertTitle: "Eres larry",
-                        alertMessage: "Ata Papa",
+                        alertTitle: "Usuario",
+                        alertMessage: "Administrador",
                         alertIcon: 'success',
                         showConfirmButton: false,
                         timer: 3000,
@@ -162,12 +162,40 @@ export const perfil = async (req, res) => {
     }
 };
 
+export const password=async(req,res) =>{
+    const {pass, newpass} = req.body;
+
+    const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+
+        res.render('profile', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows,
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+
+        res.render('profile', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows,
+        });
+    }
+}
+
+
 export const register=  async(req, res) => {
     try {
         if (req.session.rol == 'admin') {
         const { user, name, rol, pass } = req.body;
         
-        console.log(req.body)
+        // console.log(req.body)
         // Verificar si algún campo está vacío
         if (!user || !name || !rol || !pass) {
             return res.render('register', {
@@ -2791,7 +2819,7 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
             doc.moveDown();
             // Agregar el párrafo del cliente
            
-            const customerName = `Recibo de la C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} la cantidad de $ ${cantidad}  como pago parcial por el lote ${informacion[0].land_lote} de la manzana ${informacion[0].land_manzana}, operación pactada en $ ${informacion[0].land_precio}, los gasos de escrituración e  impuesto predial con número ${informacion[0].land_predial}, son por cuenta del comprador, según acuerdo entre las partes, ubicado en el Fraccionamiento Fuerza Aérea Mexicana, Municipio de Acapulco, Estado de Guerrero e identificado internamiento con la clave ${informacion[0].land_id_interno}, a fin de llevar a cabo la compra venta de dicho lote.  `;
+            const customerName = `Recibo de la C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} la cantidad de $ ${cantidad}  como pago parcial por el lote ${informacion[0].land_lote} de la manzana ${informacion[0].land_manzana}, operación pactada en $ ${informacion[0].land_precio}, los gastos de escrituración e  impuesto predial con número ${informacion[0].land_predial}, son por cuenta del comprador, según acuerdo entre las partes, ubicado en el Fraccionamiento Fuerza Aérea Mexicana, Municipio de Acapulco, Estado de Guerrero e identificado internamiento con la clave ${informacion[0].land_id_interno}, a fin de llevar a cabo la compra venta de dicho lote.  `;
             doc.text(customerName, {
                 // width: 410,
                 align: 'justify'// Alinea el texto
@@ -3056,8 +3084,8 @@ for (let i = 0; i < rows.length; i++) {
                 { label: "Fecha", property: 'fecha_venta', width: 70 },
                 { label: "Cliente", property: 'customer_name', width: 200 }, 
                 { label: "Precio", property: 'precio', width: 100 },
-                { label: "L", property: 'lote', width: 50 }, // Debe ser 'lote' en lugar de 'Lote'
-                { label: "M", property: 'manzana', width: 50 } // Debe ser 'manzana' en lugar de 'Manzana'
+                { label: "L", property: 'lote', width: 50 }, 
+                { label: "M", property: 'manzana', width: 50 } 
             ],
             rows: []
         };
@@ -3481,10 +3509,10 @@ const finiquito =async (req,res)=>{
     const buffers = [];
  
       // Establecer la posición de la imagen
-      const imgWidth = 100; // Ancho de la imagen
-      const imgHeight = 80; // Alto de la imagen
-      const imgX = doc.page.width - imgWidth - 30; // Posición X de la imagen (10 píxeles desde el borde derecho)
-      const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
+      const imgWidth = 100;
+      const imgHeight = 80; 
+      const imgX = doc.page.width - imgWidth - 30;
+      const imgY = 10; 
       doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
 
       // Obtenemos la fecha en formato de objeto Date
@@ -3495,18 +3523,18 @@ const finiquito =async (req,res)=>{
     
     const tipo = `CARTA FINIQUITO`;
       doc.text(tipo, {
-          align: 'left' // Alinea el texto a la derecha
+          align: 'left' 
       });
       doc.moveDown();
    
       const fecha = `Acapulco, Guerrero, a   ${fechaFormateada}`;
       doc.text(fecha, {
-          align: 'right' // Alinea el texto a la derecha
+          align: 'right' 
       });
       doc.moveDown();
       doc.moveDown();
     
-        // Agregar el párrafo de lorem
+       
         const lorem = ' apoderado de Basilisk Inmobiliaria Siete S de RL de CV, personalidad y facultades que acredito mediante escritura pública número 45,153 de 19 de Febrero de 2015, otorgada ante la fe del licenciado José Luis Altamirano Quintero, Notario Público número 66 del Distro Federal.';
         doc.text(`Israel Nogueda Pineda, ${lorem}`, {
             // width: 410,
@@ -3515,66 +3543,55 @@ const finiquito =async (req,res)=>{
 
         doc.moveDown();
         doc.moveDown();
-        // Agregar el párrafo del cliente
+
         const finiquito = `Por este conducto manifiesto, a nombre de mi representada, que  C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} ha cumplido a plena satisfacción de mi representada con los pagos convenidos en el contrato privado de compra venta establecido entre las partes respecto al inmueble con clave  ${informacion[0].land_id_interno}, manzana  ${informacion[0].land_manzana} lote  ${informacion[0].land_lote}, ubicado en el Fraccionamiento Fuerza Área Mexicana, municipio de Acapulco de Juáres, Estado de Guerrero.   `;
 
-        doc.text(finiquito, {
-            // width: 410,
-            align: 'justify'// Alinea el texto
-        });
+        doc.text(finiquito, {align: 'justify'});
         doc.moveDown();
     
                // Agregar el párrafo del cliente
         const texto = `De conformidad con la claúsula QUINTA Y SEXTA del Contrato, en cuestión, Basilisk Inmobiliaira Siete S de RL de CV, ratifica, la obligatoriedad de firmar la escritura pública ante la fe del Notario Público que haya sido elegido por C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno}, obligándose a entregar la documentación necesaria para la celebración de la misma, quedando a cargo de C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} los honorarios, gastos, impuestos y derechos que genere la escritura pública, así como también todos los gastos e impuestos anteriores y posteriores por concepto de predial con cuenta catastral   ${informacion[0].land_predial} y derechos por servicios de agua, luz o cualquier otro servicio que se tenga que cubrir por lote materia de compraventa, para llevar a cabo la escrituración respectiva.   `;
 
-        doc.text(texto, {
-         align: 'justify'// Alinea el texto
-               });
-               doc.moveDown();
-               doc.moveDown();
-            doc.moveDown();
+        doc.text(texto, {align: 'justify'});
+
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
         
-            doc.moveDown();
-            const extra = `Basilisk Inmobiliaria Siete, S. de R.L de C.V `;
-            doc.text(extra, {
-                align: 'justify'// Alinea el texto
-            });
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
+        doc.moveDown();
+        const extra = `Basilisk Inmobiliaria Siete, S. de R.L de C.V `;
+        doc.text(extra, {align: 'justify'});
+
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
          
-            doc.moveDown();
-            doc.moveDown();
-            const firma  = `Israel Nogueda Pineda  `;
-            doc.text(firma, {
-                align: 'justify'
-            });
-            const apoderado  = `Apoderado.  `;
-            doc.text(apoderado, {
-                align: 'justify'
-            });
-            doc.moveDown();
-            doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        const firma  = `Israel Nogueda Pineda  `;
+        doc.text(firma, {align: 'justify'});
+
+        const apoderado  = `Apoderado.  `;
+        doc.text(apoderado, {align: 'justify'});
+            
+        doc.moveDown();
+        doc.moveDown();
         
-            doc.moveDown();
-            doc.moveDown();
-            doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
+        doc.moveDown();
          
-            const nombrelogo  = `B A S I L I S K  `;
-            doc.text(nombrelogo, {
-                align: 'center'
-            });// Ajusta la posición vertical del pie de página
-          const footerY = doc.page.height - 20;
+        const nombrelogo  = `B A S I L I S K  `;
+        doc.text(nombrelogo, {align: 'center'});
+        const footerY = doc.page.height - 20;
     
-          // Dibuja la línea horizontal
-              const lineY = footerY - 30; // Ajusta la posición vertical de la línea
-              doc.lineCap('butt')
-                  .moveTo(50, lineY)
-                  .lineTo(doc.page.width - 50, lineY)
-                  .stroke();
     
-        
-   
+        const lineY = footerY - 30; 
+        // Ajusta la posición vertical de la línea
+        doc.lineCap('butt')
+        .moveTo(50, lineY)
+        .lineTo(doc.page.width - 50, lineY)
+        .stroke();
         // Manejador para agregar datos al buffer
         doc.on('data', buffers.push.bind(buffers));
 
@@ -3587,17 +3604,15 @@ const finiquito =async (req,res)=>{
                 'Content-Disposition': 'attachment; filename=finalizacion.pdf',
                 'Content-Length': pdfData.length
             });
-            // alert("hola");
             res.end(pdfData);
         
         });
 
         // Finaliza y cierra el documento PDF
         doc.end();
-        // res.json({ success: true, message: 'PDF generado exitosamente.' });
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
-        // res.status(500).send('Error interno del servidor al generar el PDF');
+        
     }
 
 }
@@ -3628,6 +3643,7 @@ export const methods = {
     pagados,    
     perfil,
     finiquito,
+    password,
   }
 
 
