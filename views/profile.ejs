@@ -78,18 +78,22 @@
               </div>
               
               <div class="col-md-6">
-                  <label for="newpass" class="form-label">Nueva contraseña</label>
-                  <div class="password-input">
-                      <input type="password" class="form-control" id="newpass" name="newpass" placeholder="Nueva contraseña">
-                      <div class="toggle-password" onclick="togglePasswordVisibility('newpass')">
-                          <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                      </div>
-                  </div>
-              </div>
-              
+                <label for="newpass" class="form-label">Nueva contraseña</label>
+                <div class="password-input">
+                    <input type="password" class="form-control" id="newpass" name="newpass" placeholder="Nueva contraseña" oninput="validatePassword()">
+                    <div class="toggle-password" onclick="togglePasswordVisibility('newpass')">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div id="password-error" class="form-text text-gray">
+                  La contraseña debe tener 8 caracteres, mayúscula, minúscula y un carácter especial.
+                </div>
+            </div>
+            
                
 
-
+<br>
+<br>
 
 
               <br> <br> <br> <br>
