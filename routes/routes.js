@@ -1,6 +1,11 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
-import {auth, methods as authentication} from '../controller/controlador.js'
+import { auth,methods as authentication} from '../controller/controlador.js'
+import { methods as clientes} from '../controller/clientes.js'
+import { methods as terrenos} from '../controller/terrenos.js'
+import {methods as ventas} from '../controller/ventas.js'
+import { methods as abonos} from '../controller/abonos.js'
+import {methods as pdf} from '../controller/pdf.js'
 
 const router = Router();// Definición de la ruta '/'
 router.get('/', authentication.auth, (req, res) => {
@@ -150,7 +155,7 @@ router.get('/cliente', async(req, res) => {
     }
 });
 
-router.post('/cliente', authentication.crearCliente)
+router.post('/cliente', clientes.crearCliente)
 
 
 //ver clientesss
@@ -208,9 +213,9 @@ router.get('/edit_cliente/:id', async(req, res) => {
         });
     }
 });
-router.post('/updatecliente/:id',authentication.editarClientes);
+router.post('/updatecliente/:id',clientes.editarClientes);
 
-router.get('/deletecliente/:id', authentication.eliminarCliente);
+router.get('/deletecliente/:id', clientes.eliminarCliente);
 
 
 
@@ -235,7 +240,7 @@ router.get('/terreno', async(req, res) => {
     }
 });
 
-router.post('/terreno', authentication.crearTerreno);
+router.post('/terreno', terrenos.crearTerreno);
 
 //VER CLIENTES
 router.get('/terrenos', async(req, res) => {
@@ -285,11 +290,11 @@ router.get('/edit_terreno/:id', async(req, res) => {
     }
 });
 
- router.post('/updateterreno/:id',authentication.editarTerrenos);
+ router.post('/updateterreno/:id',terrenos.editarTerrenos);
 
 
 //  ELIMINAR TERRENO
-router.get('/deleteterreno/:id', authentication.eliminarTerreno);
+router.get('/deleteterreno/:id', terrenos.eliminarTerreno);
 
 
 // venta
@@ -331,7 +336,7 @@ router.get('/terreno/:id', async (req, res) => {
     }
 });
 
-router.post('/venta', authentication.crearVenta)
+router.post('/venta', ventas.crearVenta)
 
 //VER VENTAS
 
@@ -385,11 +390,11 @@ router.get('/venta/:id', async(req, res) => {
 });
 
 
-router.post('/updateventa/:id',authentication.editarVenta);
+router.post('/updateventa/:id',ventas.editarVenta);
 
 
 //  ELIMINAR TERRENO
-router.get('/deleteventa/:id', authentication.eliminarVenta);
+router.get('/deleteventa/:id', ventas.eliminarVenta);
 
 
 // tambien va usuario?? 
@@ -509,19 +514,19 @@ router.get('/abonos/:id', async (req, res) => {
 
 // crear abono
 
-router.post('/crear_abonos/:id',authentication.crearAbonos);
+router.post('/crear_abonos/:id',abonos.crearAbonos);
 
-router.get('/reporte/:id',authentication.crearPdf);
+router.get('/reporte/:id',pdf.crearPdf);
 
-router.get('/contado/',authentication.contado);
+router.get('/contado/',pdf.contado);
 
-router.get('/pagados/',authentication.pagados);
+router.get('/pagados/',pdf.pagados);
 
 
-router.get('/proceso/',authentication.proceso);
+router.get('/proceso/',pdf.proceso);
 
-router.get('/disponibles/',authentication.disponibles);
-router.get('/finalizacion/:id',authentication.finiquito);
+router.get('/disponibles/',pdf.disponibles);
+router.get('/finalizacion/:id',pdf.finiquito);
 
 
 
