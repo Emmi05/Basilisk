@@ -299,4 +299,24 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
         crearAbonos,
       }
     
-    
+      // Función para obtener el día en letras
+function getDiaEnLetras(fecha) {
+    const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const dia = fecha.getDay();
+    return dias[dia];
+}
+
+// Función para obtener el mes en letras
+function getMesEnLetras(fecha) {
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const mes = fecha.getMonth();
+    return meses[mes];
+}
+
+// Función para formatear la fecha
+function formatFechaEnLetras(fecha) {
+    const dia = getDiaEnLetras(fecha);
+    const mes = getMesEnLetras(fecha);
+    const año = fecha.getFullYear();
+    return `${dia} ${fecha.getDate()} de ${mes} de ${año}`;
+}
