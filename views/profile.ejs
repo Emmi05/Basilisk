@@ -1,3 +1,21 @@
+<style>
+  .password-input {
+      position: relative;
+  }
+
+  .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 30px;
+      transform: translateY(-50%);
+      cursor: pointer;
+  }
+
+  .toggle-password i {
+      font-size: 18px;
+  }
+</style>
+
 
 <%- include ('layouts/head.ejs') %>
 <body id="page-top">
@@ -24,7 +42,7 @@
        <!-- Begin Page Content -->
        <% usuarios.forEach(function(usuario) { %>
         <div class="container-fluid">
-            <h1>Editar usuarios</h1>
+            <h1>Perfil</h1>
             <form class="row g-3" action="/profile" method="POST">
 
                 <input id="id" name="id" value="<%= usuario.id %>" hidden>
@@ -50,15 +68,27 @@
                 </div>
                 
                 <div class="col-md-6">
-                    <label for="pass" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="pass" name="pass"  placeholder="Contarseña anterior">
+                  <label for="pass" class="form-label">Contraseña</label>
+                  <div class="password-input">
+                      <input type="password" class="form-control" id="pass" name="pass" placeholder="Contraseña anterior">
+                      <div class="toggle-password" onclick="togglePasswordVisibility('pass')">
+                          <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                      </div>
                   </div>
+              </div>
+              
+              <div class="col-md-6">
+                  <label for="newpass" class="form-label">Nueva contraseña</label>
+                  <div class="password-input">
+                      <input type="password" class="form-control" id="newpass" name="newpass" placeholder="Nueva contraseña">
+                      <div class="toggle-password" onclick="togglePasswordVisibility('newpass')">
+                          <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                      </div>
+                  </div>
+              </div>
+              
+               
 
-                    
-                <div class="col-md-6">
-                    <label for="newpass" class="form-label">Nueva contraseña</label>
-                    <input type="password" class="form-control" id="newpass" name="newpass"  placeholder="Contarseña nueva">
-                  </div>
 
 
 
@@ -120,6 +150,23 @@
  })
  </script>
 <% } %>
+
+<script>
+  function togglePasswordVisibility(passwordId) {
+      const passwordInput = document.getElementById(passwordId);
+      const toggleIcon = document.querySelector(`#${passwordId} + .toggle-password i`);
+
+      if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          toggleIcon.classList.remove('fa-eye-slash');
+          toggleIcon.classList.add('fa-eye');
+      } else {
+          passwordInput.type = 'password';
+          toggleIcon.classList.remove('fa-eye');
+          toggleIcon.classList.add('fa-eye-slash');
+      }
+  }
+</script>
 
 
  

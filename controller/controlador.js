@@ -180,7 +180,23 @@ export const password = async (req, res) => {
     } else if (req.session.rol === 'admin') {
         try {
             const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
-
+ // Verificar si algún campo está vacío
+        if (!pass || !newpass) {
+            return res.render('profile', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos!",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/', 
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios: rows,
+            });
+        }
             // Obtener la contraseña actual del usuario desde la base de datos
             const storedPassword = rows[0].pass;
 
