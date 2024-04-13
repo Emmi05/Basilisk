@@ -59,7 +59,7 @@ router.get('/servicesterrenos', (req, res) => {
 
 
 
-router.get('/register', async(req, res) => {
+router.get('/registro_usuario', async(req, res) => {
     if (req.session.rol == 'usuario') {
         res.render('denegado', {
             login: true,
@@ -81,7 +81,7 @@ router.get('/register', async(req, res) => {
 router.post('/register',authentication.register);
 
 
-//ver usuarios
+
  router.get('/usuarios', async(req, res) => {
         if (req.session.rol == 'usuario') {
             res.render('denegado', {
@@ -103,7 +103,7 @@ router.post('/register',authentication.register);
         }
 });
 
-router.get('/editar/:id', async(req, res) => {
+router.get('/editar_usuario/:id', async(req, res) => {
     const id = req.params.id;
      if (req.session.rol == 'admin') {
         const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
@@ -188,7 +188,7 @@ router.get('/clientes', async(req, res) => {
 
 
 // editar cambiar ruta se pone la misma / en el boton y cambiar rows debo darle permiso a mi usuario y cambiar el rol a false en usuario
-router.get('/edit_cliente/:id', async(req, res) => {
+router.get('/editar_cliente/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -265,7 +265,7 @@ router.get('/terrenos', async(req, res) => {
     }
 });
 
-router.get('/edit_terreno/:id', async(req, res) => {
+router.get('/editar_terreno/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {

@@ -10,8 +10,21 @@ const manzanaregex = /^[a-zA-Z0-9\s-]+$/;
 const dimensionesregex = /^\d+$/;
 const precioRegex = /\b\d{1,3}(,\d{3})*(\.\d+)?\b/;
 const predialregex = /^\d{3}-\d{3}-\d{3}-\d{3}$/;
+const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
 
 
+
+// Expresiones regulares globales
+const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+const apellidoRegex = /^[A-Za-zÁ-Úá-ú]+$/;
+const celRegex = /^\d{10}$/;
+
+
+const cantidades = /^\d*,?\d+$/;
+
+// abonos
+const numeros= /^\d+$/;
 // terreno
 export const crearTerreno= async (req, res) => {
     try {
