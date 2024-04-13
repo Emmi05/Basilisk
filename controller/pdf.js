@@ -128,7 +128,9 @@ doc.text(infoVenta, { align: 'left' });
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
         // Envía una respuesta de error al cliente si falla la generación del PDF
-        res.status(500).send('Error interno del servidor al generar el PDF');
+        // res.status(500).send('Error interno del servidor al generar el PDF');
+        return res.status(500).render('pdferror');
+
     }
 }
 
@@ -153,7 +155,7 @@ const contado = async (req, res) => {
         // Agrega datos de ventas de terrenos a la tabla
 for (let i = 0; i < rows.length; i++) {
     const venta = rows[i];
-    console.log('Lote:', venta.lote, 'Manzana:', venta.manzana); // Agrega este console.log para verificar los valores de lote y manzana
+    // console.log('Lote:', venta.lote, 'Manzana:', venta.manzana); // Agrega este console.log para verificar los valores de lote y manzana
     // Resto del código para construir las filas de la tabla...
 }
 
@@ -247,7 +249,9 @@ for (let i = 0; i < rows.length; i++) {
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
         // Envía una respuesta de error al cliente si falla la generación del PDF
-        res.status(500).send('Error interno del servidor al generar el PDF');
+        // res.status(500).send('Error interno del servidor al generar el PDF');
+        return res.status(500).render('pdferror');
+
     }
 }
 
@@ -269,12 +273,12 @@ const proceso = async (req, res) => {
         doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
         
 
-        // Agrega datos de ventas de terrenos a la tabla
-for (let i = 0; i < rows.length; i++) {
-    const venta = rows[i];
-    console.log('Lote:', venta.lote, 'Manzana:', venta.manzana); // Agrega este console.log para verificar los valores de lote y manzana
-    // Resto del código para construir las filas de la tabla...
-}
+         // Agrega datos de ventas de terrenos a la tabla
+        for (let i = 0; i < rows.length; i++) {
+            const venta = rows[i];
+            console.log('Lote:', venta.lote, 'Manzana:', venta.manzana); // Agrega este console.log para verificar los valores de lote y manzana
+            // Resto del código para construir las filas de la tabla...
+        }
 
         // Agregar (fecha de generación del PDF)
         const fechaActual = new Date().toLocaleDateString('es-ES', {
@@ -368,7 +372,9 @@ for (let i = 0; i < rows.length; i++) {
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
         // Envía una respuesta de error al cliente si falla la generación del PDF
-        res.status(500).send('Error interno del servidor al generar el PDF');
+        // res.status(500).send('Error interno del servidor al generar el PDF');
+        return res.status(500).render('pdferror');
+
     }
 }
 
@@ -477,7 +483,8 @@ const disponibles = async (req, res) => {
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
         // Envía una respuesta de error al cliente si falla la generación del PDF
-        res.status(500).send('Error interno del servidor al generar el PDF');
+        // res.status(500).send('Error interno del servidor al generar el PDF');
+        return res.status(500).render('pdferror');
     }
 }
 
@@ -587,7 +594,8 @@ const pagados = async (req, res) => {
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
         // Envía una respuesta de error al cliente si falla la generación del PDF
-        res.status(500).send('Error interno del servidor al generar el PDF');
+        // res.status(500).send('Error interno del servidor al generar el PDF');
+        return res.status(500).render('pdferror');
     }
 }
 
@@ -708,6 +716,7 @@ const finiquito =async (req,res)=>{
         doc.end();
     } catch (error) {
         console.error('Error en la generación del PDF:', error);
+        return res.status(500).render('pdferror');
         
     }
 

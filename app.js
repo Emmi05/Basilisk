@@ -43,6 +43,11 @@ app.use((req, res, next) => {
     res.render('404')
 });
 
+app.use((err, req, res, next) => {
+    console.error('Error de servidor:', err.stack);
+    res.status(500).render('500');
+});
+
 
 app.listen(3000, (req, res) => {
     console.log('SERVER RUNNING IN http://localhost:3000');

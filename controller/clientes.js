@@ -1,11 +1,4 @@
-import { query } from 'express';
 import { pool} from '../database/db.js'
-import moment from 'moment';
-import { Router } from 'express';
-import PDFDocument from "pdfkit-table";
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import {promisify} from 'util';
 
 // Expresiones regulares globales
 const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
@@ -374,11 +367,13 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
         }
         else {
             // El rol no es válido
-            res.status(403).send('Acceso denegado');
+            // res.status(403).send('Acceso denegado');
+            return res.status(403).render('denegado');
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error interno del servidor');
+        // res.status(500).send('Error interno del servidor');
+        return res.status(500).render('500');
     }
 };
 
@@ -782,7 +777,8 @@ export const editarClientes = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error interno del servidor');
+        // res.status(500).send('Error interno del servidor');
+        return res.status(500).render('500');
     }
 };
 
@@ -817,10 +813,11 @@ export const eliminarCliente = async (req, res) => {
             }
         } catch (error) {
             console.error(error);
-            res.status(500).send('Error interno del servidor');
+            // res.status(500).send('Error interno del servidor');
+            return res.status(500).render('500');
         }
     } else {
-        res.status(403).send('Acceso denegado');
+        return res.status(403).render('denegado');
     }
 };
 

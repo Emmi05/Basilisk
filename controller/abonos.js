@@ -4,14 +4,9 @@ import moment from 'moment';
 
 import PDFDocument from "pdfkit-table";
 
-
-
 // abonos
 const numeros= /^\d+$/;
 
-
-
-// Crear abonos
 const crearAbonos = async (req, res) => {
     const id_venta = req.params.id;
 
@@ -164,6 +159,7 @@ const crearAbonos = async (req, res) => {
      }
     } catch (error) {
         console.error(error);
+        return res.status(500).render('500');
         // res.status(500).send('Error interno del servidor');
     }
 }

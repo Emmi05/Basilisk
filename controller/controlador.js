@@ -1,36 +1,9 @@
-import { query } from 'express';
-import { pool} from '../database/db.js'
-import moment from 'moment';
-import { Router } from 'express';
-import PDFDocument from "pdfkit-table";
+import { pool} from '../database/db.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {promisify} from 'util';
 
 
-
-
-
-// Expresiones regulares globales
-const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
-const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
-const apellidoRegex = /^[A-Za-zÁ-Úá-ú]+$/;
-const celRegex = /^\d{10}$/;
-const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
-
-//expresion para terrenos
-const idInternoRegex = /^\d+\.\d+\/\d+$/;
-const loteRegex = /^\d{1,2}$/;
-const manzanaregex = /^[a-zA-Z0-9\s-]+$/;
-const dimensionesregex = /^\d+$/;
-const precioRegex = /\b\d{1,3}(,\d{3})*(\.\d+)?\b/;
-const predialregex = /^\d{3}-\d{3}-\d{3}-\d{3}$/;
-
-// Ventas
-const cantidades = /^\d*,?\d+$/;
-
-// abonos
-const numeros= /^\d+$/;
 
 export const login=  async(req, res) => {
     const user = req.body.user;
@@ -252,7 +225,7 @@ export const password = async (req, res) => {
 
         } catch (error) {
             console.error('Error al ejecutar la consulta SQL:', error);
-         return res.status(500).send('Error de servidor');
+            return res.status(500).render('500');
         
         }
         } else if (req.session.rol === 'admin') {
@@ -340,7 +313,8 @@ export const password = async (req, res) => {
 
         } catch (error) {
             console.error('Error al ejecutar la consulta SQL:', error);
-            return res.status(500).send('Error de servidor');
+            return res.status(500).render('500');
+
         }
     }
 }
@@ -474,10 +448,7 @@ export const register=  async(req, res) => {
     } catch (error) {
         console.error(error);
         // Manejar el error apropiadamente
-        res.status(500).json({
-            success: false,
-            message: 'Error interno del servidor'
-        });
+        return res.status(500).render('500');
     }
 }
 
@@ -627,7 +598,8 @@ export const editarUsuario = async (req, res) => {
         }
     } else {
         // Manejar el error apropiadamente
-        res.status(500).send('Error interno del servidor');
+        // res.status(500).send('Error interno del servidor');
+        return res.status(500).render('500');
     }
 }
 
@@ -657,7 +629,8 @@ export const eliminarUsuario = async (req, res) => {
         // (error) 
         //     console.error(error);
             // Manejar el error apropiadamente
-            res.status(500).send('Error interno del servidor');
+            // res.status(500).send('Error interno del servidor');
+            return res.status(500).render('500');
         }
     }
 
