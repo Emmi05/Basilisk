@@ -40,7 +40,9 @@ router.get('/login', (req, res) => {
 });
 router.post('/login', authentication.login)
 
-
+router.get('/nosotros', (req, res) => {
+    res.render('nosotros');
+});
 // LOGOUT
 router.get('/logout', function(req, res) {
     res.clearCookie('jwt')  
