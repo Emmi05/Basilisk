@@ -93,8 +93,6 @@ export const auth = async (req, res, next) => {
                 req.user = results[0];
                 // console.log( "esto es" , req.user); // Agregar esta línea para verificar
 
-
-
                 return next();
             } else {
                 throw new Error('Usuario no encontrado');
