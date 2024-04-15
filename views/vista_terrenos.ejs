@@ -1,241 +1,1268 @@
-<!DOCTYPE html>
-<html lang="">
-<head>
-<title>Terrenos</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="stylesheet" href="resources/css/layout.css">
-<link rel="stylesheet" href="resources/css/estilos.css">
+<!doctype html>
+<html lang="es">
+  <head>
+  	<title>Fashion Template for Bootstrap</title>
 
-<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
-<style>
-    #webchat {
-       /* height: 100%; */
-       margin: 0;
-       transition-duration: 0.5s;
-       transition-property: margin;
-       z-index: 1000;
-       background-color: white;
-     }
-     a{
-       color: rgb(33, 67, 179);
-     }
- 
- 
-     .webchat__chat {
-       background-color: white;
-       box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-       display: flex;
-       flex-direction: column;
-       /* height: 100%;  */
-       margin: auto;
-       max-width: 360px;
-       min-width: 360px;
-       transition-duration: 0.5s;
-       transition-property: max-width, min-width, width;
-     }
- 
-     @media (min-width: 720px) {
-       #webchat {
-         margin: 0 10px;
-       }
- 
-       .webchat__chat {
-         max-width: 480px;
-         min-width: 480px;
-         width: 600px;
-       }
-     }
-     @media (max-width: 460px) {
- #webchat {
- margin: 0;
- width: 100%;
- }
- 
- .webchat__chat {
- max-width: none;
- min-width: 0;
- width: 100%;
- }
- }
- @media (max-width: 300px) {
- #webchat {
- margin: 0;
- width: 100%;
- }
- 
- .webchat__chat {
- max-width: none;
- min-width: 0;
- width: 100%;
- }
- }
- </style>
-</head>
-<body id="top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico"> -->
 
-<!-- Top Background Image Wrapper -->
-<div class="bgded overlay" style="background-image:url('resources/img/demo/backgrounds/vista.jpg');"> 
-  <!-- ################################################################################################ -->
-  <div class="wrapper row0">
-    <div id="topbar" class="hoc clear">
-      <div class="fl_left"> 
-        <!-- ################################################################################################ -->
-        <ul class="nospace">
-          <li><i class="fas fa-phone rgtspace-5"></i> 7441318629</li>
-          <li><i class="far fa-envelope rgtspace-5"></i> info@basilisk.com</li>
-        </ul>
-        <!-- ################################################################################################ -->
-      </div>
-      <div class="fl_right"> 
-        <!-- ################################################################################################ -->
-        
-        <!-- ################################################################################################ -->
-      </div>
-    </div>
-  </div>
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900" rel="stylesheet"> 
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,500,700,900" rel="stylesheet"> 
+	<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 
-  <div class="wrapper row1">
-    <header id="header" class="hoc clear">
-      <div id="logo" class="fl_left"> 
-        <!-- ################################################################################################ -->
-        <h1><a href="/services">Basilisk</a></h1>
-        <!-- ################################################################################################ -->
-      </div>
-      <nav id="mainav" class="fl_right"> 
-        <!-- ################################################################################################ -->
-        <ul class="clear">
-            <li class="active"><a href="/services">Inicio</a></li>
-            <li class="active"><a href="/servicesterrenos">Terrenos</a></li>
-            <!-- <li><a class="drop" href="gallery.ejs">Terrenos</a>
-              <ul>
-                <li><a href="gallery.ejs">Terrenos</a></li>
-               
-              </ul>
-            </li> -->
-           
-            <li><a href="#">Iniciar Sesión</a></li>
-            <!-- <li><a href="#">Link Text</a></li>
-            <li><a href="#">Link Text</a></li> -->
-          </ul>
-        <!-- ################################################################################################ -->
-      </nav>
-    </header>
-  </div>
- 
-  <div id="breadcrumb" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-    <h6 class="heading">Terrenos</h6>
-    <ul>
-      <li><a href="#">Inicio</a></li>
-      <li><a href="#">Terrenos</a></li>
-      <li><a href="#">Terrenos</a></li>
-      <!-- <li><a href="#">Dolor</a></li> -->
-    </ul>
-    <!-- ################################################################################################ -->
-  </div>
-  <!-- ################################################################################################ -->
-</div>
-<!-- End Top Background Image Wrapper -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">	
+	<!-- Bootstrap core CSS -->
+    <link href="../resources/css/inicio/bootstrap.css" rel="stylesheet">
 
-<div class="wrapper row3">
-  <main class="hoc container clear"> 
-    <!-- main body -->
-    <!-- ################################################################################################ -->
-    <div class="content"> 
-      <!-- ################################################################################################ -->
-      <div id="gallery">
-        <figure>
-          <header class="heading">Todos nuestros terrenos</header>
-          <ul class="nospace clear">
-            <li class="one_quarter first"><a href="#"><img src="resources/img/demo/gallery/terrenos/1.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/4.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/5.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/6.jpg" alt=""></a></li>
-            <li class="one_quarter first"><a href="#"><img src="resources/img/demo/gallery/terrenos/7.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/12.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/16.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/10.jpg" alt=""></a></li>
-            <li class="one_quarter first"><a href="#"><img src="resources/img/demo/gallery/terrenos/11.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/14.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/13.jpg" alt=""></a></li>
-            <li class="one_quarter"><a href="#"><img src="resources/img/demo/gallery/terrenos/15.jpg" alt=""></a></li>
-          </ul>
-          <figcaption>Mide: 300mts²
-            Papeles: Listo para escriturar ✍🏼Ubicación: Dentro de la colonia fuerza aérea mexicana , Acapulco de Juárez, Guerrero. 
-            ⚠️ Trato directo con los dueños ⚠️
- Para más información llamar📲 o mandar mensaje 💬 
- Números teléfonicos: 7 4 4 3 4 4 6 8 8 4 y 7 4 4 4 5 5 8 0 3 2</figcaption>
-        </figure>
-      </div>
-      <!-- ################################################################################################ -->
-      <!-- ################################################################################################ -->
-
-      <!-- ################################################################################################ -->
-    </div>
-    <!-- ################################################################################################ -->
-    <!-- / main body -->
-    <div class="clear"></div>
-  </main>
-</div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<div class="bgded overlay row4" style="background-image:url('resources/img/demo/backgrounds/.png');">
-  <footer id="footer" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-  
-    <!-- ################################################################################################ -->
-    <hr class="btmspace-50">
-   
-      <!-- ################################################################################################ -->
-    <!-- </div> -->
-    <div id="ctdetails" class="clear">
-      <ul class="nospace clear">
-        <li class="one_quarter first">
-          <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Llamanos:</strong> 7441318629</span></div>
-        </li>
-        <li class="one_quarter">
-          <div class="block clear"><a href="#"><i class="fas fa-envelope"></i></a> <span><strong>Envianos un correo:</strong> basilisk@gmail.com</span></div>
-        </li>
-        <li class="one_quarter">
-          <div class="block clear"><a href="#"><i class="fas fa-clock"></i></a> <span><strong> Lunes - Sabado:</strong> 08.00am - 2.00pm</span></div>
-        </li>
-        <li class="one_quarter">
-          <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Ven a conocernos:</strong> Dirección <a href="https://www.google.com.mx/maps/dir/16.8461145,-99.8471637/Tr%C3%A1mites+de+Regularizaciones+Basilisk,+Av.+Pie+de+la+Cuesta+s%2Fn,+Mozimba,+39460+Acapulco+de+Ju%C3%A1rez,+Gro./@16.8677641,-99.9294142,14.19z/data=!4m10!4m9!1m1!4e1!1m5!1m1!1s0x85caf8214f8b625b:0x490b79742f5fdbc9!2m2!1d-99.9290705!2d16.8647528!3e0?entry=ttu">nuestras oficinas</a></span></div>
-        </li>
-      </ul>
-    </div>
-    <!-- ################################################################################################ -->
-  </footer>
-</div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<div class="wrapper row5">
-  <div id="copyright" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-    <p class="fl_left">Basilisk &copy; 2024  <a href="#"></a></p>
-    <p class="fl_right"> <a target="_blank" href="#" title=""></a></p>
-    <!-- ################################################################################################ -->
-  </div>
-</div>
-<!-- chatbot -->
-<span class="u-text-highlight"> <a  class="floating-button" onclick="toggleChat()" id="b">✉️</a></span>
-    <p class="texto links" onclick="" style="width: fit-content;"> Envía un mensaje!
-        <div  id="webchat" role="main"  class="texto" style="display: none; width: fit-content;"></div>
-    </p>
-
+    <!-- Bootstrap core CSS -->
+    <link href="../resources/css/inicio/styles.css" rel="stylesheet">
+    <link href="../resources/css/inicio/animate.css" rel="stylesheet">
+    <link href="../resources/css/inicio/owl-carousel.css" rel="stylesheet">
+	 <link href="../resources/css/inicio/lightbox.css" rel="stylesheet">
+    <link href="../resources/css/inicio/jquery-ui.css" rel="stylesheet">
     
-<!-- Contenedor del chat (inicialmente oculto) -->
-<div id="chatContainer">
-  <button id="minimizeButton" onclick="minimizarChat()"><i class=""></i></button>
+
+    <!-- Custom styles for this template -->
+  </head>
+
+  <body id="category" class="category-col-5">
+  
+
+	<nav aria-label="breadcrumb" class="w-100 float-left">
+  <ol class="breadcrumb parallax justify-content-center" data-source-url="../resources/img/demo/backgrounds/vista2.jpg" style="background-image: url(&quot;../resources/img/demo/backgrounds/vista2.jpg&quot;); background-position: 50% 0.809717%;">
+    <li class="breadcrumb-item"><a href="#">Terrenos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Compra</li>
+  </ol>
+</nav>
+	<div class="main-content w-100 float-left"> 
+		<div class="container">
+			<div class="row">
+				<div class="content-wrapper col-xl-12 col-lg-12 order-lg-2">
+				<div class="block-category mb-30 w-100 float-left">
+					<div class="category-cover text-center">
+						<img src="#" alt="category-banner"/>
+					</div>
+					<div class="title-category text-capitalize">Terrenos</div>
+					<div class="category-description">Hermosos terrenos para crear un patrimonio, se cuenta con documentación: listo para escriturar, con una ubicación dentro de la colonia Fuerza Área Mexicana, Acapulco de Júarez, Guerrero. Todas las propiedades son privadas NO ejidales.</div>
+				</div>
+
+
+                <!-- FILTROSSSS -->
+
+				<header class="product-grid-header d-flex d-xs-block d-sm-flex d-lg-flex w-100 float-left">
+				<div class="hidden-sm-down total-products d-flex d-xs-block d-lg-flex col-md-3 col-sm-3 col-xs-12 align-items-center">
+				<div class="row">
+					<div class="nav" role="tablist">
+						<a class="grid active" href="#grid" data-toggle="tab" role="tab" aria-selected="true" aria-controls="grid"><i class="material-icons align-middle">grid_on</i></a>
+						<a class="list" href="#list" data-toggle="tab" role="tab" aria-selected="false" aria-controls="list"><i class="material-icons align-middle">format_list_bulleted</i></a>
+						<a class="sort" href="#sort-view" data-toggle="tab" role="tab" aria-selected="false" aria-controls="sort-view"><i class="material-icons align-middle">reorder</i></a>
+					</div>
+				</div> 
+				</div>
+				<div class="shop-results-wrapper d-flex d-sm-flex d-xs-block d-lg-flex justify-content-end col-md-9 col-sm-9 col-xs-12">
+				<div class="shop-results d-flex align-items-center"><span>Show</span>
+                                    <div class="shop-select">
+                                        <select name="number" id="number">
+                                            <option value="9">9</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="75">75</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+								</div>
+				<div class="shop-results d-flex align-items-center"><span>Sort By</span>
+					<div class="shop-select">
+						<select name="sort" id="sort">
+							<option value="position">Default sorting</option>
+							<option value="p-name">Sort Popularity</option>
+							<option value="p-price">Sort Price</option>
+						</select>
+					</div>
+				</div>
+				</div>
+				</header>
+
+
+
+				<div class="tab-content text-center products w-100 float-left category-col-5">
+				<div class="tab-pane grid fade active" id="grid" role="tabpanel">
+				<div class="row">
+
+								<div class="product-layouts col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="product-thumb">
+						<div class="image zoom">
+							<a href="product-details.html">
+								<img src="../resources/img/demo/gallery/01.jpg" alt="01"/>
+								<img src="../resources/img/demo/gallery/01.jpg" alt="02" class="second_image img-responsive"/>							</a>
+							<!-- <ul class="countdown countdown1">
+										  <li><span class="days">00</span><p class="days_text">Days</p></li>
+										  <li><span class="hours">00</span><p class="hours_text">Hours</p></li>
+										  <li><span class="minutes">1</span><p class="minutes_text">Minutes</p></li>
+										  <li><span class="seconds">0</span><p class="seconds_text">Seconds</p></li>
+										</ul>	 -->
+						</div>
+						<div class="thumb-description">
+							<div class="caption">
+								<h4 class="product-title text-capitalize"><a href="product-details.html">aliquam quaerat voluptatem</a></h4>
+							</div>
+							<div class="rating">
+							<div class="product-ratings d-inline-block align-middle">
+								<span class="fa fa-stack"><i class="material-icons">star</i></span>
+							   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+							   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+							  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+							  <span class="fa fa-stack"><i class="material-icons off">star</i></span>							</div>
+							</div>
+							
+							<div class="price">
+								<div class="regular-price">$100.00</div>
+								<div class="old-price">$150.00</div>
+							</div>
+							<div class="button-wrapper">
+							<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal" disabled><i class="material-icons">shopping_cart</i><span>Out of stock</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+								<div class="product-layouts col-lg-3 col-md-3 col-sm-6 col-xs-6"> 
+									<div class="product-thumb">
+										<div class="image zoom">
+											<a href="product-details.html">
+												<img src="../resources/img/demo/gallery/02.jpg" alt="02"/>
+												<img src="../resources/img/demo/gallery/02.jpg" alt="03" class="second_image img-responsive"/>											</a>
+											<!-- <ul class="countdown countdown2">
+										  <li><span class="days">00</span><p class="days_text">Days</p></li>
+										  <li><span class="hours">00</span><p class="hours_text">Hours</p></li>
+										  <li><span class="minutes">00</span><p class="minutes_text">Minutes</p></li>
+										  <li><span class="seconds">00</span><p class="seconds_text">Seconds</p></li>
+										</ul>	 -->
+											<div class="flags">
+											<div class="sale">sale</div>
+											<div class="new">new</div>
+										</div>
+										</div>
+										<div class="thumb-description">
+											<div class="caption">
+												<h4 class="product-title text-capitalize w-100 float-left"><a href="product-details.html">aspetur autodit autfugit</a></h4>
+											</div>
+											<div class="rating">
+											<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											</div>
+											</div>
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+											<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="product-layouts col-lg-3 col-md-3 col-sm-6 col-xs-6">
+									<div class="product-thumb">
+										<div class="image zoom">
+											<a href="product-details.html">
+												<img src="../resources/img/demo/gallery/02_1.jpg" alt="03"/>
+												<img src="../resources/img/demo/gallery/02_1.jpg" alt="04" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">magni dolores eosquies</a></h4>
+											</div>
+											<div class="rating">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>										</div>
+										</div>
+									</div>
+								</div>
+
+
+
+								<div class="product-layouts col-lg-3 col-md-3 col-sm-6 col-xs-6">
+									<div class="product-thumb">
+										<div class="image zoom">
+											<a href="product-details.html">
+												<img src="../resources/img/demo/gallery/03.jpg" alt="04"/>
+												<img src="../resources/img/demo/gallery/03.jpg" alt="05" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description">
+											<div class="caption">
+												<h4 class="product-title text-capitalize w-100 float-left"><a href="product-details.html">voluptas nulla pariatur</a></h4>
+											</div>
+											<div class="rating">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+
+								<div class="product-layouts col-lg-3 col-md-3 col-sm-6 col-xs-6">
+									<div class="product-thumb">
+										<div class="image zoom">
+											<a href="product-details.html">
+												<img src="../resources/img/demo/gallery/04.jpg" alt="05"/>
+												<img src="../resources/img/demo/gallery/04.jpg" alt="06" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">aliquam quat voluptatem</a></h4>
+											</div>
+											<div class="rating">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+                                <div class="product-layouts col-lg-3 col-md-3 col-sm-6 col-xs-6">
+									<div class="product-thumb">
+										<div class="image zoom">
+											<a href="product-details.html">
+												<img src="../resources/img/demo/gallery/05.jpg" alt="06"/>
+												<img src="../resources/img/demo/gallery/05.jpg" alt="07" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">voluptas sit aspernatur</a></h4>
+											</div>
+											<div class="rating">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="product-layouts col-lg-3 col-md-3 col-sm-6 col-xs-6">
+									<div class="product-thumb">
+										<div class="image zoom">
+											<a href="product-details.html">
+												<img src="../resources/img/demo/gallery/06.jpg" alt="03"/>
+												<img src="../resources/img/demo/gallery/04.jpg" alt="08" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">similique suntin culpaqui</a></h4>
+											</div>
+											<div class="rating">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal" disabled="disabled"><i class="material-icons">shopping_cart</i><span>out of stock</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="product-layouts col-lg-3 col-md-3 col-sm-6 col-xs-6">
+									<div class="product-thumb">
+										<div class="image zoom">
+											<a href="product-details.html">
+												<img src="../resources/img/demo/gallery/07.jpg" alt="08"/>
+												<img src="../resources/img/demo/gallery/08.jpg" alt="09" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">suscipit laboriosam nisi</a></h4>
+											</div>
+											<div class="rating">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+				</div>
+
+				</div>
+
+                
+				<div class="tab-pane fade list text-left" id="list" role="tabpanel">
+								<div class="product-layouts col-lg-6 col-md-6 col-sm-6 col-xs-6">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-5 col-md-4">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/1.jpg" alt="01"/>
+												<img src="../resources/img/demo/1.jpg" alt="02" class="second_image img-responsive"/>											
+											</a>
+											<ul class="countdown countdown4 text-center">
+											  <li><span class="days">00</span><p class="days_text">Days</p></li>
+											  <li><span class="hours">00</span><p class="hours_text">Hours</p></li>
+											  <li><span class="minutes">00</span><p class="minutes_text">Minutes</p></li>
+											  <li><span class="seconds">00</span><p class="seconds_text">Seconds</p></li>
+											</ul>
+																						</div>
+										<div class="thumb-description col-xs-12 col-sm-7 col-md-8 position-static text-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">aliquam quaerat voluptatem</a></h4>
+											</div>
+											<div class="rating mb-10">
+											<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											</div>
+											</div>
+											
+											<div class="description">
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin rhoncus arcu turpis, quis sagittis orci dictum non. Etiam id eleifend erat. Donec sit amet nisl id nisi laoreet viverra in ac nibh.											</div>
+
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="color-option d-flex align-items-center float-left w-100">
+                                        <ul class="color-categories">
+                                            <li>
+                                                <a class="tt-pink" href="#" title="Pink"></a>                                            </li>
+                                            <li>
+                                                <a class="tt-blue" href="#" title="Blue"></a>                                            </li>
+                                            <li>
+                                                <a class="tt-yellow" href="#" title="Yellow"></a>                                            </li>
+                                        </ul>
+                                    </div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal" disabled="disabled"><i class="material-icons">shopping_cart</i><span>out of stock</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts col-lg-6 col-md-6 col-sm-6 col-xs-6">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-5 col-md-4">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/2.jpg" alt="02"/>
+												<img src="../resources/img/demo/3.jpg" alt="03" class="second_image img-responsive"/></a>	
+												<!-- <ul class="countdown countdown5 text-center">
+										  <li><span class="days">00</span><p class="days_text">Days</p></li>
+										  <li><span class="hours">00</span><p class="hours_text">Hours</p></li>
+										  <li><span class="minutes">00</span><p class="minutes_text">Minutes</p></li>
+										  <li><span class="seconds">00</span><p class="seconds_text">Seconds</p></li>
+										</ul> -->
+																					</div>
+										<div class="thumb-description col-xs-12  col-sm-7 col-md-8 position-static text-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">aspetur autodit autfugit</a></h4>
+											</div>
+											<div class="rating mb-10">
+											<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											</div>
+											</div>
+											<div class="description">
+											Integer erat purus, semper pharetra leo tincidunt, commodo vestibulum nulla. Nam ultricies nisl sed maximus rhoncus. Aliquam et ipsum pulvinar, rutrum erat nec, aliquet nisl.											</div>
+
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts col-lg-6 col-md-6 col-sm-6 col-xs-6">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-5 col-md-4">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/3.jpg" alt="03"/>
+												<img src="../resources/img/demo/4.jpg" alt="04" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12  col-sm-7 col-md-8 position-static text-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">magni dolores eosquies</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+										<div class="description">
+											Suspendisse eu mi ullamcorper, volutpat leo at, consectetur arcu. Morbi eget tempor sem, sed auctor sem. Nullam sodales scelerisque nisi, eu pellentesque felis euismod malesuada.											</div>
+
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts col-lg-6 col-md-6 col-sm-6 col-xs-6">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-5 col-md-4">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/4.jpg" alt="04"/>
+												<img src="../resources/img/demo/4.jpg" alt="05" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12  col-sm-7 col-md-8 position-static text-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">voluptas nulla pariatur</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+																						<div class="description">
+											Phasellus euismod nulla nulla, sit amet tristique tellus condimentum ut. Aenean posuere lacus eu ultrices lobortis. Duis eget est arcu. Praesent rhoncus efficitur augue nec porttitor.											</div>
+
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts col-lg-6 col-md-6 col-sm-6 col-xs-6">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-5 col-md-4">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/3.jpg" alt="05"/>
+												<img src="../resources/img/demo/3.jpg" alt="06" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12  col-sm-7 col-md-8 position-static text-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">aliquam quat voluptatem</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+																						<div class="description">
+											Sed nisi elit, gravida eu risus sit amet, hendrerit tristique sapien. Proin consequat augue lectus, eu tempor orci congue quis. Sed dapibus non enim sed tristique. Donec commodo velit at odio gravida.											</div>
+
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts col-lg-6 col-md-6 col-sm-6 col-xs-6">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-5 col-md-4">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/3.jpg" alt="06"/>
+												<img src="../resources/img/demo/1.jpg" alt="07" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12  col-sm-7 col-md-8 position-static text-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">voluptas sit aspernatur</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+												<div class="description">
+											Vestibulum semper tincidunt eros, ut pulvinar felis. Maecenas tincidunt mi et dui dignissim, in feugiat nisl scelerisque. Aenean et nisi turpis. Cras in nisi vitae magna feugiat placerat id sit amet mauris.											</div>
+
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts col-lg-6 col-md-6 col-sm-6 col-xs-6">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-5 col-md-4">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/1.jpg" alt="07"/>
+												<img src="../resources/img/demo/1.jpg" alt="08" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12  col-sm-7 col-md-8 position-static text-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">similique suntin culpaqui</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+																						<div class="description">
+											Phasellus ut felis eu libero semper elementum. Maecenas sit amet scelerisque ante. Nam ultrices enim sed lacus gravida condimentum. Proin at malesuada nibh.											</div>
+
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal" disabled="disabled"><i class="material-icons">shopping_cart</i><span>out of stock</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts col-lg-6 col-md-6 col-sm-6 col-xs-6">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-5 col-md-4">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/1.jpg" alt="08"/>
+												<img src="../resources/img/demo/1.jpg" alt="09" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12  col-sm-7 col-md-8 position-static text-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">suscipit laboriosam nisi</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+																						<div class="description">
+											Duis tincidunt ante urna, sit amet vestibulum felis placerat in. Duis a tortor et odio consequat congue. Mauris euismod augue tempor, sagittis nisl sed, pretium purus.											</div>
+
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											<div class="button-wrapper">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+				</div>
+				<div class="tab-pane fade sort text-left" id="sort-view" role="tabpanel">
+								<div class="product-layouts">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-3 col-md-2">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/1.jpg" alt="01"/>
+												<img src="../resources/img/demo/1.jpg" alt="02" class="second_image img-responsive"/>											
+											</a>
+											
+																						</div>
+										<div class="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+										<div class="sort-title col-md-5 col-sm-7 float-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">aliquam quaerat voluptatem</a></h4>
+											</div>
+											
+											<div class="rating mb-10">
+											<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											</div>
+											</div>
+											<div class="description mb-10">
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin rhoncus arcu turpis, quis sagittis orci dictum non. Etiam id eleifend erat. Donec sit amet nisl id nisi laoreet viverra in ac nibh.											</div>
+											<div class="color-option d-flex align-items-center float-left w-100">
+                                        <ul class="color-categories">
+                                            <li>
+                                                <a class="tt-pink" href="#" title="Pink"></a>                                            </li>
+                                            <li>
+                                                <a class="tt-blue" href="#" title="Blue"></a>                                            </li>
+                                            <li>
+                                                <a class="tt-yellow" href="#" title="Yellow"></a>                                            </li>
+                                        </ul>
+                                    </div>
+										</div>
+									<div class="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+									    <div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											</div>
+											<div class="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal" disabled="disabled"><i class="material-icons">shopping_cart</i><span>out of stock</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-3 col-md-2">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/1.jpg" alt="02"/>
+												<img src="../resources/img/demo/1.jpg" alt="03" class="second_image img-responsive"/></a>	
+												
+																					</div>
+										<div class="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+										<div class="sort-title col-md-5 col-sm-7 float-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">aspetur autodit autfugit</a></h4>
+											</div>
+											<div class="rating mb-10">
+											<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											</div>
+											</div>
+											<div class="description mb-10">
+											Integer erat purus, semper pharetra leo tincidunt, commodo vestibulum nulla. Nam ultricies nisl sed maximus rhoncus. Aliquam et ipsum pulvinar, rutrum erat nec, aliquet nisl.											</div>
+											</div>
+<div class="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+												</div>
+											<div class="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-3 col-md-2">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/3.jpg" alt="03"/>
+												<img src="../resources/img/demo/1.jpg" alt="04" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+										<div class="sort-title col-md-5 col-sm-7 float-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">magni dolores eosquies</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+										<div class="description mb-10">
+											Suspendisse eu mi ullamcorper, volutpat leo at, consectetur arcu. Morbi eget tempor sem, sed auctor sem. Nullam sodales scelerisque nisi, eu pellentesque felis euismod malesuada.											</div>
+</div>
+<div class="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											</div>
+											<div class="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-3 col-md-2">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/1.jpg" alt="04"/>
+												<img src="../resources/img/demo/1.jpg" alt="05" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+										<div class="sort-title col-md-5 col-sm-7 float-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">voluptas nulla pariatur</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+																						<div class="description mb-10">
+											Phasellus euismod nulla nulla, sit amet tristique tellus condimentum ut. Aenean posuere lacus eu ultrices lobortis. Duis eget est arcu. Praesent rhoncus efficitur augue nec porttitor.											</div>
+</div>
+<div class="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											</div>
+											<div class="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-3 col-md-2">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/4.jpg" alt="05"/>
+												<img src="../resources/img/demo/3.jpg" alt="06" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+										<div class="sort-title col-md-5 col-sm-7 float-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">aliquam quat voluptatem</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+																						<div class="description mb-10">
+											Sed nisi elit, gravida eu risus sit amet, hendrerit tristique sapien. Proin consequat augue lectus, eu tempor orci congue quis. Sed dapibus non enim sed tristique. Donec commodo velit at odio gravida.											</div>
+</div>
+<div class="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											</div>
+											<div class="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-3 col-md-2">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/2.jpg" alt="06"/>
+												<img src="../resources/img/demo/1.jpg" alt="07" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+													<div class="sort-title col-md-5 col-sm-7 float-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">voluptas sit aspernatur</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+												<div class="description mb-10">
+											Vestibulum semper tincidunt eros, ut pulvinar felis. Maecenas tincidunt mi et dui dignissim, in feugiat nisl scelerisque. Aenean et nisi turpis. Cras in nisi vitae magna feugiat placerat id sit amet mauris.											</div>
+											</div>
+<div class="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											</div>
+											<div class="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-3 col-md-2">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/1.jpg" alt="07"/>
+												<img src="../resources/img/demo/1.jpg" alt="08" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+											<div class="sort-title col-md-5 col-sm-7 float-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">similique suntin culpaqui</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+																						<div class="description mb-10">
+											Phasellus ut felis eu libero semper elementum. Maecenas sit amet scelerisque ante. Nam ultrices enim sed lacus gravida condimentum. Proin at malesuada nibh.											</div>
+</div>
+<div class="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											</div>
+											<div class="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal" disabled="disabled"><i class="material-icons">shopping_cart</i><span>out of stock</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="product-layouts">
+									<div class="product-thumb row">
+										<div class="image zoom col-xs-12 col-sm-3 col-md-2">
+											<a href="product-details.html" class="d-block position-relative">
+												<img src="../resources/img/demo/1.jpg" alt="08"/>
+												<img src="../resources/img/demo/1.jpg" alt="09" class="second_image img-responsive"/>											</a>										</div>
+										<div class="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+										<div class="sort-title col-md-5 col-sm-7 float-left">
+											<div class="caption">
+												<h4 class="product-title text-capitalize"><a href="product-details.html">suscipit laboriosam nisi</a></h4>
+											</div>
+											<div class="rating mb-10">
+												<div class="product-ratings d-inline-block align-middle">
+												<span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+											  <span class="fa fa-stack"><i class="material-icons off">star</i></span>											   </div>
+											</div>
+																						<div class="description mb-10">
+											Duis tincidunt ante urna, sit amet vestibulum felis placerat in. Duis a tortor et odio consequat congue. Mauris euismod augue tempor, sagittis nisl sed, pretium purus.											</div>
+											</div>
+<div class="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+											<div class="price">
+												<div class="regular-price">$100.00</div>
+												<div class="old-price">$150.00</div>
+											</div>
+											</div>
+											<div class="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+<div class="button-group text-center">
+												<button type="button" class="btn btn-primary btn-cart" data-target="#cart-pop" data-toggle="modal"><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+												<a href="wishlist.html" class="btn btn-primary btn-wishlist"><i class="material-icons">favorite</i><span>wishlist</span></a>
+												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
+												<button type="button" class="btn btn-primary btn-quickview"  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+				</div>
+				</div>
+				<div class="pagination-wrapper float-left w-100">
+				<p>Showing 1 to 9 of 11 (2 Pages)</p>
+				<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+				</div>
+				</div>
+				
+			</div>
+		</div>
+		</div>
+	
+
+
+  
+  
+
+
+<!-- product_view modal -->
+
+  <div class="modal fade product_view" id="product_view" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			 <h4 class="modal-title w-100w-100w-100 font-weight-bold d-none">Quick view</h4>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	  <span aria-hidden="true">×</span>
+	</button>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-6 left-columm">
+						<div class="product-large-image tab-content">
+						<div class="tab-pane active" id="product-1" role="tabpanel" aria-labelledby="product-tab-1">
+							<div class="single-img img-full">
+								<a href="../resources/img/demo/1.jpg"><img src="../resources/img/demo/1.jpg" class="img-fluid" alt=""></a>
+							</div>
+						</div>
+						<div class="tab-pane" id="product-2" role="tabpanel" aria-labelledby="product-tab-2">
+							<div class="single-img">
+								<a href="../resources/img/demo/1.jpg"><img src="../resources/img/demo/2.jpg" class="img-fluid" alt=""></a>
+							</div>
+						</div>
+						<div class="tab-pane" id="product-3" role="tabpanel" aria-labelledby="product-tab-3">
+							<div class="single-img">
+								<a href="../resources/img/demo/3.jpg"><img src="../resources/img/demo/3.jpg" class="img-fluid" alt=""></a>
+							</div>
+						</div>
+						<div class="tab-pane" id="product-4" role="tabpanel" aria-labelledby="product-tab-4">
+							<div class="single-img">
+								<a href="../resources/img/demo/4.jpg"><img src="../resources/img/demo/4.jpg" class="img-fluid" alt=""></a>
+							</div>
+						</div>
+						<div class="tab-pane" id="product-5" role="tabpanel" aria-labelledby="product-tab-5">
+							<div class="single-img">
+								<a href="../resources/img/demo/1.jpg"><img src="../resources/img/demo/1.jpg" class="img-fluid" alt=""></a>
+							</div>
+						</div>
+				</div>
+				<div class="small-image-list float-left w-100"> 
+                                <div class="nav-add small-image-slider-single-product-tabstyle-3 owl-carousel" role="tablist">
+                                    <div class="single-small-image img-full">
+                                        <a data-toggle="tab" id="product-tab-1" href="#product-1" class="img active"><img src="../resources/img/demo/1.jpg" class="img-fluid" alt=""></a>
+                                    </div>
+                                    <div class="single-small-image img-full">
+                                        <a data-toggle="tab" id="product-tab-2" href="#product-2" class="img"><img src="../resources/img/demo/1.jpg" class="img-fluid" alt=""></a>
+                                    </div>
+                                    <div class="single-small-image img-full">
+                                        <a data-toggle="tab" id="product-tab-3" href="#product-3" class="img"><img src="../resources/img/demo/1.jpg" class="img-fluid" alt=""></a>
+                                    </div>
+                                    <div class="single-small-image img-full">
+                                        <a data-toggle="tab" id="product-tab-4" href="#product-4" class="img"><img src="../resources/img/demo/1.jpg" class="img-fluid" alt=""></a>
+                                    </div>
+                                    <div class="single-small-image img-full">
+                                        <a data-toggle="tab" id="product-tab-5" href="#product-5" class="img"><img src="../resources/img/demo/1.jpg" class="img-fluid" alt=""></a>
+                                    </div>
+                                </div>
+                            </div>
+				</div>
+				<div class="col-md-6 product_content">
+					<h4 class="product-title text-capitalize">aliquam quaerat voluptatem</h4>
+					<div class="rating">
+					<div class="product-ratings d-inline-block align-middle">
+																				<span class="fa fa-stack"><i class="material-icons">star</i></span>
+									   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+									   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+									   <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+									   <span class="fa fa-stack"><i class="material-icons off">star</i></span>			</div>							</div>
+					<span class="description float-left w-100">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+					<h3 class="price float-left w-100"><span class="regular-price align-middle">$75.00</span><span class="old-price align-middle">$60.00</span></h3>
+					
+					<div class="product-variants float-left w-100">
+						<div class="col-md-4 col-sm-6 col-xs-12 size-options d-flex align-items-center">
+											<h5>Size:</h5>
+
+								<select class="form-control" name="select">
+											<option value="" selected="">Size</option>
+											<option value="black">Medium</option>
+											<option value="white">Large</option>
+											<option value="gold">Small</option>
+											<option value="rose gold">Extra large</option>
+								</select>
+						</div>
+						<div class="color-option d-flex align-items-center">
+                                        <h5>color :</h5>
+                                        <ul class="color-categories">
+                                            <li class="active">
+                                                <a class="tt-pink" href="#" title="Pink"></a>
+                                            </li>
+                                            <li>
+                                                <a class="tt-blue" href="#" title="Blue"></a>
+                                            </li>
+                                            <li>
+                                                <a class="tt-yellow" href="#" title="Yellow"></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+					</div>
+					<div class="btn-cart d-flex align-items-center float-left w-100">
+						<h5>qty:</h5>
+						<input value="1" type="number">
+						<button type="button" class="btn btn-primary"><i class="material-icons">shopping_cart</i> Add To Cart</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+  <!-- cart-pop modal -->
+<div class="modal fade" id="cart-pop" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header alert-success">
+			 <h4 class="modal-title w-100w-100w-100">Product successfully added to your shopping cart</h4>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	  <span aria-hidden="true">×</span>
+	</button>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+			<div class="col-md-6 divide-right">
+			<div class="row">
+				<div class="col-md-5 col-xs-4 product-img float-left">
+					<img src="../resources/img/demo/1.jpg" class="img-responsive" alt="01">
+				</div>
+				<div class="col-md-7 col-xs-8 product-desc float-left">
+					<h4 class="product-title text-capitalize">aliquam quaerat voluptatem</h4>
+					<div class="rating">
+					<div class="product-ratings d-inline-block align-middle">
+					<span class="fa fa-stack"><i class="material-icons">star</i></span>
+				   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+				   <span class="fa fa-stack"><i class="material-icons">star</i></span>
+				   <span class="fa fa-stack"><i class="material-icons off">star</i></span>
+				   <span class="fa fa-stack"><i class="material-icons off">star</i></span></div></div>
+					<h3 class="price float-left w-100"><span class="regular-price align-middle">$75.00</span><span class="old-price align-middle">$60.00</span></h3>
+				</div>
+			</div>
+			</div>
+				<div class="col-md-6 divide-left">
+					<p class="cart-products-count">There are 2 items in your cart.</p>
+					<p class="total-products float-left w-100">
+						<strong>Total products:</strong> $150.00
+					</p>
+					<p class="shipping float-left w-100">
+						<strong>Total shipping:</strong> free
+					</p>
+					<p class="total-price float-left w-100">
+						<strong>Total:</strong> $150.00(tax incl.)
+					</p>
+					<div class="cart-content-btn float-left w-100">
+					<form action="#">
+                      <input class="btn pull-right mt_10 btn-primary" value="Continue shopping" type="submit">
+                    </form>
+					<form action="checkout_page.html">
+                      <input class="btn pull-right mt_10 btn-secondary" value="Proceed to checkout" type="submit">
+                    </form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 </div>
 
 
+	<script src="../resources/scripts/inicio/jquery.min.js"></script>
+	<script src="../resources/scripts/inicio/bootstrap.min.js"></script>
+	<script src="../resources/scripts/inicio/owl.carousel.min.js"></script>
+	<script src="../resources/scripts/inicio/custom.js"></script>
+	<script src="../resources/scripts/inicio/parallax.js"></script>
+	<script src="../resources/scripts/inicio/jquery-ui.min.js"></script>
+	<script src="../resources/scripts/inicio/ResizeSensor.min.js"></script>
+	<script src="../resources/scripts/inicio/theia-sticky-sidebar.min.js"></script>
+		<script src="../resources/scripts/inicio/jquery.countdown.min.js"></script>
+		<script src="../resources/scripts/inicio/masonry.pkgd.min.js"></script>
+		<script src="../resources/scripts/inicio/imagesloaded.pkgd.min.js"></script>
+		<script src="../resources/scripts/inicio/jquery.zoom.min.js"></script>
+		
+<!--Start of Tawk.to Script-->
 
-<script src="resources/scripts/jquery.min.js"></script>
-
-<script src="resources/scripts/jquery.mobilemenu.js"></script>
-<script src="resources/scripts/chatbot.js"></script>
-</body>
+<!--End of Tawk.to Script-->		
+		</body>
 </html>
+
+
+
+
