@@ -43,6 +43,11 @@ router.post('/login', authentication.login)
 router.get('/nosotros', (req, res) => {
     res.render('nosotros');
 });
+
+router.get('/contactanos', (req, res) => {
+    res.render('contactanos');
+});
+
 // LOGOUT
 router.get('/logout', function(req, res) {
     res.clearCookie('jwt')  
