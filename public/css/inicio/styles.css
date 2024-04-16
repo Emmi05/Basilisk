@@ -2347,8 +2347,8 @@
 }
 .btn-primary:focus, .btn-primary:hover, .btn-primary:active {
   color: #333333 !important;
-  background-color: #ffcc01 !important;
-  border-color: #ffcc01 !important;
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
   box-shadow: none !important;
 }
 
@@ -2356,8 +2356,8 @@
 .btn-primary:disabled:hover,
 .btn-primary.disabled,
 .btn-primary:disabled {
-  background: #ffcc01 !important;
-  border-color: #ffcc01 !important;
+  background: #0d6efd !important;
+  border-color: #0d6efd !important;
   color: #333333 !important;
   cursor: not-allowed;
 }
@@ -8115,6 +8115,7 @@ body {
     max-width: 555px;
   }
 }
+
 #ttcmsaboutus .ttcmsaboutus .ttcmsabout-img:after {
   background: #fff url(../img/banner/aboutus-backimg.png);
   bottom: -30px;
