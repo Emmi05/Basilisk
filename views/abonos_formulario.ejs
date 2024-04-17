@@ -27,31 +27,24 @@
           <div class="container-fluid">
               <h1>Registro abonos</h1>
               <form class="row g-3"  action="/crear_abonos/<%= abono.id %>" method="POST">
-             
-         
-
-                <!-- CALCULOS DE TERRENO - INICIAL-ENGANCHE  -->
+        
                 <div class="col-md-6">
                     <label for="cliente" class="form-label">Cliente</label>
                     <input type="text" class="form-control" id="id_customer" name="id_customer" value=" <%= abono.customer_name %>  <%= abono.customer_paterno %>  <%= abono.customer_materno %>" readonly>
                 </div>
-
     
                 <div class="col-md-6">
                   <label for="cliente" class="form-label">Deuda restante</label>
                   <input type="number" class="form-control" id="precio-inicial" name="deuda_restante" value="<%= abono.deuda_restante.toFixed(2) %>" readonly>
               </div>
               
-        
       
             <div class="col-md-6">
               <label for="faltantes" class="form-label">Cuotas faltantes</label>
               <input type="number" class="form-control" id="faltantes" name="cuotas_faltantes" value="<%= abono.cuotas_restantes%>"  readonly min="1" >
           </div>
-
-
           
-          <!-- AQUI AGARRO PARA PONER EN CP CUOTAS PAGADAS  -->
+          <!--  CP CUOTAS PAGADAS  -->
           <div class="col-md-6">
             <label for="n_abono" class="form-label">N_abono</label>
             <input type="number" class="form-control" id="n_abono" name="n_abono" value="">

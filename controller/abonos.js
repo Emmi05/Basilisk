@@ -60,35 +60,28 @@ const crearAbonos = async (req, res) => {
                     abonos: abonosrows,
                 });
             }
-            console.log(n_abono, "abono dado");
-            console.log(cuotasFaltantes, "cuotas generales");
-
-          
-
+            // console.log(n_abono, "abono dado");
+            // console.log(cuotasFaltantes, "cuotas generales");
+    
             const id_land=abonosrows[0].id_land;
-
-
             const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono); // Sumar n_abono a las cuotas pagadas
 
-            // const cuota_restante = abonosrows[0].cuotas - abonosrows[0].ncuotas_pagadas; // Calcula cuotas restantes
-           
-            console.log(cuota_restante, "cuota pagada?");
-            
+            // console.log(cuota_restante, "cuota pagada?");            
             const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat(n_abono); // Restar n_abono a las cuotas restantes
 
-            console.log(abonosrows[0].cuotas_restantes);
-            console.log(cuota_pagada, "cuota restante");
+            // console.log(abonosrows[0].cuotas_restantes);
+            // console.log(cuota_pagada, "cuota restante");
             
 
             const deuda_restante = abonosrows[0].deuda_restante - cantidad;
-            console.log(deuda_restante, "deuda restante ");
-            console.log("-------------------------------------------------")
+            // console.log(deuda_restante, "deuda restante ");
+            // console.log("-------------------------------------------------")
 
             ///aqui se valida los decimales 
             if(deuda_restante<=1){
                 const deuda_restante=0;
                 const id_sale = abonosrows[0].id;
-                console.log(id_sale);
+                // console.log(id_sale);
                  const [landsearch] = await pool.query('SELECT * FROM sale WHERE id = ?', [id_sale]);
 
                 const id_land = landsearch[0].id_land;
@@ -186,14 +179,14 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
     
             const fecha = `Acapulco, Guerrero, a  ${fechaEnLetras}`;
             doc.text(fecha, {
-                align: 'right' // Alinea el texto a la derecha
+                align: 'right' 
             });
     
             doc.moveDown();
             doc.moveDown();
             doc.moveDown();
     
-            // Agregar el párrafo de lorem
+           
             const lorem = ' apoderado de Basilisk Inmobiliaria Siete S de RL de CV, personalidad y facultades que acredito mediante escritura pública número 45,153 de 19 de Febrero de 2015, otorgada ante la fe del licenciado José Luis Altamirano Quintero, Notario Público número 66 del Distro Federal.';
             doc.text(`Israel Nogueda Pineda, ${lorem}`, {
                 // width: 410,

@@ -8,8 +8,30 @@ import { methods as abonos} from '../controller/abonos.js'
 import {methods as pdf} from '../controller/pdf.js'
 
 const router = Router();// Definición de la ruta '/'
-router.get('/', authentication.auth, (req, res) => {
-    //firt VALIDATE IF LOGGED OR AUTH SO IF IS NOT RETURN TO MY "HOME IT THIS CASE MY STATIC PAGE"
+
+router.get('/nosotros', (req, res) => {
+    res.render('nosotros');
+});
+
+router.get('/contactanos', (req, res) => {
+    res.render('contactanos');
+});
+
+
+
+
+// router.get('/services', (req, res) => {
+//     res.render('terrenos_index');
+// });
+
+router.get('/servicesterrenos', (req, res) => {
+    res.render('vista_terrenos');
+});
+// AUTENTIFICACION
+router.use(authentication.auth);
+
+router.get('/', (req, res) => {
+    // Validación de sesión
     if (req.session.loggedin) {
         if (req.session.rol == 'usuario') {
             res.render('home', {
@@ -40,13 +62,6 @@ router.get('/login', (req, res) => {
 });
 router.post('/login', authentication.login)
 
-router.get('/nosotros', (req, res) => {
-    res.render('nosotros');
-});
-
-router.get('/contactanos', (req, res) => {
-    res.render('contactanos');
-});
 
 // LOGOUT
 router.get('/logout', function(req, res) {
@@ -55,15 +70,6 @@ router.get('/logout', function(req, res) {
         res.redirect('/');
     });
 });
-
-router.get('/services', (req, res) => {
-    res.render('terrenos_index');
-});
-
-router.get('/servicesterrenos', (req, res) => {
-    res.render('vista_terrenos');
-});
-
 
 
 router.get('/registro_usuario', async(req, res) => {

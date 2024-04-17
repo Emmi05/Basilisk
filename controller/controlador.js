@@ -83,16 +83,23 @@ export const login=  async(req, res) => {
 }
 
 export const auth = async (req, res, next) => {
+    // Si ya estás en la página de inicio, no redirigir
+    if (req.originalUrl === '/') {
+        return next();
+    }
+
+    // Si el usuario ya está en la página de login, no redirigir
+    if (req.originalUrl === '/login') {
+        return next();
+    }
+
     if (req.cookies.jwt) {
         try {
             const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
             const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
-            // console.log(results)
 
             if (results.length > 0) {
                 req.user = results[0];
-                // console.log( "esto es" , req.user); // Agregar esta línea para verificar
-
                 return next();
             } else {
                 throw new Error('Usuario no encontrado');
@@ -100,9 +107,11 @@ export const auth = async (req, res, next) => {
         } catch (error) {
             console.error(error);
             res.redirect('/login');
+            return;
         }
     } else {
         res.redirect('/login');
+        return;
     }
 };
 

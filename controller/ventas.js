@@ -21,11 +21,8 @@ const crearVenta = async (req, res) => {
 
         const inicialNumber = parseFloat(inicial);
         const nCuentasNumber = parseFloat(n_cuentas);
-
     
         const deuda_restante = precio - inicial;
-
-        
 
         // Verificar si algún campo está vacío o si los valores de 'inicial' y 'n_cuentas' no son números válidos
         if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
@@ -301,7 +298,7 @@ if (result && result.affectedRows > 0) {
             name: req.session.name,
             rol: req.session.rol,
             ventas: rows,
-            ruta: 'abonos'
+            ruta: 'view_venta'
         });
     } else {
         // Manejar el caso en que no se pudo actualizar el estado del terreno
@@ -313,6 +310,7 @@ if (result && result.affectedRows > 0) {
 }
 
 }
+//
 
 export const methods = {
    
