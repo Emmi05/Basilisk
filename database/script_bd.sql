@@ -1,12 +1,13 @@
 create database node;
 use node;
 drop database node;
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 10-04-2024 a las 20:58:32
+-- Tiempo de generación: 17-04-2024 a las 07:57:08
 -- Versión del servidor: 8.2.0
 -- Versión de PHP: 8.2.13
 
@@ -40,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `abonos` (
   `cantidad` int NOT NULL,
   `n_abono` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=724 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=750 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `abonos`
@@ -225,38 +226,65 @@ INSERT INTO `abonos` (`id`, `id_sale`, `fecha_abono`, `cuotas_pagadas`, `cuotas_
 (720, 273, '2024-04-08', 72, 8, 4375, 1),
 (721, 273, '2024-04-08', 73, 7, 4375, 1),
 (722, 273, '2024-04-08', 74, 6, 4375, 1),
-(723, 273, '2024-04-08', 75, 5, 4375, 1);
+(723, 273, '2024-04-08', 75, 5, 4375, 1),
+(724, 273, '2024-05-10', 76, 4, 4375, 1),
+(725, 274, '2024-04-11', 0, 12, 0, 0),
+(726, 274, '2024-05-11', 1, 11, 41667, 1),
+(727, 273, '2024-04-11', 80, 0, 17500, 4),
+(728, 274, '2024-04-11', 12, 0, 458333, 11),
+(729, 276, '2024-04-11', 0, 12, 0, 0),
+(730, 276, '2024-04-11', 1, 11, 12500, 1),
+(731, 276, '2024-04-12', 12, 0, 137500, 11),
+(732, 277, '2024-04-11', 0, 30, 0, 0),
+(733, 278, '2024-04-11', 0, 40, 0, 0),
+(734, 278, '2024-04-11', 1, 39, 3625, 1),
+(735, 278, '2024-05-11', 3, 37, 7250, 2),
+(736, 278, '2024-06-11', 13, 27, 36250, 10),
+(737, 278, '2024-07-11', 23, 17, 36250, 10),
+(738, 278, '2024-08-11', 33, 7, 36250, 10),
+(739, 278, '2024-09-11', 37, 3, 14500, 4),
+(740, 278, '2024-12-11', 40, 0, 10875, 3),
+(741, 277, '2024-04-11', 10, 20, 50000, 10),
+(742, 277, '2024-05-11', 20, 10, 50000, 10),
+(743, 277, '2024-06-11', 30, 0, 50000, 10),
+(744, 279, '2024-04-11', 0, 25, 0, 0),
+(745, 279, '2024-05-11', 1, 24, 8000, 1),
+(746, 279, '2024-06-11', 2, 23, 8000, 1),
+(747, 279, '2024-07-11', 3, 22, 8000, 1),
+(748, 279, '2024-06-12', 4, 21, 8000, 1),
+(749, 279, '2024-04-16', 5, 20, 8000, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `customers`
 --
---al final hice cel de varchar (20)
+
 DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `a_materno` varchar(50) NOT NULL,
   `a_paterno` varchar(50) NOT NULL,
-  `cel` int NOT NULL,
+  `cel` varchar(20) DEFAULT NULL,
   `adress` varchar(60) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `customers`
 --
 
 INSERT INTO `customers` (`id`, `name`, `a_materno`, `a_paterno`, `cel`, `adress`) VALUES
-(3, 'Emma', 'Carmona', 'Flores', 2147483647, '2DA CERRADA DE CASTILLO BRETON 23'),
-(18, 'IXCHELL', 'NAZARIO', 'SALGADO', 2147483647, '2DA CERRADA DE CASTILLO BRETON 23'),
-(19, 'KAORY', 'NAZARIO', 'SALGADO', 2147483647, 'JARDIN'),
-(24, 'Rosa Genesis', 'Carmona', 'Flores ', 2147483647, 'Cancun '),
-(25, 'Rogelio', 'Jolleño', 'Flores', 2147483647, 'Calzada pie de la cuesta 13F, Mozimba'),
-(28, 'Mariel', 'Flores', 'Barragan', 2147483647, 'Zihuatanejo y Acapulco'),
-(29, 'Alberto', 'nose', 'barragan', 2147483647, 'zihua'),
-(30, 'usuario', 'flores', 'usuario', 2147483647, 'Calzada pie de la cuesta 13F, Mozimba');
+(3, 'Emma', 'Carmona', 'Flores', '7441318629', '2DA CERRADA DE CASTILLO BRETON 23'),
+(18, 'Ixchell', 'Nazario', 'Salgado', '7441766843', 'Jardin Palmas'),
+(19, 'Kaory', 'Nazario', 'Salgado', '7442574961', 'Jardin Palmas'),
+(24, 'Rosa Genesis', 'Carmona', 'Flores ', '2147483647', 'Cancun '),
+(25, 'Rogelio', 'Jolleño', 'Flores', '2147483647', 'Calzada pie de la cuesta 13F, Mozimba'),
+(29, 'Albertano', 'nose', 'Barragan', '5555555555', 'Zihuatanejo ixtapa'),
+(30, 'usuario', 'flores', 'usuario', '2147483647', 'Calzada pie de la cuesta 13F, Mozimba'),
+(35, 'Balvina', 'Tecuapa', 'Jolleño', '7441530347', 'Coyuca de Benitez'),
+(36, 'Israel', 'Pineda', 'Nogueda', '7441318629', 'Las brisas joya');
 
 -- --------------------------------------------------------
 
@@ -277,21 +305,22 @@ CREATE TABLE IF NOT EXISTS `land` (
   `escritura` varchar(10) NOT NULL,
   `estado` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `land`
 --
 
 INSERT INTO `land` (`id`, `id_interno`, `calle`, `lote`, `manzana`, `superficie`, `precio`, `predial`, `escritura`, `estado`) VALUES
-(21, '1234543.2348/34', 'Hermegildo Galeana 23', 5, '52', '150', 200000, '128-103-015-000', 'no', 'disponible'),
+(21, '1234543.2348/34', 'Hermegildo Galeana 23', 5, '52', '150', 200000, '128-103-015-000', 'no', 'pagado'),
 (22, '1234543.2348/38', 'Hermegildo Galeana 09', 2, '52-A', '150', 300000, '128-103-015-098', 'no', 'pagado'),
-(31, '1234543.2348/31', 'Hermegildo Galeana 23', 1, '1', '250', 500000, '128-103-015-031', 'no', 'proceso'),
-(32, '1234543.2348/30', 'nodebetenerpunto', 6, '6', '300', 250000, '128-103-015-010', 'no', 'disponible'),
-(33, '1234543.2349/03', 'Hermegildo Galeana ', 9, 'A-5', '150', 300000, '128-103-017-003', 'si', 'disponible'),
-(35, '1234543.3048/32', 'Hermegildo Galeana 23', 8, '49', '300', 300000, '120-103-015-532', 'no', 'pagado'),
-(36, '2314543.2347/90', 'no se', 3, '3', '500', 190000, '281-103-000-876', 'no', 'disponible'),
-(37, '2134543.2349/36', 'Hermegildo Galeana 23', 4, '4', '300', 600000, '198-303-015-905', 'si', 'disponible');
+(31, '1234543.2348/31', 'Hermegildo Galeana 23', 1, '1', '250', 500000, '128-103-015-031', 'no', 'pagado'),
+(32, '1234543.2348/30', 'Plutarco Elias Calles', 6, '6', '300', 250000, '128-103-015-010', 'no', 'disponible'),
+(33, '1234543.2349/03', 'Hermegildo Galeana ', 9, 'A-5', '150', 300000, '128-103-017-003', 'si', 'pagado'),
+(35, '1234543.3048/32', 'Hermegildo Galeana 23', 8, '49', '300', 300000, '120-103-015-532', 'no', 'disponible'),
+(36, '2314543.2347/90', 'no se', 3, '3', '500', 190000, '281-103-000-876', 'no', 'pagado'),
+(37, '2134543.2349/36', 'Hermegildo Galeana 23', 4, '4', '300', 600000, '198-303-015-905', 'si', 'disponible'),
+(38, '1239543.2348/38', 'Hermegildo Galeana', 8, 'B', '150', 300000, '088-109-008-006', 'no', 'proceso');
 
 -- --------------------------------------------------------
 
@@ -309,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `parentesco` (
   `cel_conyuge` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `parentesco`
@@ -317,11 +346,12 @@ CREATE TABLE IF NOT EXISTS `parentesco` (
 
 INSERT INTO `parentesco` (`id`, `customer_id`, `name_conyuge`, `a_materno_conyuge`, `a_paterno_conyuge`, `cel_conyuge`) VALUES
 (6, 18, 'Kaory', 'Nazario', 'Salgado', 2147483647),
-(7, 19, 'EMMA', 'CARMMONA', 'FLORES', 234567890),
+(7, 19, 'Emma', 'Carmona', 'Flores', 2147483647),
 (11, 3, 'Rosa Genesis', 'aaaa', 'wufwuf', 2147483647),
 (15, 24, '', '', '', 0),
 (16, 25, 'Ana Cecilia', 'Alvarez', 'Montalvo', 2147483647),
-(18, 29, 'jessica', 'carmona', 'flores', 2147483647);
+(18, 29, 'jessica', 'carmona', 'flores', 2147483647),
+(21, 36, '', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -345,16 +375,20 @@ CREATE TABLE IF NOT EXISTS `sale` (
   PRIMARY KEY (`id`),
   KEY `id_customer` (`id_customer`),
   KEY `id_land` (`id_land`)
-) ENGINE=InnoDB AUTO_INCREMENT=274 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=280 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `sale`
 --
 
 INSERT INTO `sale` (`id`, `id_customer`, `id_land`, `fecha_venta`, `tipo_venta`, `inicial`, `n_cuentas`, `ncuotas_pagadas`, `vendedor`, `cuotas`, `deuda_restante`) VALUES
-(267, 30, 35, '2024-04-02', 'credito', 60000, 60, 60, 'ixchel salgado Nazario', 4000, 0),
 (272, 25, 22, '2024-04-06', 'credito', 150000, 30, 30, 'Emma Flores', 5000, 0),
-(273, 19, 31, '2024-04-07', 'credito', 150000, 80, 75, 'Emma Flores', 4375, 21875);
+(273, 19, 31, '2024-04-07', 'credito', 150000, 80, 80, 'Emma Flores', 4375, 0),
+(275, 36, 21, '2024-04-11', 'contado', NULL, NULL, 0, 'Emma Flores', 0, 0),
+(276, 3, 32, '2024-04-11', 'credito', 100000, 12, 12, 'Emma Flores', 12500, 0),
+(277, 24, 33, '2024-04-11', 'credito', 150000, 30, 30, 'Emma Flores', 5000, 0),
+(278, 35, 36, '2024-04-11', 'credito', 45000, 40, 40, 'Emma Flores', 3625, 0),
+(279, 18, 38, '2024-04-11', 'credito', 100000, 25, 5, 'Emma Flores', 8000, 160000);
 
 -- --------------------------------------------------------
 
@@ -377,16 +411,15 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `user`, `name`, `rol`, `pass`) VALUES
-(36, 'Emma', 'Emma Flores', 'admin', '$2a$08$gm5gndMHGEk30lrFhruAw.rVjcymhsi28KIuP3hIhg4upf5zKtq3m'),
+(36, 'Emma', 'Emma Flores', 'admin', '$2a$08$6udKawKeT6Kk0xZhm8QTiuTJ.b6fok11StA6jcv7AK7iu6z4wxism'),
 (38, 'Elias', 'Elias Flores Olea', 'usuario', '$2a$08$nUZOAd9iZJEz2bVIAevZLOFNjg2iN5z7AIH/.YNmEZsMK.Yg/8H/q'),
-(55, 'ixchell', 'ixchel salgado Nazario', 'usuario', '$2a$08$17G3w9XwGFqEBVz0tE9KX.6jjMbycH2E6zRhYN26mWuKOK4OHce8W'),
+(55, 'ixchell', 'ixchel salgado Nazario', 'usuario', '$2a$08$WLcCpkiSMLQv.3eGRldSKe1B7g1b3SkSNwSqpygQ4sTv358FGjtra'),
 (57, 'ayudamedios3', 'sdfgttmvmg', 'admin', '$2a$08$B368z9aj6NKEMMhMaiwWTuMCDZSNoYS6Zxo2b/zRW5blLfXjp8T1i'),
 (58, 'randomuser12', 'flores flores', 'admin', '$2a$08$jeQl8KNalipB/kVXm/sEG.iTe67MkDgjXlx8eiqHPXRCaOpIxEVEW'),
 (59, 'randomusrt', '{+++--x..cvb', 'usuario', '$2a$08$/LfSVEWfU45vjN9bqnP0KOM9dim7ngnlINSZAsiL.9eVicbNTWwRK'),
 (60, 'emma_flores', 'Emma Flores Carmona', 'admin', '$2a$08$.cO0UQDFneDD.CsHqGXg5uKyUBK8IHfKnZ6cWQ5ruFRhK9t4euOm6'),
 (61, 'algomasque', 'select user from users', 'usuario', '$2a$08$U6ju9b9O09c.zo7zz.MTaOAHQImhE1XeXhRuZAug5sTroj6bw84TC'),
-(62, 'NOPUEDESERAYUDA', 'AYUDAPOLICIA', 'usuario', '$2a$08$Zf3iraTcOZd7mjQ5boWhaecDffQPh.rEpjAOsBtG8hDY69ybLyhsO'),
-(63, 'angel', 'Angel de jesus Cano cruz', 'usuario', '$2a$08$NRENpSftWgZW5R8sLz.PrufqXKpdY4E2OLihTPhyEV/T.wOFnrqBK');
+(63, 'angel', 'Angel de Jesus Cano Cruz', 'usuario', '$2a$08$NRENpSftWgZW5R8sLz.PrufqXKpdY4E2OLihTPhyEV/T.wOFnrqBK');
 
 --
 -- Restricciones para tablas volcadas
