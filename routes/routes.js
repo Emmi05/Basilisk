@@ -20,9 +20,9 @@ router.get('/contactanos', (req, res) => {
 
 
 
-// router.get('/services', (req, res) => {
-//     res.render('terrenos_index');
-// });
+router.get('/services', (req, res) => {
+    res.render('terrenos_index');
+});
 
 router.get('/servicesterrenos', (req, res) => {
     res.render('vista_terrenos');
