@@ -276,8 +276,7 @@ const proceso = async (req, res) => {
          // Agrega datos de ventas de terrenos a la tabla
         for (let i = 0; i < rows.length; i++) {
             const venta = rows[i];
-            console.log('Lote:', venta.lote, 'Manzana:', venta.manzana); // Agrega este console.log para verificar los valores de lote y manzana
-            // Resto del código para construir las filas de la tabla...
+            // console.log('Lote:', venta.lote, 'Manzana:', venta.manzana); //
         }
 
         // Agregar (fecha de generación del PDF)
@@ -606,7 +605,7 @@ const finiquito =async (req,res)=>{
    
     try{
 
-   console.log(informacion)
+//    console.log(informacion)
 
     // Inicializa el documento PDF
     const doc = new PDFDocument();

@@ -9131,7 +9131,7 @@ html:not(.lt-ie10) .not-animated {
 *
 * ToTop
 */
-.ui-to-top {
+/* .ui-to-top {
 	position: fixed;
 	right: 15px;
 	bottom: 15px;
@@ -9146,22 +9146,22 @@ html:not(.lt-ie10) .not-animated {
 	text-decoration: none;
 	transition: transform 0.45s ease-in-out, background 0.3s cubic-bezier(0.2, 1, 0.3, 1);
 	transform: translate3d(0, 100px, 0);
-}
+} */
 
-.ui-to-top::before, .ui-to-top::after {
+/* .ui-to-top::before, .ui-to-top::after {
 	content: '\f239';
 	font-family: 'Material Design Icons';
 	font-size: 20px;
 	line-height: 48px;
 	vertical-align: middle;
 	transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.2, 1, 0.3, 1);
-}
+} */
 
-.ui-to-top::before {
+/* .ui-to-top::before {
 	display: block;
-}
+} */
 
-.ui-to-top::after {
+/* .ui-to-top::after {
 	position: absolute;
 	width: 100%;
 	top: 50%;
@@ -9204,7 +9204,7 @@ html.tablet .ui-to-top {
 		right: 40px;
 		bottom: 40px;
 	}
-}
+} */
 
 /*
 *
