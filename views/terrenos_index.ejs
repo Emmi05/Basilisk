@@ -11,54 +11,10 @@
     <link rel="stylesheet" href="../resources/css/boostrap.css">
     <link rel="stylesheet" href="../resources/css/fonts.css">
     <link rel="stylesheet" href="../resources/css/css.css" id="main-styles-link">
+    <link rel="stylesheet" href="../resources/css/chatbot.css">
 
     <!-- <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style> -->
 
-    <style>
-   .btn__floating {
-    position: fixed; /* Cambia a fixed */
-    bottom: 20px; /* Posición inicial */
-    right: 15px;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 20px;
-    transition: bottom 0.3s; /* Transición suave */
-}
-
-
-.btn__floating ul {
-    list-style: none;
-    padding: 0;
-}
-
-.btn__floating ul li:nth-child(1) a i{
-    background-color: #7a058e;
-}
-
-.btn__floating ul li:nth-child(2) a i{
-    background-color: #009e20;
-}
-
-.btn__floating ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 14pt;
-}
-
-.btn__floating ul li a i {
-   width: 40px;
-   height: 40px;
-   border-radius: 50%;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-}
-
-
-    </style>
   </head>
   <body>
    
@@ -399,22 +355,18 @@
   <div class="modal-dialog  ">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Chat en Vivo</h5>
-        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal"onclick="cerrar();">
+        <h5 class="modal-title" id="exampleModalLabel">Ebot</h5>
+        <button type="button" class="btn btn-secondary cerrar" data-mdb-dismiss="modal"onclick="cerrar();">
                X
         </button>
 
       </div>
       <div class="modal-body">
-        <iframe src='https://webchat.botframework.com/embed/basilisk?s=2EByR44FvhU.QmXDZyX6WMp76ApQxw2HDFGmsVgeG8OLJ4RqYxyVlG8'  style='min-width: 400px; width: 100%; min-height: 500px;'></iframe>
+
+        <iframe src='https://webchat.botframework.com/embed/basiliskidioma-bot?s=bmQmB_t4MwU.WpStaCcojPX0LIQuiY3av2UXRK3bl67vexpsD_3L8Qk'  style='min-width: 350px; width: 100%; min-height: 500px;'></iframe>
+
       </div>
-      <div class="modal-footer">
-        <!-- <button type="button" id="cerrarSesion" class="btn btn-primary d-none" onclick="cerrar();">
-          Cerrar Sesión
-        </button>
-      -->
-        
-      </div>
+     
     </div>
   </div>
 </div>
@@ -444,6 +396,7 @@
     <script src="../resources/scripts/script.js"></script>
     <script src="../resources/scripts/chatbot.js"></script>
 
+
     <script>
       function abrirModal(event) {
           event.preventDefault(); // Evita la acción predeterminada del enlace
@@ -451,8 +404,6 @@
       }
    
   function cerrar() {
-    // Aquí puedes añadir cualquier otra lógica que necesites para cerrar la sesión
-    // Por ejemplo, redireccionar a una página de inicio de sesión o cerrar una sesión de usuario en tu backend
 
     // Cierra el modal
     $('#modalchat').modal('hide'); 

@@ -1,63 +1,96 @@
-
-   #webchat {
-      /* height: 100%; */
-      margin: 0;
-      transition-duration: 0.5s;
-      transition-property: margin;
-      z-index: 1000;
-      background-color: white;
-    }
-    a{
-      color: rgb(33, 67, 179);
-    }
-
-
-    .webchat__chat {
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-      display: flex;
-      flex-direction: column;
-      /* height: 100%;  */
-      margin: auto;
-      max-width: 360px;
-      min-width: 360px;
-      transition-duration: 0.5s;
-      transition-property: max-width, min-width, width;
-    }
-
-    @media (min-width: 720px) {
-      #webchat {
-        margin: 0 10px;
-      }
-
-      .webchat__chat {
-        max-width: 480px;
-        min-width: 480px;
-        width: 600px;
-      }
-    }
-    @media (max-width: 460px) {
-#webchat {
-margin: 0;
-width: 100%;
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow: hidden !important; /* !important para forzar la regla */
 }
 
-.webchat__chat {
-max-width: none;
-min-width: 0;
-width: 100%;
-}
-}
-@media (max-width: 300px) {
-#webchat {
-margin: 0;
-width: 100%;
+.modal-header {
+  padding: 0px; 
+  margin: 0;
 }
 
-.webchat__chat {
-max-width: none;
-min-width: 0;
-width: 100%;
-}
+.modal-content iframe {
+  flex: 1;
+  width: 100%; /* Ancho al 100% del contenedor */
+  height: 50vh; /* Altura del 50% del viewport */
+  border: none;
+  overflow: hidden !important; /* Oculta cualquier overflow */
 }
 
+/* Media query para pantallas más pequeñas */
+@media (max-width: 767.98px) {
+  .modal-header {
+    padding: 0 15px; /* Ajusta los paddings horizontalmente */
+    font-size: 1rem; /* Reduce el tamaño de la fuente */
+    display: flex;
+    justify-content: space-between; /* Espacio entre los elementos */
+    align-items: center; /* Alinea verticalmente */
+  }
+
+  .modal-header h2 {
+    margin: 0; /* Asegura que no haya márgenes adicionales */
+  }
+
+  .close-modal {
+    margin-left: 15px; /* Márgen izquierdo para separar del título */
+  }
+}
+
+/* Ajustes para pantallas aún más pequeñas */
+@media (max-width: 400px) {
+  .modal-header {
+    font-size: 0.8rem; /* Reduce el tamaño de la fuente */
+  }
+
+  .modal-content iframe {
+    height: 35vh; /* Reduce la altura del iframe */
+  }
+}
+
+
+
+.btn__floating {
+  position: fixed; /* Cambia a fixed */
+  bottom: 20px; /* Posición inicial */
+  right: 15px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  transition: bottom 0.3s; /* Transición suave */
+}
+
+
+.btn__floating ul {
+  list-style: none;
+  padding: 0;
+}
+
+.btn__floating ul li:nth-child(1) a i{
+  background-color: #7a058e;
+}
+
+.btn__floating ul li:nth-child(2) a i{
+  background-color: #009e20;
+}
+
+.btn__floating ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 14pt;
+}
+
+.btn__floating ul li a i {
+ width: 40px;
+ height: 40px;
+ border-radius: 50%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
+
+
+  
