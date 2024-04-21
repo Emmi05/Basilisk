@@ -1,54 +1,77 @@
+.modal-wrapper {
+  display: none; /* Oculta el modal por defecto */
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end; /* Alinea el contenido a la derecha */
+  align-items: flex-start; /* Alinea el contenido arriba */
+  overflow: auto;
+  z-index: 1100; /* Ajustado el z-index para que esté por encima del menú */
+
+}
+
+.modal-header {
+  padding: 0px;
+  margin: 0;
+  font-size: 10px;
+  
+
+}
+
+.modal-dialog {
+  width: auto;
+  max-width: 40%; /* Reducido el max-width a 40% */
+  background-color: #ffffff; /* Ajusta el color de fondo según lo necesites */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra para un efecto de profundidad */
+  margin: 0px; /* Espacio alrededor del modal */
+}
+
 .modal-content {
   display: flex;
   flex-direction: column;
   height: auto;
-  overflow: hidden !important; /* !important para forzar la regla */
-}
-
-.modal-header {
-  padding: 0px; 
-  margin: 0;
+  overflow-y: auto; /* Add this line */
 }
 
 .modal-content iframe {
-  flex: 1;
   width: 100%; /* Ancho al 100% del contenedor */
-  height: 50vh; /* Altura del 50% del viewport */
   border: none;
-  overflow: hidden !important; /* Oculta cualquier overflow */
+  overflow: hidden; /* Remove !important and change to overflow: hidden */
 }
 
 /* Media query para pantallas más pequeñas */
 @media (max-width: 767.98px) {
-  .modal-header {
-    padding: 0 15px; /* Ajusta los paddings horizontalmente */
-    font-size: 1rem; /* Reduce el tamaño de la fuente */
-    display: flex;
-    justify-content: space-between; /* Espacio entre los elementos */
-    align-items: center; /* Alinea verticalmente */
+  .modal-dialog {
+    max-width: 80%; /* Ajusta el max-width para pantallas más pequeñas */
+    margin: 10px; /* Reducido el margin para pantallas más pequeñas */
   }
 
-  .modal-header h2 {
-    margin: 0; /* Asegura que no haya márgenes adicionales */
+  .modal-content iframe {
+    height: 30vh; /* Reducido el height del iframe para pantallas más pequeñas */
   }
 
-  .close-modal {
-    margin-left: 15px; /* Márgen izquierdo para separar del título */
-  }
+  /* Resto del CSS para pantallas más pequeñas ... */
 }
 
 /* Ajustes para pantallas aún más pequeñas */
 @media (max-width: 400px) {
-  .modal-header {
-    font-size: 0.8rem; /* Reduce el tamaño de la fuente */
+  .modal-dialog {
+    max-width: 90%; /* Ajusta el max-width para pantallas aún más pequeñas */
+    margin: 5px; /* Reducido el margin para pantallas aún más pequeñas */
   }
 
   .modal-content iframe {
-    height: 35vh; /* Reduce la altura del iframe */
+    height: 25vh; /* Reducido el height del iframe para pantallas aún más pequeñas */
   }
+
+  /* Resto del CSS para pantallas aún más pequeñas ... */
 }
 
-
+/* Resto del CSS ... */
 
 .btn__floating {
   position: fixed; /* Cambia a fixed */
@@ -94,3 +117,13 @@
 
 
   
+.modal-wrapper {
+  transition: opacity 0.3s, visibility 0.3s; /* Transiciones suaves */
+  opacity: 0;
+  visibility: hidden;
+}
+
+.modal-wrapper.active {
+  opacity: 1;
+  visibility: visible;
+}

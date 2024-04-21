@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html class="wide wow-animation" lang="en">
   <head>
     <title>Home</title>
@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../resources/css/fonts.css">
     <link rel="stylesheet" href="../resources/css/css.css" id="main-styles-link">
     <link rel="stylesheet" href="../resources/css/chatbot.css">
+    
 
     <!-- <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style> -->
 
@@ -349,34 +350,29 @@
         </div>
       </section>
 
-
 <!-- Modal -->
-<div class="modal top fade" id="modalchat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="false">
+
+<div class="modal-wrapper" id="modalchat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-mdb-backdrop="static"  data-mdb-keyboard="false">
   <div class="modal-dialog  ">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Ebot</h5>
-        <button type="button" class="btn btn-secondary cerrar" data-mdb-dismiss="modal"onclick="cerrar();">
-               X
+        <button type="button" class="btn btn-secondary cerrar" id="closeModalBtn" data-mdb-dismiss="modal">
+          X
         </button>
-
+        
       </div>
       <div class="modal-body">
-
-        <iframe src='https://webchat.botframework.com/embed/basiliskidioma-bot?s=bmQmB_t4MwU.WpStaCcojPX0LIQuiY3av2UXRK3bl67vexpsD_3L8Qk'  style='min-width: 350px; width: 100%; min-height: 500px;'></iframe>
-
+        <iframe src='https://webchat.botframework.com/embed/basiliskidioma-bot?s=bmQmB_t4MwU.WpStaCcojPX0LIQuiY3av2UXRK3bl67vexpsD_3L8Qk'  style='min-width: 350px; width: 100%; min-height: 490px;'></iframe>
       </div>
-     
     </div>
   </div>
 </div>
 
-
-
 <section class="btn__floating">
   <ul>
       <li>
-          <a href="#" data-mdb-toggle="modal" data-mdb-target="#modalchat" onclick="abrirModal(event);">
+          <a href="#" id="openModalBtn">
               <i class="fa-solid fa-comments"></i>
           </a>
       </li>
@@ -384,32 +380,48 @@
 </section>
 
 
-
-
     
     </div>
-    
+    <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <!-- Global Mailform Output-->
     <div class="snackbars" id="form-output-global"></div>
     <!-- Javascript-->
    <script src="../resources/scripts/core.min.js"></script>
     <script src="../resources/scripts/script.js"></script>
     <script src="../resources/scripts/chatbot.js"></script>
-
-
+    
     <script>
-      function abrirModal(event) {
-          event.preventDefault(); // Evita la acción predeterminada del enlace
-          $('#modalchat').modal('show'); // Muestra el modal
-      }
-   
-  function cerrar() {
+document.addEventListener('DOMContentLoaded', function() {
+  const btnOpenModal = document.getElementById('openModalBtn'); // Selecciona el botón
+  const modalChat = document.getElementById('modalchat'); // Selecciona el modal
+  const btnCloseModal = document.getElementById('closeModalBtn'); // Selecciona el botón para cerrar el modal
 
-    // Cierra el modal
-    $('#modalchat').modal('hide'); 
-}
+  // Abrir el modal
+  btnOpenModal.addEventListener('click', function(event) {
+    event.preventDefault(); // Previene la acción predeterminada del enlace
+    modalChat.classList.add('active'); // Añade la clase 'active' al modal
+  });
 
-</script>
+  // Cerrar el modal haciendo clic en el botón "X"
+  btnCloseModal.addEventListener('click', function() {
+    modalChat.classList.remove('active'); // Quita la clase 'active' del modal
+  });
+
+  // Cerrar el modal haciendo clic fuera del modal
+  modalChat.addEventListener('click', function(event) {
+    if (event.target === modalChat) { // Comprueba si el clic fue fuera del contenido del modal
+      modalChat.classList.remove('active'); // Quita la clase 'active' del modal
+    }
+  });
+});
+
+
+    </script>
 
   </body>
 </html>
