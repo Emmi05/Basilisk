@@ -1,6 +1,5 @@
 .modal-wrapper {
   display: none; /* Oculta el modal por defecto */
-
   position: fixed;
   top: 0;
   left: 0;
@@ -11,20 +10,16 @@
   align-items: flex-start; /* Alinea el contenido arriba */
   overflow: auto;
   z-index: 1100; /* Ajustado el z-index para que esté por encima del menú */
-
 }
-
 .modal-header {
   padding: 0px;
   margin: 0;
-  font-size: 10px;
-  
-
+  font-size: 8px;
 }
 
 .modal-dialog {
   width: auto;
-  max-width: 40%; /* Reducido el max-width a 40% */
+  max-width: 38%; /* Reducido el max-width a 40% */
   background-color: #ffffff; /* Ajusta el color de fondo según lo necesites */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra para un efecto de profundidad */
   margin: 0px; /* Espacio alrededor del modal */
@@ -162,3 +157,7 @@
     height: 60vh; /* Reducido el height del iframe para pantallas aún más pequeñas */
   }
 }
+
+
+
+
