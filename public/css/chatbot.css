@@ -4,13 +4,14 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
   justify-content: flex-end; /* Alinea el contenido a la derecha */
   align-items: flex-start; /* Alinea el contenido arriba */
   overflow: auto;
   z-index: 1100; /* Ajustado el z-index para que esté por encima del menú */
 }
+
 .modal-header {
   padding: 0px;
   margin: 0;
@@ -19,11 +20,12 @@
 
 .modal-dialog {
   width: auto;
-  max-width: 38%; /* Reducido el max-width a 40% */
+  max-width: 30%; /* Reducido el max-width a 30% */
   background-color: #ffffff; /* Ajusta el color de fondo según lo necesites */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra para un efecto de profundidad */
-  margin: 0px; /* Espacio alrededor del modal */
+  margin: 10px; 
 }
+
 
 .modal-content {
   display: flex;
@@ -32,11 +34,9 @@
   overflow-y: auto; /* Add this line */
 }
 
-.modal-content iframe {
-  width: 100%; /* Ancho al 100% del contenedor */
-  border: none;
-  overflow: hidden; /* Remove !important and change to overflow: hidden */
-}
+
+
+/* Resto del CSS ... */
 
 
 
