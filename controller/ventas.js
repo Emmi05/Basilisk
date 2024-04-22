@@ -15,9 +15,11 @@ const crearVenta = async (req, res) => {
     const [rows2] = await pool.query('SELECT * FROM land WHERE estado = ?', ['disponible']);
     
     const vendedor = req.session.name;
+    const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, cuotas, precio} = req.body;
+
     
     try {
-        const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, cuotas, precio} = req.body;
+        if (req.session.rol == 'admin') {
 
         const inicialNumber = parseFloat(inicial);
         const nCuentasNumber = parseFloat(n_cuentas);
@@ -31,8 +33,136 @@ const crearVenta = async (req, res) => {
                 alertTitle: "Error",
                 alertMessage: "Debes rellenar todos los campos obligatorios.",
                 alertIcon: 'error',
+                showConfirmButton: true,
+                timer: false,
+                ruta: '/',
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                clientes: rows,
+                terrenos: rows2,
+                terrenos2: terreno,
+            });
+        }
+
+        // Formatear fecha
+        const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD');
+  
+        if (tipo_venta === 'credito') {
+            if(inicialNumber <= 0 || !cantidades.test(inicial)) {
+                return res.render('ventas', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: '/',
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    clientes: rows,
+                    terrenos: rows2,
+                    terrenos2: terreno,
+                });
+            }
+
+            if(nCuentasNumber <= 0 || !cantidades.test(n_cuentas)) {
+                return res.render('ventas', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: '/',
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    clientes: rows,
+                    terrenos: rows2,
+                    terrenos2: terreno,
+                });
+            }
+        }
+         // Validar que el enganche no sea igual o mayor que el precio del terreno
+         if (inicialNumber >= precio) {
+            return res.render('ventas', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "La cantidad del enganche debe ser menor que el precio del terreno.",
+                alertIcon: 'error',
                 showConfirmButton: false,
-                timer: 5000,
+                timer: 3500,
+                ruta: '/',
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                clientes: rows,
+                terrenos: rows2,
+                terrenos2: terreno,
+            });
+        }
+        // Insertar venta en la base de datos según el tipo de venta
+        if (tipo_venta === 'contado') {
+            // Insertar venta en la base de datos
+            await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, vendedor) VALUES (?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, vendedor]);
+
+            // Marcar el terreno como "pagado"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_land]);
+        } else if (tipo_venta === 'credito') {
+            // Insertar venta a crédito en la base de datos
+           const ventasearch = await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante]);
+
+            // Marcar el terreno como "proceso"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
+
+            if(ventasearch){
+               const [ventasrows] =  await pool.query('SELECT * FROM sale WHERE id_land = ? ', [id_land]);
+
+             await pool.query('INSERT INTO abonos (id_sale, cuotas_restantes, fecha_abono) VALUES (?, ?, ?)', [ventasrows[0].id, n_cuentas, fechaFormateada ]);
+
+            }
+        }
+
+        return res.render('ventas', {
+            alert: true,
+            alertTitle: "Exito",
+            alertMessage: "Venta registrada!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: 'ventas',
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            clientes: rows,
+            terrenos: rows2,
+            terrenos2: terreno,
+        });
+    }
+    else if (req.session.rol == 'usuario') {
+
+
+        const inicialNumber = parseFloat(inicial);
+        const nCuentasNumber = parseFloat(n_cuentas);
+    
+        const deuda_restante = precio - inicial;
+
+        // Verificar si algún campo está vacío o si los valores de 'inicial' y 'n_cuentas' no son números válidos
+        if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
+            return res.render('ventas', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Debes rellenar todos los campos obligatorios.",
+                alertIcon: 'error',
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/',
                 login: true,
                 roluser: false,
@@ -145,7 +275,10 @@ const crearVenta = async (req, res) => {
             terrenos: rows2,
             terrenos2: terreno,
         });
-  
+    }
+
+
+
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
