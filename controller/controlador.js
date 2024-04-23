@@ -485,7 +485,7 @@ export const register=  async(req, res) => {
 // vista 
 export const usuarios=  async(req, res) => {
     if (req.session.rol == 'usuario') {
-        res.render('usuarios', {
+        res.render('denegado', {
             login: true,
             roluser: false,
             name: req.session.name,
@@ -505,7 +505,7 @@ export const usuarios=  async(req, res) => {
 export const editarUsuario = async (req, res) => {
     const id = req.params.id;
     const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
-
+try {
     if (req.session.rol == 'admin') {
         const { user, name, rol } = req.body;
 
@@ -626,46 +626,62 @@ export const editarUsuario = async (req, res) => {
                 usuarios:rows,
             });
         }
-    } else {
-        // Manejar el error apropiadamente
-        // res.status(500).send('Error interno del servidor');
-        return res.status(500).render('500');
-    }
-}
 
-
-export const eliminarUsuario = async (req, res) => {
-     if (req.session.rol == 'admin') {
-        const { id } = req.params;
-        const [result]=await pool.query('DELETE FROM users WHERE id=?',[id])
-        //otro if de si es mayor a 0?
-        if (result && result.affectedRows > 0) {
-            const [rows]=await pool.query('SELECT * FROM users');
-        res.render('usuarios', {
-            alert: true,
-            alertTitle: "Eliminado",
-            alertMessage: "¡Eliminado Exitoso",
-            alertIcon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
+    } else if (req.session.rol == 'usuario') {
+        res.render('denegado', {
             login: true,
-            roluser: true,
+            roluser: false,
             name: req.session.name,
             rol: req.session.rol,
-            usuarios:rows,
-            ruta:'usuarios'
         });
-    } }else{
-        // (error) 
-        //     console.error(error);
-            // Manejar el error apropiadamente
-            // res.status(500).send('Error interno del servidor');
-            return res.status(500).render('500');
-        }
     }
+}catch{
+    return res.status(500).render('500');
 
+}
+}
 
-    // CLIENTES
+export const eliminarUsuario = async (req, res) => {
+    try {
+        if (req.session.rol == 'admin') {
+            const { id } = req.params;
+            const [result]=await pool.query('DELETE FROM users WHERE id=?',[id])
+            //otro if de si es mayor a 0?
+            if (result && result.affectedRows > 0) {
+                const [rows]=await pool.query('SELECT * FROM users');
+            res.render('usuarios', {
+                alert: true,
+                alertTitle: "Eliminado",
+                alertMessage: "¡Eliminado Exitoso",
+                alertIcon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios:rows,
+                ruta:'usuarios'
+            });
+        }else{
+
+        }
+    } else if (req.session.rol == 'usuarios'){
+        res.render('denegado', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    }
+    
+    } catch (error) {
+        return res.status(500).render('500');
+
+    }
+    
+        }
+
 
 export const methods = {
     register,
