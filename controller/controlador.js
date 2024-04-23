@@ -96,8 +96,9 @@ export const auth = async (req, res, next) => {
     if (req.cookies.jwt) {
         try {
             const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
+            
             const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
-
+    
             if (results.length > 0) {
                 req.user = results[0];
                 return next();
@@ -105,15 +106,37 @@ export const auth = async (req, res, next) => {
                 throw new Error('Usuario no encontrado');
             }
         } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                console.log('Token expirado');
+                res.clearCookie('jwt');
+                return res.render('login', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Token expirado",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'login'
+                });
+          
+            }
             console.error(error);
-            res.redirect('/login');
-            return;
+            return res.render('login', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Error al verificar token",
+                alertIcon: 'error',
+                showConfirmButton: true,
+                timer: false,
+                ruta: 'login'
+            });
+        
         }
     } else {
         res.redirect('/login');
         return;
     }
-};
+}
 
 export const perfil = async (req, res) => {
     const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
