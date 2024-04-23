@@ -1,56 +1,31 @@
-function toggleChat() {
-    var webchat = document.getElementById('webchat');
-
- if (webchat.style.display === '' || webchat.style.display === 'none') {
-        // Si el chat está cerrado o no se ha mostrado, ábrelo
-        webchat.style.display = 'block';
-        webchat.style.display = 'block';
-    } else {
-        // Si el chat está abierto, ciérralo
-        webchat.style.display = 'none';
-    }
-}
-
-function minimizarChat() {
-    var webchat = document.getElementById('webchat');
-webchat.style.display = 'none';
-}
-
-
-
-
 window.WebChat.renderWebChat({
-className: 'webchat__chat',
-directLine: window.WebChat.createDirectLine({
-  token: 'hc_CeaYWjEI.q8hoxtqATRY_IGDyIsZmJVBUmPwbwNSRo7CmX0w6qn8'}),
-styleOptions: {
-botAvatarImage: 'assets/img/guest.png',
-botAvatarInitials: 'BS',
-userAvatarImage: 'assets/img/user.png',
-userAvatarInitials: 'Yo',
-//    botAvatarInitials: 'Bot',
-//           userAvatarInitials: 'Yo',
-
-      bubbleBackground: '#F4F4F4',
-      bubbleBorderColor: '#F4F4F4',
-      bubbleBorderRadius: 4,
+    className: 'webchat__chat',
+    directLine: window.WebChat.createDirectLine({
+      token: 'bmQmB_t4MwU.WpStaCcojPX0LIQuiY3av2UXRK3bl67vexpsD_3L8Qk'
+    }),
+    styleOptions: {
+      botAvatarImage: './resources/img/logo_ovalado.png',
+      botAvatarInitials: 'BS',
+      userAvatarImage: './resources/img/exito.png',
+      userAvatarInitials: 'Yo',
+      bubbleBackground: '#e6e6e6',
+      bubbleBorderColor: '#cccccc',
+      bubbleBorderRadius: 8,
       bubbleBorderWidth: 2,
       bubbleNubOffset: 0,
       bubbleNubSize: 10,
-      rootHeight: '500px',
+      rootHeight: '495px',
       rootWidth: 'fit-content',
-
-      bubbleFromUserBackground: '#F4F4F4',
-      bubbleFromUserBorderColor: '#F4F4F4',
-      bubbleFromUserBorderRadius: 4,
+      bubbleFromUserBackground: '#f2f2f2',
+      bubbleFromUserBorderColor: '#e0e0e0',
+      bubbleFromUserBorderRadius: 8,
       bubbleFromUserBorderWidth: 2,
       bubbleFromUserNubOffset: 0,
       bubbleFromUserNubSize: 10,
-
       groupTimestamp: 3000,
       showAvatarInGroup: 'status'
-}
-},
+    }
+  }, document.getElementById('webchat'))
+  
 
-document.getElementById('webchat')
-);
+  

@@ -1,3 +1,13 @@
+<style>
+    body .btn-primary1 {
+        background-color: blueviolet;
+        color:#ffff
+    }
+    body .btn-primary1:hover {
+        background-color: blueviolet;
+        color: #ffff;
+    }
+    </style>
 <%- include ('layouts/head.ejs') %>
 <body id="page-top">
 
@@ -60,7 +70,7 @@
                                                     <td><%= usuario.user %></td>
                                                     <td><%= usuario.rol %></td>
                                                     <td>
-                                                        <a href="/editar/<%= usuario.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                                                        <a href="/editar_terreno/<%= usuario.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
                                                         <a onclick="eliminar(<%= usuario.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                                                         <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
                                                         <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->

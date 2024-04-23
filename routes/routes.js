@@ -1,10 +1,37 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
-import {methods as authentication} from '../controller/controlador.js'
+import { auth,methods as authentication} from '../controller/controlador.js'
+import { methods as clientes} from '../controller/clientes.js'
+import { methods as terrenos} from '../controller/terrenos.js'
+import {methods as ventas} from '../controller/ventas.js'
+import { methods as abonos} from '../controller/abonos.js'
+import {methods as pdf} from '../controller/pdf.js'
 
 const router = Router();// Definición de la ruta '/'
-router.get('/', authentication.auth, (req, res) => {
-    //firt VALIDATE IF LOGGED OR AUTH SO IF IS NOT RETURN TO MY "HOME IT THIS CASE MY STATIC PAGE"
+
+router.get('/nosotros', (req, res) => {
+    res.render('nosotros');
+});
+
+router.get('/contactanos', (req, res) => {
+    res.render('contactanos');
+});
+
+
+
+
+router.get('/services', (req, res) => {
+    res.render('terrenos_index');
+});
+
+router.get('/servicesterrenos', (req, res) => {
+    res.render('vista_terrenos');
+});
+// AUTENTIFICACION
+router.use(authentication.auth);
+
+router.get('/', (req, res) => {
+    // Validación de sesión
     if (req.session.loggedin) {
         if (req.session.rol == 'usuario') {
             res.render('home', {
@@ -44,17 +71,8 @@ router.get('/logout', function(req, res) {
     });
 });
 
-router.get('/services', (req, res) => {
-    res.render('terrenos_index');
-});
 
-router.get('/servicesterrenos', (req, res) => {
-    res.render('vista_terrenos');
-});
-
-
-
-router.get('/register', async(req, res) => {
+router.get('/registro_usuario', async(req, res) => {
     if (req.session.rol == 'usuario') {
         res.render('denegado', {
             login: true,
@@ -76,7 +94,7 @@ router.get('/register', async(req, res) => {
 router.post('/register',authentication.register);
 
 
-//ver usuarios
+
  router.get('/usuarios', async(req, res) => {
         if (req.session.rol == 'usuario') {
             res.render('denegado', {
@@ -98,7 +116,7 @@ router.post('/register',authentication.register);
         }
 });
 
-router.get('/editar/:id', async(req, res) => {
+router.get('/editar_usuario/:id', async(req, res) => {
     const id = req.params.id;
      if (req.session.rol == 'admin') {
         const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
@@ -122,6 +140,12 @@ router.post('/update/:id',authentication.editarUsuario);
 
 router.get('/delete/:id', authentication.eliminarUsuario);
 
+// PROFILE
+router.get('/profile', authentication.auth, authentication.perfil);
+
+router.post('/profile', authentication.auth, authentication.password);
+    
+
 // ruta clientes
 
 router.get('/cliente', async(req, res) => {
@@ -144,7 +168,7 @@ router.get('/cliente', async(req, res) => {
     }
 });
 
-router.post('/cliente', authentication.crearCliente)
+router.post('/cliente', clientes.crearCliente)
 
 
 //ver clientesss
@@ -177,7 +201,7 @@ router.get('/clientes', async(req, res) => {
 
 
 // editar cambiar ruta se pone la misma / en el boton y cambiar rows debo darle permiso a mi usuario y cambiar el rol a false en usuario
-router.get('/clienteEdit/:id', async(req, res) => {
+router.get('/editar_cliente/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -202,9 +226,9 @@ router.get('/clienteEdit/:id', async(req, res) => {
         });
     }
 });
-router.post('/updatecliente/:id',authentication.editarClientes);
+router.post('/updatecliente/:id',clientes.editarClientes);
 
-router.get('/deletecliente/:id', authentication.eliminarCliente);
+router.get('/deletecliente/:id', clientes.eliminarCliente);
 
 
 
@@ -229,7 +253,7 @@ router.get('/terreno', async(req, res) => {
     }
 });
 
-router.post('/terreno', authentication.crearTerreno);
+router.post('/terreno', terrenos.crearTerreno);
 
 //VER CLIENTES
 router.get('/terrenos', async(req, res) => {
@@ -254,7 +278,7 @@ router.get('/terrenos', async(req, res) => {
     }
 });
 
-router.get('/editTerreno/:id', async(req, res) => {
+router.get('/editar_terreno/:id', async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -279,11 +303,11 @@ router.get('/editTerreno/:id', async(req, res) => {
     }
 });
 
- router.post('/updateterreno/:id',authentication.editarTerrenos);
+ router.post('/updateterreno/:id',terrenos.editarTerrenos);
 
 
 //  ELIMINAR TERRENO
-router.get('/deleteterreno/:id', authentication.eliminarTerreno);
+router.get('/deleteterreno/:id', terrenos.eliminarTerreno);
 
 
 // venta
@@ -325,11 +349,11 @@ router.get('/terreno/:id', async (req, res) => {
     }
 });
 
-router.post('/venta', authentication.crearVenta)
+router.post('/venta', ventas.crearVenta)
 
 //VER VENTAS
 
-router.get('/abonos', async(req, res) => {
+router.get('/view_venta', async(req, res) => {
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
         res.render('venta', {
@@ -379,12 +403,11 @@ router.get('/venta/:id', async(req, res) => {
 });
 
 
-
-router.post('/updateventa/:id',authentication.editarVenta);
+router.post('/updateventa/:id',ventas.editarVenta);
 
 
 //  ELIMINAR TERRENO
-router.get('/deleteventa/:id', authentication.eliminarVenta);
+router.get('/deleteventa/:id', ventas.eliminarVenta);
 
 
 // tambien va usuario?? 
@@ -402,7 +425,7 @@ router.get('/credits', async(req, res) => {
 });
 
 
-router.get('/abono_view',  async(req, res) => {
+router.get('/abono',  async(req, res) => {
     
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT  c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.estado, l.id_interno, s.n_cuentas,  s.deuda_restante,  s.id, s.tipo_venta, s.inicial, s.cuotas, MAX(a.cuotas_pagadas) as cuotas_pagadas,  (SELECT a2.cuotas_restantes FROM abonos a2 WHERE a2.id_sale = s.id AND a2.cuotas_pagadas = MAX(a.cuotas_pagadas)) as cuotas_restantes FROM   sale s  JOIN customers c ON s.id_customer = c.id  JOIN  abonos a ON a.id_sale = s.id JOIN   land l ON s.id_land = l.id  WHERE  s.tipo_venta = "credito" && l.estado = "proceso" GROUP BY  s.id ORDER BY  a.cuotas_pagadas DESC; ');
@@ -432,7 +455,7 @@ router.get('/abono_view',  async(req, res) => {
 router.get('/terrenos_pagados',  async(req, res) => {
     
     if (req.session.rol == 'usuario') {
-        const [rows] = await pool.query('SELECT s.* , l.* FROM  sale s JOIN  land l ON s.id_land = l.id WHERE  l.estado = "pagado"');
+        const [rows] = await pool.query('SELECT s.id AS sale_id, s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
     
         res.render('terrenos_pagados', {
             login: true,
@@ -442,9 +465,7 @@ router.get('/terrenos_pagados',  async(req, res) => {
             pagados: rows,
         });
     } else if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
-    
-
+        const [rows] = await pool.query('SELECT s.id AS sale_id, s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
         res.render('terrenos_pagados', {
             login: true,
             roluser: true,
@@ -458,7 +479,7 @@ router.get('/terrenos_pagados',  async(req, res) => {
 
 // ABONOS VISTA FORMULARIO
 
-router.get('/abonosAlta/:id', async (req, res) => {
+router.get('/abonos/:id', async (req, res) => {
 
     const id = req.params.id;
 
@@ -506,18 +527,20 @@ router.get('/abonosAlta/:id', async (req, res) => {
 
 // crear abono
 
-router.post('/crearAbonos/:id',authentication.crearAbonos);
+router.post('/crear_abonos/:id',abonos.crearAbonos);
 
-router.get('/reporte/:id',authentication.crearPdf);
+router.get('/reporte/:id',pdf.crearPdf);
 
-router.get('/contado/',authentication.contado);
+router.get('/contado/',pdf.contado);
 
-router.get('/pagados/',authentication.pagados);
+router.get('/pagados/',pdf.pagados);
 
 
-router.get('/proceso/',authentication.proceso);
+router.get('/proceso/',pdf.proceso);
 
-router.get('/disponibles/',authentication.disponibles);
+router.get('/disponibles/',pdf.disponibles);
+router.get('/finalizacion/:id',pdf.finiquito);
+
 
 
 

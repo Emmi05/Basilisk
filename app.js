@@ -7,18 +7,15 @@ import { static as expressStatic } from 'express';
 import session from 'express-session';
 import cookieParser from'cookie-parser';
 
-
-
 const app = express();
 app.use(urlencoded({ extended: false }));
 app.use(json());
 
-// 3 - Invocamos a dotenv
+//  Invocamos a dotenv
 dotenv.config({ path: './env/.env' });
 
 app.use('/resources', expressStatic('public'));
 app.set('view engine', 'ejs');
-
 
 app.use(session({
     secret: 'secret',
@@ -26,15 +23,10 @@ app.use(session({
     saveUninitialized: true
 }));
 
-
 //para poder trabajar con las cookies
 app.use(cookieParser())
-
-// 9 - establecemos las rutas
+// establecemos las rutas
 app.use(rutas);
-
-
-
 
 // función para limpiar la caché luego del logout
 app.use(function(req, res, next) {
@@ -49,6 +41,11 @@ app.use(helmet());
 app.use((req, res, next) => {
     res.status(404)
     res.render('404')
+});
+
+app.use((err, req, res, next) => {
+    console.error('Error de servidor:', err.stack);
+    res.status(500).render('500');
 });
 
 

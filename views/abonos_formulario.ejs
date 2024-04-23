@@ -15,7 +15,7 @@
   
               <!-- Main Content -->
               <div id="content">
-  
+               
                   <!-- Topbar /header -->
                   <%- include ('layouts/header.ejs') %>
                     <!-- header -->
@@ -23,34 +23,28 @@
           
          <!-- Begin Page Content -->
          <% abonos.forEach(abono => { %>
-
+     
           <div class="container-fluid">
               <h1>Registro abonos</h1>
-              <form class="row g-3" action="/crearAbonos/<%= abono.id %>" method="POST" autocomplete="off">
-             
-                
-                <!-- CALCULOS DE TERRENO - INICIAL-ENGANCHE  -->
+              <form class="row g-3"  action="/crear_abonos/<%= abono.id %>" method="POST">
+        
                 <div class="col-md-6">
                     <label for="cliente" class="form-label">Cliente</label>
                     <input type="text" class="form-control" id="id_customer" name="id_customer" value=" <%= abono.customer_name %>  <%= abono.customer_paterno %>  <%= abono.customer_materno %>" readonly>
                 </div>
-
     
                 <div class="col-md-6">
                   <label for="cliente" class="form-label">Deuda restante</label>
                   <input type="number" class="form-control" id="precio-inicial" name="deuda_restante" value="<%= abono.deuda_restante.toFixed(2) %>" readonly>
               </div>
               
-        
-        
+      
             <div class="col-md-6">
               <label for="faltantes" class="form-label">Cuotas faltantes</label>
               <input type="number" class="form-control" id="faltantes" name="cuotas_faltantes" value="<%= abono.cuotas_restantes%>"  readonly min="1" >
           </div>
-
-
           
-          <!-- AQUI AGARRO PARA PONER EN CP CUOTAS PAGADAS  -->
+          <!--  CP CUOTAS PAGADAS  -->
           <div class="col-md-6">
             <label for="n_abono" class="form-label">N_abono</label>
             <input type="number" class="form-control" id="n_abono" name="n_abono" value="">
@@ -83,19 +77,24 @@
                 <br> <br> <br> <br>
                   <div class="col-12">
                     <!-- <a href="/abono_view" class="btn btn-secondary">Regresar</a> -->
-                    <a href="/abono_view" class="btn btn-sm btn-info"><i class="fas fa-money-bill"></i></a>
 
                     <a href="/" class="btn btn-secondary">Cancelar</a>
 
-                    <button type="submit" class="btn btn-primary"  id="guardarBtn"  value="Save">Guardar</button>
+
+      
+                      <button type="submit" class="btn btn-primary" id="guardarBtn" >Guardar</button>
+                
+                   
                   </div>
+               
                 </form>
                 <% }); %>
 
       <!-- Footer -->
-  
+  <!-- HTML -->
+
   <!-- End of Footer -->
-  
+
   </div>
   <!-- End of Content Wrapper -->
   
@@ -109,6 +108,7 @@
   
   <!-- Logout Modal-->
   <%- include ('layouts/logout.ejs') %>
+<!-- -- Contenedor de la alerta SweetAlert --> -->
 
   
               <!-- Bootstrap core JavaScript-->
@@ -132,18 +132,19 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   
   <% if (typeof alert != "undefined")  { %>
-   <script>
-   Swal.fire({
-     title:'<%= alertTitle %>',
-     text:'<%= alertMessage %>',
-     icon:'<%= alertIcon %>',
-     showConfirmButton: <%= showConfirmButton %>,
-     timer: <%= timer %>
-   }).then(()=>{
-     window.location='/<%= ruta %>'
-   })
-   </script>
-  <% } %>
+    <script>
+     Swal.fire({
+      title:'<%= alertTitle %>',
+      text:'<%= alertMessage %>',
+      icon:'<%= alertIcon %>',
+      showConfirmButton: <%= showConfirmButton %>,
+      timer: <%= timer %>
+    }).then(()=>{
+      window.location='/<%= ruta %>'
+    })
+    </script>
+   <% } %>
+   
   
   <script>
     // Función para calcular y actualizar la cantidad de abono
@@ -170,61 +171,61 @@
 </script>
 
 <script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('guardarBtn').addEventListener('click', async function(event) {
-        event.preventDefault(); // Prevenir el comportamiento por defecto del botón (enviar el formulario)
-
-        const id_venta = <%= abono.id %>; 
-        const cantidad = parseFloat(document.getElementById('cantidadAbono').value); // Obtener la cantidad de abono del campo correspondiente
-
-        // Realizar una solicitud AJAX al servidor
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/crearAbonos/:id', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-      
-                // Redireccionar al usuario una vez que han cerrado el mensaje de éxito
-                Swal.fire({
-                    title: '¡Registro Exitoso!',
-                    icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Continuar',
-                    allowOutsideClick: false
-                }).then(() => {
-                    window.location = '/abono_view';
-                });
-
-            } else {
-                console.error('Error en la solicitud:', xhr.statusText);
-            }
-          }
+    function generarPDF() {
+        fetch('/crear_abonos/:id', {
+            method: 'POST',
+            body: JSON.stringify({ id: '<%= abono.id %>' })
         })
+        .then(response => {
+            // Verificar el tipo de contenido de la respuesta
+            if (response.ok) {
+                return response.text(); // Si es exitosa, obtener el cuerpo de la respuesta como texto
+            } else {
+                throw new Error('Error al generar el PDF. Código de estado: ' + response.status);
+            }
+        })
+        .then(html => {
+     // Inserta el HTML de la respuesta en el contenedor de alerta
+    // document.getElementById('alertContainer').innerHTML = html;
+    document.body.innerHTML += html;
 
-        xhr.onerror = function() {
-            console.error('Error en la solicitud');
-        };
-
-        // Enviar los datos al servidor en formato JSON
-        const data = JSON.stringify({
-            id_venta: id_venta,
-            cantidad: cantidad,
-            n_abono: n_abono,
-            fecha_abono: fecha_abono,
-            cantidad:cantidad,
-
-        });
-        xhr.send(data);
+    
+ 
+    Swal.fire({
+        title: 'Exito',
+        text: 'Proceso realizado con éxito',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/abono'; 
+        }
     });
-      
-  });
-    </script>
+        })
+        .catch(error => {
+            // Mostrar un mensaje de error si hubo un problema con la solicitud AJAX
+            console.error('Error al generar el PDF:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No exito',
+                icon: 'error',
+                confirmButtonText: 'ok'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/'; 
+                }
+            });
+        });
+    }
+
+    document.getElementById('guardarBtn').addEventListener('click', generarPDF);
+</script>
+
+
 <% }); %>
 
-  
+
+
   </div>
-  
   </body>
   </html>
