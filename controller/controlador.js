@@ -81,20 +81,18 @@ export const login=  async(req, res) => {
     }
 
 }
-
 export const auth = async (req, res, next) => {
     // Si ya estás en la página de inicio, no redirigir
     if (req.originalUrl === '/') {
         return next();
     }
-
     // Si el usuario ya está en la página de login, no redirigir
     if (req.originalUrl === '/login') {
         return next();
     }
 
-    if (req.cookies.jwt) {
-        try {
+    try {
+        if (req.cookies.jwt) {
             const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
             
             const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
@@ -105,39 +103,37 @@ export const auth = async (req, res, next) => {
             } else {
                 throw new Error('Usuario no encontrado');
             }
-        } catch (error) {
-            if (error.name === 'TokenExpiredError') {
-                console.log('Token expirado');
-                res.clearCookie('jwt');
-                return res.render('login', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "Token expirado",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: false,
-                    ruta: 'login'
-                });
-          
-            }
-            console.error(error);
+        } else {
+            throw new jwt.TokenExpiredError('Token expirado'); // Simula que el token ha expirado
+        }
+    } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            console.log('Token expirado');
+            res.clearCookie('jwt');
             return res.render('login', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "Error al verificar token",
+                alertMessage: "Token expirado",
                 alertIcon: 'error',
                 showConfirmButton: true,
                 timer: false,
                 ruta: 'login'
             });
-        
         }
-    } else {
-        res.redirect('/login');
-        return;
+        
+        console.error(error);
+        res.clearCookie('jwt'); // Limpiar la cookie en caso de otros errores
+        return res.render('login', {
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Error al verificar token",
+            alertIcon: 'error',
+            showConfirmButton: true,
+            timer: false,
+            ruta: 'login'
+        });
     }
 }
-
 export const perfil = async (req, res) => {
     const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
     console.log(userId); // Solo para verificar en la consola
