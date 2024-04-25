@@ -1,7 +1,7 @@
 .modal-wrapper {
   display: none; 
   position: fixed;
-  top: 31%;  /* Cambiado de 0 a 10% */
+  top: 20%;  /* Cambiado de 0 a 10% */
   left: 0;
   width: 100%;
   height: auto;

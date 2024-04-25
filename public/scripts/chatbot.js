@@ -14,7 +14,7 @@ window.WebChat.renderWebChat({
       bubbleBorderWidth: 2,
       bubbleNubOffset: 0,
       bubbleNubSize: 10,
-      rootHeight: '300px',
+      rootHeight: '380px',
       rootWidth: 'fit-content',
       bubbleFromUserBackground: '#f2f2f2',
       bubbleFromUserBorderColor: '#e0e0e0',
