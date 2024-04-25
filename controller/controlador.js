@@ -79,8 +79,8 @@ export const login=  async(req, res) => {
         });
         res.end();
     }
-
 }
+
 export const auth = async (req, res, next) => {
     // Si ya estás en la página de inicio, no redirigir
     if (req.originalUrl === '/') {
@@ -110,6 +110,7 @@ export const auth = async (req, res, next) => {
         if (error.name === 'TokenExpiredError') {
             console.log('Token expirado');
             res.clearCookie('jwt');
+            req.session.destroy(); // Eliminar la sesión del usuario
             return res.render('login', {
                 alert: true,
                 alertTitle: "Error",
@@ -123,6 +124,7 @@ export const auth = async (req, res, next) => {
         
         console.error(error);
         res.clearCookie('jwt'); // Limpiar la cookie en caso de otros errores
+        req.session.destroy(); // Eliminar la sesión del usuario
         return res.render('login', {
             alert: true,
             alertTitle: "Error",
@@ -134,6 +136,12 @@ export const auth = async (req, res, next) => {
         });
     }
 }
+
+
+
+
+
+
 export const perfil = async (req, res) => {
     const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
     console.log(userId); // Solo para verificar en la consola
