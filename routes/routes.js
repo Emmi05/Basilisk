@@ -19,13 +19,18 @@ router.get('/contactanos', (req, res) => {
 
 
 
-router.get('/services', (req, res) => {
-    res.render('terrenos_index');
-});
+// router.get('/services', (req, res) => {
+//     res.render('terrenos_index');
+// });
 
 router.get('/inicio_terrenos', (req, res) => {
     res.render('vista_terrenos');
 });
+// AUTENTIFICACION
+router.use(authentication.auth);
+
+
+
 // AUTENTIFICACION
 router.use(authentication.auth);
 

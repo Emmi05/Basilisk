@@ -5,6 +5,7 @@ import {promisify} from 'util';
 
 
 
+
 export const login=  async(req, res) => {
     const user = req.body.user;
     const pass = req.body.pass;
@@ -79,20 +80,21 @@ export const login=  async(req, res) => {
         });
         res.end();
     }
-}
 
+}
 export const auth = async (req, res, next) => {
     // Si ya estás en la página de inicio, no redirigir
     if (req.originalUrl === '/') {
         return next();
     }
+
     // Si el usuario ya está en la página de login, no redirigir
     if (req.originalUrl === '/login') {
         return next();
     }
 
-    try {
-        if (req.cookies.jwt) {
+    if (req.cookies.jwt) {
+        try {
             const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
             
             const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
@@ -103,43 +105,46 @@ export const auth = async (req, res, next) => {
             } else {
                 throw new Error('Usuario no encontrado');
             }
-        } else {
-            throw new jwt.TokenExpiredError('Token expirado'); // Simula que el token ha expirado
-        }
-    } catch (error) {
-        if (error.name === 'TokenExpiredError') {
-            console.log('Token expirado');
-            res.clearCookie('jwt');
-            req.session.destroy(); // Eliminar la sesión del usuario
+        } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                console.log('Token expirado');
+                res.clearCookie('jwt'); // Elimina la cookie JWT
+                clearSessionCookie(req, res); // Llama al middleware personalizado para eliminar la cookie de sesión
+                return res.render('login', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Token expirado",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'login'
+                });
+            }
+            console.error(error);
             return res.render('login', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "Token expirado",
+                alertMessage: "Error al verificar token",
                 alertIcon: 'error',
                 showConfirmButton: true,
                 timer: false,
                 ruta: 'login'
             });
         }
-        
-        console.error(error);
-        res.clearCookie('jwt'); // Limpiar la cookie en caso de otros errores
-        req.session.destroy(); // Eliminar la sesión del usuario
-        return res.render('login', {
-            alert: true,
-            alertTitle: "Error",
-            alertMessage: "Error al verificar token",
-            alertIcon: 'error',
-            showConfirmButton: true,
-            timer: false,
-            ruta: 'login'
-        });
+    } else {
+        clearSessionCookie(req, res); // Llama al middleware personalizado para eliminar la cookie de sesión
+        res.redirect('/login');
+        return;
     }
+
 }
 
-
-
-
+// Middleware personalizado para eliminar la cookie de sesión
+function clearSessionCookie(req, res) {
+    if (req.cookies['connect.sid']) {
+        res.clearCookie('connect.sid');
+    }
+}
 
 
 export const perfil = async (req, res) => {
