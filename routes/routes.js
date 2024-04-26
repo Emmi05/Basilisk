@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
-import { auth,methods as authentication} from '../controller/controlador.js'
+import { methods as controlador} from '../controller/controlador.js'
 import { methods as clientes} from '../controller/clientes.js'
 import { methods as terrenos} from '../controller/terrenos.js'
 import {methods as ventas} from '../controller/ventas.js'
@@ -26,13 +26,10 @@ router.get('/contactanos', (req, res) => {
 router.get('/inicio_terrenos', (req, res) => {
     res.render('vista_terrenos');
 });
-// AUTENTIFICACION
-router.use(authentication.auth);
-
 
 
 // AUTENTIFICACION
-router.use(authentication.auth);
+// router.use(authentication.auth);
 
 router.get('/', (req, res) => {
     // Validación de sesión
@@ -64,7 +61,7 @@ router.get('/', (req, res) => {
 router.get('/login', (req, res) => {
     res.render('login');
 });
-router.post('/login', authentication.login)
+router.post('/login', controlador.login)
 
 
 // LOGOUT
@@ -95,7 +92,7 @@ router.get('/registro_usuario', async(req, res) => {
 });
 
 
-router.post('/register',authentication.register);
+router.post('/register',controlador.register);
 
 
 
@@ -140,14 +137,14 @@ router.get('/editar_usuario/:id', async(req, res) => {
         });
     }
 });
-router.post('/update/:id',authentication.editarUsuario);
+router.post('/update/:id',controlador.editarUsuario);
 
-router.get('/delete/:id', authentication.eliminarUsuario);
+router.get('/delete/:id', controlador.eliminarUsuario);
 
 // PROFILE
-router.get('/profile', authentication.auth, authentication.perfil);
+router.get('/profile',  controlador.perfil);
 
-router.post('/profile', authentication.auth, authentication.password);
+router.post('/profile', controlador.password);
     
 
 // ruta clientes

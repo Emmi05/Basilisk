@@ -30,17 +30,6 @@ export const login=  async(req, res) => {
                 req.session.name = results[0].name;
                 req.session.rol = results[0].rol;
                  
-                  const id = results[0].id
-                  const token = jwt.sign({id:id}, process.env.JWT_SECRETO, {
-                      expiresIn: process.env.JWT_TIEMPO_EXPIRA
-                  })
-                 console.log("TOKEN: "+token+" para el USUARIO : "+user)
-
-                 const cookiesOptions = {
-                      expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
-                      httpOnly: true
-                 }
-                 res.cookie('jwt', token, cookiesOptions)
                 if (req.session.rol == 'usuario') {
                     res.render('login', {
                         alert: true,
@@ -81,69 +70,6 @@ export const login=  async(req, res) => {
         res.end();
     }
 
-}
-export const auth = async (req, res, next) => {
-    // Si ya estás en la página de inicio, no redirigir
-    if (req.originalUrl === '/') {
-        return next();
-    }
-
-    // Si el usuario ya está en la página de login, no redirigir
-    if (req.originalUrl === '/login') {
-        return next();
-    }
-
-    if (req.cookies.jwt) {
-        try {
-            const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
-            
-            const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
-    
-            if (results.length > 0) {
-                req.user = results[0];
-                return next();
-            } else {
-                throw new Error('Usuario no encontrado');
-            }
-        } catch (error) {
-            if (error.name === 'TokenExpiredError') {
-                console.log('Token expirado');
-                res.clearCookie('jwt'); // Elimina la cookie JWT
-                clearSessionCookie(req, res); // Llama al middleware personalizado para eliminar la cookie de sesión
-                return res.render('login', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "Token expirado",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: false,
-                    ruta: 'login'
-                });
-            }
-            console.error(error);
-            return res.render('login', {
-                alert: true,
-                alertTitle: "Error",
-                alertMessage: "Error al verificar token",
-                alertIcon: 'error',
-                showConfirmButton: true,
-                timer: false,
-                ruta: 'login'
-            });
-        }
-    } else {
-        clearSessionCookie(req, res); // Llama al middleware personalizado para eliminar la cookie de sesión
-        res.redirect('/login');
-        return;
-    }
-
-}
-
-// Middleware personalizado para eliminar la cookie de sesión
-function clearSessionCookie(req, res) {
-    if (req.cookies['connect.sid']) {
-        res.clearCookie('connect.sid');
-    }
 }
 
 
@@ -695,13 +621,10 @@ export const eliminarUsuario = async (req, res) => {
 export const methods = {
     register,
     login,
-    auth,
     usuarios,
     editarUsuario,
     eliminarUsuario,
-    
     perfil,
- 
     password,
   }
 
