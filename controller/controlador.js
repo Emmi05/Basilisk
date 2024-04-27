@@ -29,7 +29,9 @@ export const login=  async(req, res) => {
                 req.session.loggedin = true;
                 req.session.name = results[0].name;
                 req.session.rol = results[0].rol;
-                 
+                req.session.userId = results[0].id; // Asociar el ID del usuario con la sesión
+
+
                 if (req.session.rol == 'usuario') {
                     res.render('login', {
                         alert: true,
@@ -72,11 +74,13 @@ export const login=  async(req, res) => {
 
 }
 
+// Middleware de autenticación
+
 
 export const perfil = async (req, res) => {
-    const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
-    console.log(userId); // Solo para verificar en la consola
-    
+  // Capturando el ID de sesión
+          const userId = req.session.userId;
+
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
@@ -103,7 +107,8 @@ export const perfil = async (req, res) => {
 export const password = async (req, res) => {
     const { pass, newpass } = req.body;
 
-    const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
+    const userId = req.user.id; // Accediendo al ID de usuario desde req.user
+  
 
     if (req.session.rol === 'usuario') {
         try {

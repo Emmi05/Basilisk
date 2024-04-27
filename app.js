@@ -17,12 +17,15 @@ dotenv.config({ path: './env/.env' });
 app.use('/resources', expressStatic('public'));
 app.set('view engine', 'ejs');
 
+// Configuración del middleware de sesión
 app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+    secret: 'P0st3D3t3l3f0n0vi3jo@', // Clave secreta
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000 // Duración de la sesión en milisegundos (1 día)
+    }
 }));
-
 //para poder trabajar con las cookies
 app.use(cookieParser())
 // establecemos las rutas
