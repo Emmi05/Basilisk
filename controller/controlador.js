@@ -313,7 +313,7 @@ export const register=  async(req, res) => {
             });
         }
         const existingUser = await pool.query('SELECT * FROM users WHERE user = ?', user);
-        console.log(existingUser)
+        // console.log(existingUser)
         if (existingUser[0].length > 0) {
             return res.render('register', {
                 alert: true,

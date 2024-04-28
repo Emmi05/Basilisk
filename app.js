@@ -23,9 +23,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000 // Duración de la sesión en milisegundos (1 día)
+        maxAge: 2 * 60 * 1000 // Duración de la sesión en milisegundos (2 minutos)
     }
 }));
+
 //para poder trabajar con las cookies
 app.use(cookieParser())
 // establecemos las rutas
