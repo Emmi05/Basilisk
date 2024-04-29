@@ -32,7 +32,7 @@ router.get('/inicio_terrenos', (req, res) => {
 function checkSessionExpiration(req, res, next) {
     if (!req.session.loggedin) {
       // Si no hay una sesión iniciada, redirigir al usuario al inicio de sesión
-      return res.redirect('/services');
+      return res.redirect('/');
     }
   
     // Comprobar opcionalmente el tiempo de vida de la sesión

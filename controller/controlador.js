@@ -6,14 +6,14 @@ import {promisify} from 'util';
 
 
 
-export const login=  async(req, res) => {
+export const login = async (req, res) => {
     const user = req.body.user;
     const pass = req.body.pass;
-    
+
     if (user && pass) {
         try {
             const [results, fields] = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
-            
+
             if (results.length == 0 || !(await bcrypt.compare(pass, results[0].pass))) {
                 console.log('Usuario y/o contraseña incorrectos');
                 return res.render('login', {
@@ -26,34 +26,40 @@ export const login=  async(req, res) => {
                     ruta: 'login'
                 });
             } else {
-                req.session.loggedin = true;
-                req.session.name = results[0].name;
-                req.session.rol = results[0].rol;
-                req.session.userId = results[0].id; // Asociar el ID del usuario con la sesión
+                // Crear una nueva sesión incluso si una sesión anterior ha expirado
+                req.session.regenerate(err => {
+                    if (err) {
+                        console.error('Error al regenerar la sesión:', err);
+                        return res.status(500).send('Error de servidor');
+                    }
 
+                    req.session.loggedin = true;
+                    req.session.name = results[0].name;
+                    req.session.rol = results[0].rol;
+                    req.session.userId = results[0].id; // Asociar el ID del usuario con la sesión
 
-                if (req.session.rol == 'usuario') {
-                    res.render('login', {
-                        alert: true,
-                        alertTitle: "Usuario normal:",
-                        alertMessage: "Usuario",
-                        alertIcon: 'success',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        ruta: ''
-                    });
-                } else {
-                      
-                    res.render('login', {
-                        alert: true,
-                        alertTitle: "Usuario",
-                        alertMessage: "Administrador",
-                        alertIcon: 'success',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        ruta: ''
-                    });
-                }
+                    if (req.session.rol == 'usuario') {
+                        res.render('login', {
+                            alert: true,
+                            alertTitle: "Usuario normal:",
+                            alertMessage: "Usuario",
+                            alertIcon: 'success',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            ruta: ''
+                        });
+                    } else {
+                        res.render('login', {
+                            alert: true,
+                            alertTitle: "Usuario",
+                            alertMessage: "Administrador",
+                            alertIcon: 'success',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            ruta: ''
+                        });
+                    }
+                });
             }
         } catch (error) {
             console.error('Error al ejecutar la consulta SQL:', error);
@@ -62,7 +68,7 @@ export const login=  async(req, res) => {
     } else {
         res.render('login', {
             alert: true,
-            alertTitle: "Advertecia",
+            alertTitle: "Advertencia",
             alertMessage: "Por favor ingrese un usuario y/o contraseña",
             alertIcon: 'warning',
             showConfirmButton: false,
@@ -71,8 +77,8 @@ export const login=  async(req, res) => {
         });
         res.end();
     }
-
 }
+
 
 // Middleware de autenticación
 
@@ -634,6 +640,8 @@ export const home =async (req, res) =>{
             rol: req.session.rol
           });
         } else if (req.session.rol == 'admin') {
+            console.log("hola")
+            console.log(req.session);
           res.render('home', {
             login: true,
             roluser: true,
@@ -643,6 +651,7 @@ export const home =async (req, res) =>{
         }
       } else {
         // Si no hay sesión iniciada, renderiza 'terrenos_index'
+        console.log("help")
         res.render('terrenos_index', {
             login: false,
             name: 'Debe iniciar sesión',
