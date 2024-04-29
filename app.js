@@ -22,9 +22,7 @@ app.use(session({
     secret: 'P0st3D3t3l3f0n0vi3jo@', // Clave secreta
     resave: false,
     saveUninitialized: false,
-    cookie: {
-        maxAge: 2 * 60 * 1000 // Duración de la sesión en milisegundos (2 minutos)
-    }
+   
 }));
 
 //para poder trabajar con las cookies

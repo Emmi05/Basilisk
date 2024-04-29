@@ -30,41 +30,6 @@ router.get('/inicio_terrenos', (req, res) => {
 
 
 
-router.use(function(req, res, next) {
-    if (req.session && req.session.lastAccess) {
-        var now = new Date();
-        var elapsedTime = now - req.session.lastAccess;
-        var maxAge = req.session.cookie.maxAge;
-        
-        if (elapsedTime > maxAge) {
-            // La sesión ha expirado
-            // Destruir la sesión
-            req.session.destroy(function(err) {
-                if (err) {
-                    console.log(err);
-                }
-                // Esperar un breve tiempo antes de renderizar la página de inicio de sesión con SweetAlert
-                setTimeout(() => {
-                    return res.render('login', {
-                        alert: true,
-                        alertTitle: "Sesión expirada",
-                        alertMessage: "Su sesión ha expirado. Por favor inicie sesión nuevamente.",
-                        alertIcon: 'error',
-                        showConfirmButton: true,
-                        timer: false,
-                        ruta: 'login'
-                    });
-                }, 100); // Esperar 100 milisegundos antes de renderizar la página de inicio de sesión
-            });
-        }
-    }
-    
-    // Actualizar el tiempo de última acceso en cada solicitud
-    req.session.lastAccess = new Date();
-    
-    next();
-});
-
 
 // AUTENTIFICACION
 
