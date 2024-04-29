@@ -22,9 +22,12 @@ app.use(session({
     secret: 'P0st3D3t3l3f0n0vi3jo@', // Clave secreta
     resave: false,
     saveUninitialized: false,
-   
-}));
-
+    cookie: {
+      maxAge: 120000, // 2 minutos en milisegundos
+      expires: new Date(Date.now() + 120000) // Caduca en 2 minutos
+    }
+  }));
+  
 //para poder trabajar con las cookies
 app.use(cookieParser())
 // establecemos las rutas

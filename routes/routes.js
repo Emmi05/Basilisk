@@ -29,36 +29,29 @@ router.get('/inicio_terrenos', (req, res) => {
 });
 
 
-
-
-// AUTENTIFICACION
-
-
- router.get('/',  (req, res) => {
-    // Validación de sesión
-    if (req.session.loggedin) {
-        if (req.session.rol == 'usuario') {
-            res.render('home', {
-                login: true,
-                roluser: false,
-                name: req.session.name,
-                rol: req.session.rol
-            });
-        } else if (req.session.rol == 'admin') {
-            res.render('home', {
-                login: true,
-                roluser: true,
-                name: req.session.name,
-                rol: req.session.rol
-            });
-        }
-    } else {
-        res.render('terrenos_index', {
-            login: false,
-            name: 'Debe iniciar sesión',
-        });
+function checkSessionExpiration(req, res, next) {
+    if (!req.session.loggedin) {
+      // Si no hay una sesión iniciada, redirigir al usuario al inicio de sesión
+      return res.redirect('/services');
     }
-});
+  
+    // Comprobar opcionalmente el tiempo de vida de la sesión
+    if (req.session.cookie.expires && req.session.cookie.expires < new Date()) {
+      // Si la sesión ha expirado, destruir la sesión y redirigir al usuario al inicio de sesión
+      req.session.destroy(err => {
+        if (err) {
+          console.error('Error al destruir la sesión:', err);
+        }
+        return res.redirect('/login');
+      });
+    }
+  
+    next();
+  }
+  
+
+router.get('/',  controlador.home, checkSessionExpiration);
+  
 
 router.get('/login', (req, res) => {
     res.render('login');

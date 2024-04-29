@@ -623,6 +623,35 @@ export const eliminarUsuario = async (req, res) => {
         }
 
 
+export const home =async (req, res) =>{
+     // Validación de sesión
+     if (req.session.loggedin) {
+        if (req.session.rol == 'usuario') {
+          res.render('home', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+          });
+        } else if (req.session.rol == 'admin') {
+          res.render('home', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol
+          });
+        }
+      } else {
+        // Si no hay sesión iniciada, renderiza 'terrenos_index'
+        res.render('terrenos_index', {
+            login: false,
+            name: 'Debe iniciar sesión',
+        });
+    
+      }
+}
+
+
 export const methods = {
     register,
     login,
@@ -631,6 +660,7 @@ export const methods = {
     eliminarUsuario,
     perfil,
     password,
+    home,
   }
 
 
