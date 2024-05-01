@@ -7,7 +7,6 @@ import moment from 'moment';
 const cantidades = /^\d*,?\d+$/;
 
 
-// venta crear
 const crearVenta = async (req, res) => {
     const terrenoId = req.params.id;
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
@@ -56,8 +55,8 @@ const crearVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: true,
@@ -75,8 +74,8 @@ const crearVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: true,
@@ -95,8 +94,8 @@ const crearVenta = async (req, res) => {
                 alertTitle: "Error",
                 alertMessage: "La cantidad del enganche debe ser menor que el precio del terreno.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/',
                 login: true,
                 roluser: true,
@@ -154,7 +153,6 @@ const crearVenta = async (req, res) => {
     
         const deuda_restante = precio - inicial;
 
-        // Verificar si algún campo está vacío o si los valores de 'inicial' y 'n_cuentas' no son números válidos
         if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
             return res.render('ventas', {
                 alert: true,
@@ -184,8 +182,8 @@ const crearVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -203,8 +201,8 @@ const crearVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -223,8 +221,8 @@ const crearVenta = async (req, res) => {
                 alertTitle: "Error",
                 alertMessage: "La cantidad del enganche debe ser menor que el precio del terreno.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/',
                 login: true,
                 roluser: false,
@@ -327,8 +325,8 @@ const editarVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "El enganche debe ser menor que el precio del terreno.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -344,8 +342,8 @@ const editarVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -361,8 +359,8 @@ const editarVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -500,7 +498,6 @@ const editarVenta = async (req, res) => {
 };
 
 
-//ELIMINAR VENTA
 const eliminarVenta = async (req, res) => {
     try {
         if (req.session.rol == 'admin'){
@@ -550,7 +547,7 @@ if (result && result.affectedRows > 0) {
     }
     
 }
-//
+
 
 export const methods = {
    
