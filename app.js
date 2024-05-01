@@ -18,18 +18,20 @@ app.use('/resources', expressStatic('public'));
 app.set('view engine', 'ejs');
 
 // Configuración del middleware de sesión
-app.use(session({
-    secret: 'P0st3D3t3l3f0n0vi3jo@', // Clave secreta
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 120000, // 2 minutos en milisegundos
-      expires: new Date(Date.now() + 120000) // Caduca en 2 minutos
-    }
-  }));
+app.use(
+    session({
+        secret: "I am girl",
+        resave: true,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 120000, // 2 minutos en milisegundos
+          }
+    })
+);
+ 
   
 //para poder trabajar con las cookies
-app.use(cookieParser())
+// app.use(cookieParser())
 // establecemos las rutas
 app.use(rutas);
 

@@ -63,7 +63,8 @@ export const login = async (req, res) => {
             }
         } catch (error) {
             console.error('Error al ejecutar la consulta SQL:', error);
-            return res.status(500).send('Error de servidor');
+            // return res.status(500).send('Error de servidor');
+            return res.status(500).render('500');
         }
     } else {
         res.render('login', {
@@ -71,8 +72,8 @@ export const login = async (req, res) => {
             alertTitle: "Advertencia",
             alertMessage: "Por favor ingrese un usuario y/o contraseña",
             alertIcon: 'warning',
-            showConfirmButton: false,
-            timer: 1500,
+            showConfirmButton: true,
+            timer: false,
             ruta: 'login'
         });
         res.end();
@@ -640,8 +641,7 @@ export const home =async (req, res) =>{
             rol: req.session.rol
           });
         } else if (req.session.rol == 'admin') {
-            console.log("hola")
-            console.log(req.session);
+       
           res.render('home', {
             login: true,
             roluser: true,
@@ -650,8 +650,6 @@ export const home =async (req, res) =>{
           });
         }
       } else {
-        // Si no hay sesión iniciada, renderiza 'terrenos_index'
-        console.log("help")
         res.render('terrenos_index', {
             login: false,
             name: 'Debe iniciar sesión',

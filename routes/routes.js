@@ -7,7 +7,7 @@ import {methods as ventas} from '../controller/ventas.js'
 import { methods as abonos} from '../controller/abonos.js'
 import {methods as pdf} from '../controller/pdf.js'
 
-import { autenticacionMiddleware } from '../middlewares/auth.js'; // Importa la función de middleware de autenticación
+import { autenticacionMiddleware } from '../middlewares/auth.js'; //
 import { autorizacionMiddleware } from '../middlewares/autorización.js'; // 
 
 const router = Router();// Definición de la ruta '/'
@@ -29,28 +29,9 @@ router.get('/inicio_terrenos', (req, res) => {
 });
 
 
-function checkSessionExpiration(req, res, next) {
-    if (!req.session.loggedin) {
-      // Si no hay una sesión iniciada, redirigir al usuario al inicio de sesión
-      return res.redirect('/');
-    }
-  
-    // Comprobar opcionalmente el tiempo de vida de la sesión
-    if (req.session.cookie.expires && req.session.cookie.expires < new Date()) {
-      // Si la sesión ha expirado, destruir la sesión y redirigir al usuario al inicio de sesión
-      req.session.destroy(err => {
-        if (err) {
-          console.error('Error al destruir la sesión:', err);
-        }
-        return res.redirect('/login');
-      });
-    }
-  
-    next();
-  }
-  
 
-router.get('/',  controlador.home, checkSessionExpiration);
+
+router.get('/',  controlador.home);
   
 
 router.get('/login', (req, res) => {
@@ -60,20 +41,13 @@ router.post('/login', controlador.login)
 
 // PROFILE
 router.get('/profile', autenticacionMiddleware, controlador.perfil);
-
 router.post('/profile', autenticacionMiddleware, controlador.password);
-    
-
-
-// LOGOUT
 router.get('/logout', function(req, res) {
    
     req.session.destroy(() => {
         res.redirect('/');
     });
 });
-
-
 
 router.get('/registro_usuario', autenticacionMiddleware,autorizacionMiddleware ('admin'), async  (req, res) => {
         res.render('register', {
@@ -83,12 +57,7 @@ router.get('/registro_usuario', autenticacionMiddleware,autorizacionMiddleware (
             rol: req.session.rol,
         });
     })    
-
-
-
 router.post('/register',  autenticacionMiddleware, autorizacionMiddleware ('admin'), controlador.register);
-
-
 
  router.get('/usuarios', autenticacionMiddleware,autorizacionMiddleware ('admin'),  async(req, res) => {
 
@@ -102,8 +71,6 @@ router.post('/register',  autenticacionMiddleware, autorizacionMiddleware ('admi
             });
         }
 );
-
-
 
 router.get('/editar_usuario/:id', autenticacionMiddleware, autorizacionMiddleware ('admin'), async(req, res) => {
     const id = req.params.id;
@@ -121,7 +88,6 @@ router.get('/editar_usuario/:id', autenticacionMiddleware, autorizacionMiddlewar
 router.post('/update/:id',autenticacionMiddleware, autorizacionMiddleware ('admin'), controlador.editarUsuario);
 
 router.get('/delete/:id',autenticacionMiddleware, autorizacionMiddleware ('admin'), controlador.eliminarUsuario);
-
 
 
 

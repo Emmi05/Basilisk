@@ -5,8 +5,7 @@ app.use(function(req, res, next) {
         var maxAge = req.session.cookie.maxAge;
         
         if (elapsedTime > maxAge) {
-            // La sesión ha expirado
-            // Puedes hacer lo que necesites aquí, como destruir la sesión
+           
             req.session.destroy(function(err) {
                 if (err) {
                     console.log(err);
