@@ -514,8 +514,7 @@ try {
 
             }); 
         }
-        // verifica nombre 
-        // const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+        
         if(!nombreRegex.test(name)){
             return res.render('editar', {
                 alert: true,
