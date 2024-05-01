@@ -1,8 +1,9 @@
 import { pool} from '../database/db.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import {promisify} from 'util';
 
+const usernameRegex = /^[a-zA-Z]{5,20}$/;
+ const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+ const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
 
 
 
@@ -310,8 +311,8 @@ export const register=  async(req, res) => {
                 alertTitle: "Error",
                 alertMessage: "Debes rellenar todos los campos!",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 1500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', 
                 login: true,
                 roluser: true,
@@ -327,8 +328,8 @@ export const register=  async(req, res) => {
                 alertTitle: "Error",
                 alertMessage: "El usuario ya existe. Por favor, elija otro nombre de usuario.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 1500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', 
                 login: true,
                 roluser: true,
@@ -337,16 +338,16 @@ export const register=  async(req, res) => {
             });
         }
 
-        // Verificar nombre de usuario
-        const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+        
+  
         if(!usernameRegex.test(user)){
             return res.render('register', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "El usuario no debe llevar caracteres especiales",
+                alertMessage: "El usuario no debe llevar caracteres especiales o números",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', // Redirigir a la página de registro nuevamente
                 login: true,
                 roluser: true,
@@ -354,16 +355,15 @@ export const register=  async(req, res) => {
                 rol: req.session.rol,
             }); 
         }
-        // verifica nombre 
-        const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+        
         if(!nombreRegex.test(name)){
             return res.render('register', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "El nombre no debe llevar caracteres especiales",
+                alertMessage: "El nombre no debe llevar caracteres especiales.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', // Redirigir a la página de registro nuevamente
                 login: true,
                 roluser: true,
@@ -374,15 +374,14 @@ export const register=  async(req, res) => {
 
 
          // Verificar si la contraseña cumple con los requisitos
-         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
          if (!passwordRegex.test(pass)) {
              return res.render('register', {
                  alert: true,
                  alertTitle: "Error",
                  alertMessage: "La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.",
                  alertIcon: 'error',
-                 showConfirmButton: false,
-                 timer: 3500,
+                 showConfirmButton: true,
+                 timer: false,
                  ruta: '/', // Redirigir a la página de registro nuevamente
                  login: true,
                  roluser: true,
@@ -463,8 +462,8 @@ try {
                 alertTitle: "Error",
                 alertMessage: "Debes rellenar todos los campos!",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 1500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', 
                 login: true,
                 roluser: true,
@@ -497,16 +496,15 @@ try {
                 });
             }
         }
-        // Verificar nombre de usuario
-        const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+      
         if(!usernameRegex.test(user)){
             return res.render('editar', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "El usuario no debe llevar caracteres especiales",
+                alertMessage: "El usuario no debe llevar caracteres especiales o números",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', // Redirigir a la página de registro nuevamente
                 login: true,
                 roluser: true,
@@ -517,15 +515,15 @@ try {
             }); 
         }
         // verifica nombre 
-        const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+        // const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
         if(!nombreRegex.test(name)){
             return res.render('editar', {
                 alert: true,
                 alertTitle: "Error",
                 alertMessage: "El nombre no debe llevar caracteres especiales",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', // Redirigir a la página de registro nuevamente
                 login: true,
                 roluser: true,
