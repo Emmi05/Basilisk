@@ -88,7 +88,7 @@ body{
 }
 
 .a-login:hover, .a-login:active {
-  background-color: #10B981;
+  background-color: #0191A9;
   color: white;
 }
 
@@ -223,16 +223,3 @@ body{
   position: relative;
 }
 
-.toggle-password {
-  position: absolute;
-  top: 50%;
-  right: 30px;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-
-.toggle-password i {
-  font-size: 18px;
-  color: #34D399 !important;
-  /* Cambia el color del icono a aqua */
-}

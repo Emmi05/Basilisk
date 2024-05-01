@@ -1,7 +1,7 @@
 window.WebChat.renderWebChat({
     className: 'webchat__chat',
     directLine: window.WebChat.createDirectLine({
-      token: 'bmQmB_t4MwU.WpStaCcojPX0LIQuiY3av2UXRK3bl67vexpsD_3L8Qk'
+      token: 'bmQmB_t4MwU.rlUSv2ByiBnJ0jatqvN99wDolJH_wPYZOOtM6qCl9xc'
     }),
     styleOptions: {
       botAvatarImage: './resources/img/logo_ovalado.png',
@@ -14,7 +14,7 @@ window.WebChat.renderWebChat({
       bubbleBorderWidth: 2,
       bubbleNubOffset: 0,
       bubbleNubSize: 10,
-      rootHeight: '495px',
+      rootHeight: '380px',
       rootWidth: 'fit-content',
       bubbleFromUserBackground: '#f2f2f2',
       bubbleFromUserBorderColor: '#e0e0e0',

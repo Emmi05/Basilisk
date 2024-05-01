@@ -1,18 +1,20 @@
 import { pool} from '../database/db.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import {promisify} from 'util';
+
+const usernameRegex = /^[a-zA-Z]{5,20}$/;
+ const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+ const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
 
 
 
-export const login=  async(req, res) => {
+export const login = async (req, res) => {
     const user = req.body.user;
     const pass = req.body.pass;
-    
+
     if (user && pass) {
         try {
             const [results, fields] = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
-            
+
             if (results.length == 0 || !(await bcrypt.compare(pass, results[0].pass))) {
                 console.log('Usuario y/o contraseña incorrectos');
                 return res.render('login', {
@@ -25,123 +27,68 @@ export const login=  async(req, res) => {
                     ruta: 'login'
                 });
             } else {
-                req.session.loggedin = true;
-                req.session.name = results[0].name;
-                req.session.rol = results[0].rol;
-                 
-                  const id = results[0].id
-                  const token = jwt.sign({id:id}, process.env.JWT_SECRETO, {
-                      expiresIn: process.env.JWT_TIEMPO_EXPIRA
-                  })
-                 console.log("TOKEN: "+token+" para el USUARIO : "+user)
+                // Crear una nueva sesión incluso si una sesión anterior ha expirado
+                req.session.regenerate(err => {
+                    if (err) {
+                        console.error('Error al regenerar la sesión:', err);
+                        return res.status(500).send('Error de servidor');
+                    }
 
-                 const cookiesOptions = {
-                      expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
-                      httpOnly: true
-                 }
-                 res.cookie('jwt', token, cookiesOptions)
-                if (req.session.rol == 'usuario') {
-                    res.render('login', {
-                        alert: true,
-                        alertTitle: "Usuario normal:",
-                        alertMessage: "Usuario",
-                        alertIcon: 'success',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        ruta: ''
-                    });
-                } else {
-                      
-                    res.render('login', {
-                        alert: true,
-                        alertTitle: "Usuario",
-                        alertMessage: "Administrador",
-                        alertIcon: 'success',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        ruta: ''
-                    });
-                }
+                    req.session.loggedin = true;
+                    req.session.name = results[0].name;
+                    req.session.rol = results[0].rol;
+                    req.session.userId = results[0].id; // Asociar el ID del usuario con la sesión
+
+                    if (req.session.rol == 'usuario') {
+                        res.render('login', {
+                            alert: true,
+                            alertTitle: "Usuario normal:",
+                            alertMessage: "Usuario",
+                            alertIcon: 'success',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            ruta: ''
+                        });
+                    } else {
+                        res.render('login', {
+                            alert: true,
+                            alertTitle: "Usuario",
+                            alertMessage: "Administrador",
+                            alertIcon: 'success',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            ruta: ''
+                        });
+                    }
+                });
             }
         } catch (error) {
             console.error('Error al ejecutar la consulta SQL:', error);
-            return res.status(500).send('Error de servidor');
+            // return res.status(500).send('Error de servidor');
+            return res.status(500).render('500');
         }
     } else {
         res.render('login', {
             alert: true,
-            alertTitle: "Advertecia",
+            alertTitle: "Advertencia",
             alertMessage: "Por favor ingrese un usuario y/o contraseña",
             alertIcon: 'warning',
-            showConfirmButton: false,
-            timer: 1500,
+            showConfirmButton: true,
+            timer: false,
             ruta: 'login'
         });
         res.end();
     }
-
 }
 
-export const auth = async (req, res, next) => {
-    // Si ya estás en la página de inicio, no redirigir
-    if (req.originalUrl === '/') {
-        return next();
-    }
 
-    // Si el usuario ya está en la página de login, no redirigir
-    if (req.originalUrl === '/login') {
-        return next();
-    }
+// Middleware de autenticación
 
-    if (req.cookies.jwt) {
-        try {
-            const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO);
-            
-            const results = await pool.query('SELECT * FROM users WHERE id = ?', [decodificada.id]);
-    
-            if (results.length > 0) {
-                req.user = results[0];
-                return next();
-            } else {
-                throw new Error('Usuario no encontrado');
-            }
-        } catch (error) {
-            if (error.name === 'TokenExpiredError') {
-                console.log('Token expirado');
-                res.clearCookie('jwt');
-                return res.render('login', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "Token expirado",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: false,
-                    ruta: 'login'
-                });
-          
-            }
-            console.error(error);
-            return res.render('login', {
-                alert: true,
-                alertTitle: "Error",
-                alertMessage: "Error al verificar token",
-                alertIcon: 'error',
-                showConfirmButton: true,
-                timer: false,
-                ruta: 'login'
-            });
-        
-        }
-    } else {
-        res.redirect('/login');
-        return;
-    }
-}
 
 export const perfil = async (req, res) => {
-    const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
-    console.log(userId); // Solo para verificar en la consola
-    
+  // Capturando el ID de sesión
+          const userId = req.session.userId;
+
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
@@ -168,7 +115,8 @@ export const perfil = async (req, res) => {
 export const password = async (req, res) => {
     const { pass, newpass } = req.body;
 
-    const userId = req.user[0].id; // Accediendo al ID de usuario desde req.user
+    const userId = req.user.id; // Accediendo al ID de usuario desde req.user
+  
 
     if (req.session.rol === 'usuario') {
         try {
@@ -363,8 +311,8 @@ export const register=  async(req, res) => {
                 alertTitle: "Error",
                 alertMessage: "Debes rellenar todos los campos!",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 1500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', 
                 login: true,
                 roluser: true,
@@ -373,15 +321,15 @@ export const register=  async(req, res) => {
             });
         }
         const existingUser = await pool.query('SELECT * FROM users WHERE user = ?', user);
-        console.log(existingUser)
+        // console.log(existingUser)
         if (existingUser[0].length > 0) {
             return res.render('register', {
                 alert: true,
                 alertTitle: "Error",
                 alertMessage: "El usuario ya existe. Por favor, elija otro nombre de usuario.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 1500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', 
                 login: true,
                 roluser: true,
@@ -390,16 +338,16 @@ export const register=  async(req, res) => {
             });
         }
 
-        // Verificar nombre de usuario
-        const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+        
+  
         if(!usernameRegex.test(user)){
             return res.render('register', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "El usuario no debe llevar caracteres especiales",
+                alertMessage: "El usuario no debe llevar caracteres especiales o números",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', // Redirigir a la página de registro nuevamente
                 login: true,
                 roluser: true,
@@ -407,16 +355,15 @@ export const register=  async(req, res) => {
                 rol: req.session.rol,
             }); 
         }
-        // verifica nombre 
-        const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+        
         if(!nombreRegex.test(name)){
             return res.render('register', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "El nombre no debe llevar caracteres especiales",
+                alertMessage: "El nombre no debe llevar caracteres especiales.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', // Redirigir a la página de registro nuevamente
                 login: true,
                 roluser: true,
@@ -427,15 +374,14 @@ export const register=  async(req, res) => {
 
 
          // Verificar si la contraseña cumple con los requisitos
-         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
          if (!passwordRegex.test(pass)) {
              return res.render('register', {
                  alert: true,
                  alertTitle: "Error",
                  alertMessage: "La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.",
                  alertIcon: 'error',
-                 showConfirmButton: false,
-                 timer: 3500,
+                 showConfirmButton: true,
+                 timer: false,
                  ruta: '/', // Redirigir a la página de registro nuevamente
                  login: true,
                  roluser: true,
@@ -485,7 +431,7 @@ export const register=  async(req, res) => {
 // vista 
 export const usuarios=  async(req, res) => {
     if (req.session.rol == 'usuario') {
-        res.render('usuarios', {
+        res.render('denegado', {
             login: true,
             roluser: false,
             name: req.session.name,
@@ -505,7 +451,7 @@ export const usuarios=  async(req, res) => {
 export const editarUsuario = async (req, res) => {
     const id = req.params.id;
     const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
-
+try {
     if (req.session.rol == 'admin') {
         const { user, name, rol } = req.body;
 
@@ -516,8 +462,8 @@ export const editarUsuario = async (req, res) => {
                 alertTitle: "Error",
                 alertMessage: "Debes rellenar todos los campos!",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 1500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', 
                 login: true,
                 roluser: true,
@@ -550,16 +496,15 @@ export const editarUsuario = async (req, res) => {
                 });
             }
         }
-        // Verificar nombre de usuario
-        const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+      
         if(!usernameRegex.test(user)){
             return res.render('editar', {
                 alert: true,
                 alertTitle: "Error",
-                alertMessage: "El usuario no debe llevar caracteres especiales",
+                alertMessage: "El usuario no debe llevar caracteres especiales o números",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', // Redirigir a la página de registro nuevamente
                 login: true,
                 roluser: true,
@@ -569,16 +514,15 @@ export const editarUsuario = async (req, res) => {
 
             }); 
         }
-        // verifica nombre 
-        const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
+        
         if(!nombreRegex.test(name)){
             return res.render('editar', {
                 alert: true,
                 alertTitle: "Error",
                 alertMessage: "El nombre no debe llevar caracteres especiales",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', // Redirigir a la página de registro nuevamente
                 login: true,
                 roluser: true,
@@ -626,58 +570,101 @@ export const editarUsuario = async (req, res) => {
                 usuarios:rows,
             });
         }
-    } else {
-        // Manejar el error apropiadamente
-        // res.status(500).send('Error interno del servidor');
-        return res.status(500).render('500');
+
+    } else if (req.session.rol == 'usuario') {
+        res.render('denegado', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+        });
     }
+}catch{
+    return res.status(500).render('500');
+
+}
 }
 
-
 export const eliminarUsuario = async (req, res) => {
-     if (req.session.rol == 'admin') {
-        const { id } = req.params;
-        const [result]=await pool.query('DELETE FROM users WHERE id=?',[id])
-        //otro if de si es mayor a 0?
-        if (result && result.affectedRows > 0) {
-            const [rows]=await pool.query('SELECT * FROM users');
-        res.render('usuarios', {
-            alert: true,
-            alertTitle: "Eliminado",
-            alertMessage: "¡Eliminado Exitoso",
-            alertIcon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
+    try {
+        if (req.session.rol == 'admin') {
+            const { id } = req.params;
+            const [result]=await pool.query('DELETE FROM users WHERE id=?',[id])
+            //otro if de si es mayor a 0?
+            if (result && result.affectedRows > 0) {
+                const [rows]=await pool.query('SELECT * FROM users');
+            res.render('usuarios', {
+                alert: true,
+                alertTitle: "Eliminado",
+                alertMessage: "¡Eliminado Exitoso",
+                alertIcon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                login: true,
+                roluser: true,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios:rows,
+                ruta:'usuarios'
+            });
+        }else{
+
+        }
+    } else if (req.session.rol == 'usuarios'){
+        res.render('denegado', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+        });
+    }
+    
+    } catch (error) {
+        return res.status(500).render('500');
+
+    }
+    
+        }
+
+
+export const home =async (req, res) =>{
+     // Validación de sesión
+     if (req.session.loggedin) {
+        if (req.session.rol == 'usuario') {
+          res.render('home', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol
+          });
+        } else if (req.session.rol == 'admin') {
+       
+          res.render('home', {
             login: true,
             roluser: true,
             name: req.session.name,
-            rol: req.session.rol,
-            usuarios:rows,
-            ruta:'usuarios'
-        });
-    } }else{
-        // (error) 
-        //     console.error(error);
-            // Manejar el error apropiadamente
-            // res.status(500).send('Error interno del servidor');
-            return res.status(500).render('500');
+            rol: req.session.rol
+          });
         }
-    }
+      } else {
+        res.render('terrenos_index', {
+            login: false,
+            name: 'Debe iniciar sesión',
+        });
+    
+      }
+}
 
-
-    // CLIENTES
 
 export const methods = {
     register,
     login,
-    auth,
     usuarios,
     editarUsuario,
     eliminarUsuario,
-    
     perfil,
- 
     password,
+    home,
   }
 
 

@@ -32,8 +32,11 @@
                             <!-- Page Heading -->
                             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                 <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                                <a href="/disponibles" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                                        class="fas fa-download fa-sm text-white-50"></i> 
+                                        Generar reporte
+                                    
+                                    </a>
                             </div>
         
                             <!-- Content Row -->
@@ -50,7 +53,7 @@
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">$20,000</div>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -133,20 +136,13 @@
                                         <!-- Card Header - Dropdown -->
                                         <div
                                             class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                            <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                            <h6 class="m-0 font-weight-bold text-primary">Ganancias 2023</h6>
                                             <div class="dropdown no-arrow">
                                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                                 </a>
-                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                    aria-labelledby="dropdownMenuLink">
-                                                    <div class="dropdown-header">Dropdown Header:</div>
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                </div>
+                                    
                                             </div>
                                         </div>
                                         <!-- Card Body -->
@@ -164,20 +160,12 @@
                                         <!-- Card Header - Dropdown -->
                                         <div
                                             class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                            <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                                            <h6 class="m-0 font-weight-bold text-primary">Ventas frecuentes</h6>
                                             <div class="dropdown no-arrow">
                                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                                 </a>
-                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                    aria-labelledby="dropdownMenuLink">
-                                                    <div class="dropdown-header">Dropdown Header:</div>
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                </div>
                                             </div>
                                         </div>
                                         <!-- Card Body -->
@@ -232,7 +220,6 @@
 
             <!-- Footer -->
           
-                <%- include ('layouts/footer.ejs') %>
             <!-- End of Footer -->
 
         </div>
@@ -267,13 +254,12 @@
 
     <!-- DATATABLES -->
     <script src="../resources/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="../resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <script>
-    // Set new default font family and font color to mimic Bootstrap's default styling
-// Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-// Chart.defaults.global.defaultFontColor = '#858796';
-
+    
 function number_format(number, decimals, dec_point, thousands_sep) {
   // *     example: number_format(1234.56, 2, ',', ' ');
   // *     return: '1 234,56'
@@ -306,19 +292,19 @@ var myLineChart = new Chart(ctx, {
   data: {
     labels: ["Ene", "Feb", "Mar", "Abri", "May", "Jun", "Jul", "Agos", "Sep", "Oct", "Nov", "Dec"],
     datasets: [{
-      label: "Earnings",
+      label: "Ganancias",
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
-      borderColor: "rgba(255, 0, 255, 1)", 
+      borderColor: "rgba(78, 115, 223, 1)", // Cambiado a azul
       pointRadius: 5,
-      pointBackgroundColor: "rgba(255, 0, 255, 1)", 
+      pointBackgroundColor: "rgba(78, 115, 223, 1)", // Cambiado a azul
       pointBorderColor: 'rgb(0, 0, 0)',
       pointHoverRadius: 3,
-      pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+      pointHoverBackgroundColor: "rgba(78, 115, 223, 1)", // Cambiado a azul
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [5000, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 40000],
+      data: [5000, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 0, 0, 0],
     }],
   },
   options: {
@@ -392,16 +378,14 @@ var myLineChart = new Chart(ctx, {
 </script>
 
 <script>
-    // Set new default font family and font color to mimic Bootstrap's default styling
-// Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-// Chart.defaults.global.defaultFontColor = '#858796';
+
 
 // Pie Chart Example
 var ctx = document.getElementById("myPieChart");
 var myPieChart = new Chart(ctx, {
   type: 'doughnut',
   data: {
-    labels: ["Facebook", "Marketing", "Personas"],
+    // labels: ["Facebook", "Marketing", "Personas"],
     datasets: [{
       data: [55, 30, 15],
       backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
@@ -429,6 +413,10 @@ var myPieChart = new Chart(ctx, {
 });
 
 </script>  
+
+
+<%- include ('./layouts/dash2.ejs') %>
+
 
 </body>
 

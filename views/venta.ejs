@@ -246,7 +246,6 @@
          confirmButtonText: "Sí, eliminarlo"
      }).then((result) => {
          if (result.isConfirmed) {
-             // Redirigir a la ruta de eliminación
              window.location.href = `/deleteventa/${id}`;
          }
      });
@@ -254,7 +253,7 @@
    </script>
 
 
-
+<%- include ('./layouts/dash2.ejs') %>
 
 
 

@@ -1,0 +1,44 @@
+<script>
+    function logoutAfterInactivity() {
+      const inactivityTimeout = 2 * 60 * 1000; // 2 minutos en milisegundos
+  
+      setTimeout(function() {
+          console.log("Temporizador de inactividad activado");
+  
+          fetch('/logout', {
+              method: 'GET', // O el método que uses para tu logout
+              credentials: 'same-origin' // Incluye las credenciales para enviar las cookies de sesión
+          })
+          .then(response => {
+              console.log("Recibida respuesta de la solicitud de logout");
+              if (response.ok) {
+                  console.log("Respuesta de solicitud de logout OK");
+  
+                  // Mostrar alerta
+                  Swal.fire({
+                      title: 'Sesión expirada',
+                      text: 'Tu sesión ha expirado debido a la inactividad. Serás redirigido al login.',
+                      icon: 'warning',
+                      showConfirmButton: false,
+                      timer: 5000 // Tiempo en milisegundos (5 segundos)
+                  });
+  
+                  console.log("Mostrando mensaje de sesión expirada");
+  
+                  // Esperar un tiempo antes de redirigir al usuario
+                  setTimeout(function() {
+                      console.log("Redirigiendo al usuario al login");
+                      window.location.href = '/login'; // Cambia '/login' por la ruta de tu página de login
+                  }, 5000); // Esperar 5 segundos antes de redirigir
+              }
+          })
+          .catch(error => {
+              console.error('Error al realizar la solicitud de logout:', error);
+          });
+      }, inactivityTimeout);
+  }
+  
+  // Llama a la función para iniciar el temporizador de inactividad
+  logoutAfterInactivity();
+  
+  </script>

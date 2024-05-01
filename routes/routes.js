@@ -1,11 +1,14 @@
 import { Router } from 'express';
 import { pool} from '../database/db.js'
-import { auth,methods as authentication} from '../controller/controlador.js'
+import { methods as controlador} from '../controller/controlador.js'
 import { methods as clientes} from '../controller/clientes.js'
 import { methods as terrenos} from '../controller/terrenos.js'
 import {methods as ventas} from '../controller/ventas.js'
 import { methods as abonos} from '../controller/abonos.js'
 import {methods as pdf} from '../controller/pdf.js'
+
+import { autenticacionMiddleware } from '../middlewares/auth.js'; //
+import { autorizacionMiddleware } from '../middlewares/autorización.js'; // 
 
 const router = Router();// Definición de la ruta '/'
 
@@ -17,94 +20,47 @@ router.get('/contactanos', (req, res) => {
     res.render('contactanos');
 });
 
-
-
-
 router.get('/services', (req, res) => {
     res.render('terrenos_index');
 });
 
-router.get('/servicesterrenos', (req, res) => {
+router.get('/inicio_terrenos', (req, res) => {
     res.render('vista_terrenos');
 });
-// AUTENTIFICACION
-router.use(authentication.auth);
 
-router.get('/', (req, res) => {
-    // Validación de sesión
-    if (req.session.loggedin) {
-        if (req.session.rol == 'usuario') {
-            res.render('home', {
-                login: true,
-                roluser: false,
-                name: req.session.name,
-                rol: req.session.rol
-            });
-        } else if (req.session.rol == 'admin') {
-            res.render('home', {
-                login: true,
-                roluser: true,
-                name: req.session.name,
-                rol: req.session.rol
-            });
-        }
-        res.end();
-    } else {
-        res.render('terrenos_index', {
-            login: false,
-            name: 'Debe iniciar sesión',
-        });
-    }
-});
+
+
+
+router.get('/',  controlador.home);
+  
 
 router.get('/login', (req, res) => {
     res.render('login');
 });
-router.post('/login', authentication.login)
+router.post('/login', controlador.login)
 
-
-// LOGOUT
+// PROFILE
+router.get('/profile', autenticacionMiddleware, controlador.perfil);
+router.post('/profile', autenticacionMiddleware, controlador.password);
 router.get('/logout', function(req, res) {
-    res.clearCookie('jwt')  
+   
     req.session.destroy(() => {
         res.redirect('/');
     });
 });
 
-
-router.get('/registro_usuario', async(req, res) => {
-    if (req.session.rol == 'usuario') {
-        res.render('denegado', {
-            login: true,
-            roluser: false,
-            name: req.session.name,
-            rol: req.session.rol
-        });
-    } else if (req.session.rol == 'admin') {
+router.get('/registro_usuario', autenticacionMiddleware,autorizacionMiddleware ('admin'), async  (req, res) => {
         res.render('register', {
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
         });
-    }    
-});
+    })    
+router.post('/register',  autenticacionMiddleware, autorizacionMiddleware ('admin'), controlador.register);
 
+ router.get('/usuarios', autenticacionMiddleware,autorizacionMiddleware ('admin'),  async(req, res) => {
 
-router.post('/register',authentication.register);
-
-
-
- router.get('/usuarios', async(req, res) => {
-        if (req.session.rol == 'usuario') {
-            res.render('denegado', {
-                login: true,
-                roluser: false,
-                name: req.session.name,
-                rol: req.session.rol,
-
-            });
-        } else if (req.session.rol == 'admin') {
             const [rows] = await pool.query('SELECT *FROM users');
             res.render('usuarios', {
                 login: true,
@@ -114,11 +70,11 @@ router.post('/register',authentication.register);
                 usuarios: rows
             });
         }
-});
+);
 
-router.get('/editar_usuario/:id', async(req, res) => {
+router.get('/editar_usuario/:id', autenticacionMiddleware, autorizacionMiddleware ('admin'), async(req, res) => {
     const id = req.params.id;
-     if (req.session.rol == 'admin') {
+    
         const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
         res.render('editar', {
             login: true,
@@ -127,28 +83,15 @@ router.get('/editar_usuario/:id', async(req, res) => {
             rol: req.session.rol,
             usuarios: rows,
         });
-    }else{
-        res.render('denegado', {
-            login: true,
-            roluser: false,
-            name: req.session.name,
-            rol: req.session.rol,
-        });
-    }
 });
-router.post('/update/:id',authentication.editarUsuario);
 
-router.get('/delete/:id', authentication.eliminarUsuario);
+router.post('/update/:id',autenticacionMiddleware, autorizacionMiddleware ('admin'), controlador.editarUsuario);
 
-// PROFILE
-router.get('/profile', authentication.auth, authentication.perfil);
+router.get('/delete/:id',autenticacionMiddleware, autorizacionMiddleware ('admin'), controlador.eliminarUsuario);
 
-router.post('/profile', authentication.auth, authentication.password);
-    
 
-// ruta clientes
 
-router.get('/cliente', async(req, res) => {
+router.get('/cliente',autenticacionMiddleware,  async(req, res) => {
     if (req.session.rol == 'usuario') {
         res.render('registro', {
             login: true,
@@ -168,11 +111,11 @@ router.get('/cliente', async(req, res) => {
     }
 });
 
-router.post('/cliente', clientes.crearCliente)
+router.post('/cliente',autenticacionMiddleware,  clientes.crearCliente)
 
 
 //ver clientesss
-router.get('/clientes', async(req, res) => {
+router.get('/clientes',autenticacionMiddleware,  async(req, res) => {
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT c.*, p.name_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id');
 
@@ -201,7 +144,7 @@ router.get('/clientes', async(req, res) => {
 
 
 // editar cambiar ruta se pone la misma / en el boton y cambiar rows debo darle permiso a mi usuario y cambiar el rol a false en usuario
-router.get('/editar_cliente/:id', async(req, res) => {
+router.get('/editar_cliente/:id', autenticacionMiddleware, async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -226,15 +169,15 @@ router.get('/editar_cliente/:id', async(req, res) => {
         });
     }
 });
-router.post('/updatecliente/:id',clientes.editarClientes);
+router.post('/updatecliente/:id',autenticacionMiddleware, clientes.editarClientes);
 
-router.get('/deletecliente/:id', clientes.eliminarCliente);
+router.get('/deletecliente/:id',autenticacionMiddleware, clientes.eliminarCliente);
 
 
 
 
 // terreno
-router.get('/terreno', async(req, res) => {
+router.get('/terreno', autenticacionMiddleware, async(req, res) => {
     if (req.session.rol == 'usuario') {
         res.render('terrenoAlta', {
             login: true,
@@ -253,10 +196,10 @@ router.get('/terreno', async(req, res) => {
     }
 });
 
-router.post('/terreno', terrenos.crearTerreno);
+router.post('/terreno',autenticacionMiddleware,  terrenos.crearTerreno);
 
 //VER CLIENTES
-router.get('/terrenos', async(req, res) => {
+router.get('/terrenos', autenticacionMiddleware, async(req, res) => {
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT *FROM land');
         res.render('terrenos', {
@@ -278,7 +221,7 @@ router.get('/terrenos', async(req, res) => {
     }
 });
 
-router.get('/editar_terreno/:id', async(req, res) => {
+router.get('/editar_terreno/:id',autenticacionMiddleware, async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -303,15 +246,15 @@ router.get('/editar_terreno/:id', async(req, res) => {
     }
 });
 
- router.post('/updateterreno/:id',terrenos.editarTerrenos);
+ router.post('/updateterreno/:id',autenticacionMiddleware, terrenos.editarTerrenos);
 
 
 //  ELIMINAR TERRENO
-router.get('/deleteterreno/:id', terrenos.eliminarTerreno);
+router.get('/deleteterreno/:id', autenticacionMiddleware, terrenos.eliminarTerreno);
 
 
 // venta
-router.get('/ventas', async (req, res) => {
+router.get('/ventas',autenticacionMiddleware, async (req, res) => {
     const [rows] = await pool.query('SELECT * FROM customers');
     const [rows2] = await pool.query('SELECT * FROM land');
     // const [rows2] = await pool.query('SELECT * FROM land WHERE lote = ? AND manzana = ?');
@@ -338,7 +281,7 @@ router.get('/ventas', async (req, res) => {
 });
 
 
-router.get('/terreno/:id', async (req, res) => {
+router.get('/terreno/:id', autenticacionMiddleware, async (req, res) => {
     const terrenoId = req.params.id;
     const [rows] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
 
@@ -349,11 +292,11 @@ router.get('/terreno/:id', async (req, res) => {
     }
 });
 
-router.post('/venta', ventas.crearVenta)
+router.post('/venta',autenticacionMiddleware, ventas.crearVenta)
 
 //VER VENTAS
 
-router.get('/view_venta', async(req, res) => {
+router.get('/view_venta',autenticacionMiddleware, async(req, res) => {
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
         res.render('venta', {
@@ -376,7 +319,7 @@ router.get('/view_venta', async(req, res) => {
 });
 
 //Editar
-router.get('/venta/:id', async(req, res) => {
+router.get('/venta/:id',autenticacionMiddleware, async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -403,15 +346,15 @@ router.get('/venta/:id', async(req, res) => {
 });
 
 
-router.post('/updateventa/:id',ventas.editarVenta);
+router.post('/updateventa/:id', autenticacionMiddleware, ventas.editarVenta);
 
 
 //  ELIMINAR TERRENO
-router.get('/deleteventa/:id', ventas.eliminarVenta);
+router.get('/deleteventa/:id',autenticacionMiddleware,  ventas.eliminarVenta);
 
 
 // tambien va usuario?? 
-router.get('/credits', async(req, res) => {
+router.get('/credits', autenticacionMiddleware, async(req, res) => {
  if (req.session.rol == 'admin') {
         const [rows] = await pool.query('SELECT *FROM users');
         res.render('usuarios', {
@@ -425,7 +368,7 @@ router.get('/credits', async(req, res) => {
 });
 
 
-router.get('/abono',  async(req, res) => {
+router.get('/abono', autenticacionMiddleware, async(req, res) => {
     
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT  c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.estado, l.id_interno, s.n_cuentas,  s.deuda_restante,  s.id, s.tipo_venta, s.inicial, s.cuotas, MAX(a.cuotas_pagadas) as cuotas_pagadas,  (SELECT a2.cuotas_restantes FROM abonos a2 WHERE a2.id_sale = s.id AND a2.cuotas_pagadas = MAX(a.cuotas_pagadas)) as cuotas_restantes FROM   sale s  JOIN customers c ON s.id_customer = c.id  JOIN  abonos a ON a.id_sale = s.id JOIN   land l ON s.id_land = l.id  WHERE  s.tipo_venta = "credito" && l.estado = "proceso" GROUP BY  s.id ORDER BY  a.cuotas_pagadas DESC; ');
@@ -452,7 +395,7 @@ router.get('/abono',  async(req, res) => {
     }
 });
 
-router.get('/terrenos_pagados',  async(req, res) => {
+router.get('/terrenos_pagados', autenticacionMiddleware, async(req, res) => {
     
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT s.id AS sale_id, s.*, c.*, l.* FROM sale s JOIN land l ON s.id_land = l.id JOIN customers c ON s.id_customer = c.id WHERE l.estado = "pagado"');
@@ -479,7 +422,7 @@ router.get('/terrenos_pagados',  async(req, res) => {
 
 // ABONOS VISTA FORMULARIO
 
-router.get('/abonos/:id', async (req, res) => {
+router.get('/abonos/:id', autenticacionMiddleware, async (req, res) => {
 
     const id = req.params.id;
 
@@ -527,31 +470,22 @@ router.get('/abonos/:id', async (req, res) => {
 
 // crear abono
 
-router.post('/crear_abonos/:id',abonos.crearAbonos);
+router.post('/crear_abonos/:id',autenticacionMiddleware, abonos.crearAbonos);
 
-router.get('/reporte/:id',pdf.crearPdf);
+router.get('/reporte/:id',autenticacionMiddleware, pdf.crearPdf);
 
-router.get('/contado/',pdf.contado);
+router.get('/contado/',autenticacionMiddleware, pdf.contado);
 
-router.get('/pagados/',pdf.pagados);
-
-
-router.get('/proceso/',pdf.proceso);
-
-router.get('/disponibles/',pdf.disponibles);
-router.get('/finalizacion/:id',pdf.finiquito);
+router.get('/pagados/',autenticacionMiddleware, pdf.pagados);
 
 
+router.get('/proceso/',autenticacionMiddleware,pdf.proceso);
 
-
-// REPORTE GENERAL
+router.get('/disponibles/',autenticacionMiddleware,pdf.disponibles);
+router.get('/finalizacion/:id',autenticacionMiddleware,pdf.finiquito);
 
 
 
-
-
-
-  
 
 
 export default router;

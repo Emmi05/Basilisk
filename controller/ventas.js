@@ -277,11 +277,11 @@ const crearVenta = async (req, res) => {
         });
     }
 
-
-
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error interno del servidor');
+        return res.status(500).render('500');
+
+        // res.status(500).send('Error interno del servidor');
     }
 }
 
@@ -306,6 +306,9 @@ const editarVenta = async (req, res) => {
         const [terreno] = await pool.query('SELECT estado, precio FROM land WHERE id = ?', [id_terreno_asociado]);
         const estado_terreno = terreno[0].estado;
         const precio_terreno = terreno[0].precio;
+
+        if (req.session.rol == 'usuario'){
+       
 
         if (tipo_venta === 'contado' && estado_terreno !== 'pagado') {
             // Actualizar los datos normales y establecer los valores de "inicial", "n_cuentas" y "cuotas" como null
@@ -393,19 +396,117 @@ const editarVenta = async (req, res) => {
             name: req.session.name,
             rol: req.session.rol,
             ventas: rows,
-            ruta: 'abonos'
+            ruta: 'view_venta'
         });
+    }
+    else if (req.session.rol =='admin'){
+   
+        if (tipo_venta === 'contado' && estado_terreno !== 'pagado') {
+            // Actualizar los datos normales y establecer los valores de "inicial", "n_cuentas" y "cuotas" como null
+            result = await pool.query(
+                'UPDATE sale SET tipo_venta = ?, inicial = NULL, n_cuentas = NULL, cuotas = NULL WHERE id = ?',
+                [tipo_venta, id]
+            );
+
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_terreno_asociado]);
+        } 
+        else if (tipo_venta === 'credito') {
+             // if(inicialNumber <= 0 || !cantidades.test(inicial) || nCuentasNumber <= 0 || !cantidades.test(n_cuentas) || inicialNumber >= precio_terreno) {
+            if((inicialNumber >= precio_terreno)) {
+                return res.render('ventaEdit', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El enganche debe ser menor que el precio del terreno.",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: '/',
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    ventas: rows,
+                    terrenos2: terreno,
+                });
+            }
+            if(inicialNumber <= 0 || !cantidades.test(inicial)) {
+                return res.render('ventaEdit', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: '/',
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    ventas: rows,
+                    terrenos2: terreno,
+                });
+            }
+            if(nCuentasNumber <= 0 || !cantidades.test(n_cuentas)) {
+                return res.render('ventaEdit', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: '/',
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    ventas: rows,
+                    terrenos2: terreno,
+                });
+            }
+
+            // Si es "crédito", actualiza los valores normales
+            result = await pool.query(
+                'UPDATE sale SET tipo_venta = ?, inicial = ?, n_cuentas = ?, cuotas = ? WHERE id = ?',
+                [tipo_venta, inicial, n_cuentas, cuotas, id]
+            );
         
+            // Marcar el terreno como "proceso"
+            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_terreno_asociado]);
+        }
+    
+        
+        res.render('venta', {
+            alert: true,
+            alertTitle: "Actualización",
+            alertMessage: "¡Actualización Exitosa!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows,
+            ruta: 'view_venta'
+        });
+    }
+    
     } catch (error) {
         console.error("Error al actualizar la venta:", error);
-        res.status(500).send('Error al actualizar la venta');
+        // res.status(500).send('Error al actualizar la venta');
+        return res.status(500).render('500');
+
     }
 };
 
 
 //ELIMINAR VENTA
 const eliminarVenta = async (req, res) => {
-    const ventaId = req.params.id;
+    try {
+        if (req.session.rol == 'admin'){
+
+        
+        const ventaId = req.params.id;
 
     const [venta] = await pool.query('SELECT id_land FROM sale WHERE id = ?', [ventaId]);
 
@@ -433,15 +534,21 @@ if (result && result.affectedRows > 0) {
             ventas: rows,
             ruta: 'view_venta'
         });
-    } else {
-        // Manejar el caso en que no se pudo actualizar el estado del terreno
-        res.status(500).send('Error al actualizar el estado del terreno');
     }
-} else {
-    // Manejar el caso en que no se pudo eliminar la venta
-    res.status(500).send('Error al eliminar la venta');
+ } else {
+    res.render('denegado', {
+        login: true,
+        roluser: false,
+        name: req.session.name,
+        rol: req.session.rol
+    });
+    }
 }
+    } catch {
+        return res.status(500).render('500');
 
+    }
+    
 }
 //
 
@@ -451,4 +558,5 @@ export const methods = {
     editarVenta,
     eliminarVenta,
   }
+
 

@@ -61,16 +61,11 @@
                     Solo debe tener números (150, 300).         
                  </div>
                 </div> 
-                <!-- <div class="col-md-6">
-                  <label for="inputCity" class="form-label">City</label>
-                  <input type="text" class="form-control" id="inputCity">
-                </div> -->
+               
                 <div class="col-md-6">
                     <label for="precio" name="precio" class="form-label">Precio</label>
-                    <!-- <input type="int" class="form-control" id="precio" name="precio"> -->
                     <input type="text" class="form-control" id="precio" name="precio" placeholder="precio">
 
-                    <!-- <input type="number" class="form-control" id="precio" name="precio"> -->
                     <div id="rol" class="form-text">
                       Solo debe tener números separados por coma (200,000, 150,000).         
                    </div>
@@ -84,7 +79,6 @@
                
                   <div class="col-md-6">
                   <label for="rol" class="form-label">Escritura</label>
-                  <!-- <label for="rol">Escritura</label> -->
                   <select class="form-control" id="escritura" name="escritura" >
                       <option value="">Seleccionar</option>
                       <option value="si">Si</option>
@@ -97,7 +91,6 @@
                 <label for="rol">Estado</label>
                 <select class="form-control" id="estado" name="estado" >
                     <option value="">Seleccionar</option>
-                    <!-- <option value="pagado">Pagado</option> -->
                     <option value="disponible">Disponible</option>
                     <!-- <option value="proceso">En pago</option> -->
                     
@@ -113,11 +106,7 @@
               </form>
        
             
-    <!-- Footer -->
-<!-- <footer class="sticky-footer bg-white">
-  <%- include ('layouts/footer.ejs') %>
-</footer> -->
-<!-- End of Footer -->
+
 
 </div>
 <!-- End of Content Wrapper -->
@@ -125,10 +114,6 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- Scroll to Top Button-->
-<!-- <a class="scroll-to-top rounded" href="#page-top">
-<i class="fas fa-angle-up"></i>
-</a> -->
 
 <!-- Logout Modal-->
 <%- include ('layouts/logout.ejs') %>
@@ -167,7 +152,7 @@
  </script>
 <% } %>
 
-
+<%- include ('./layouts/dash2.ejs') %>
  
 </div>
 

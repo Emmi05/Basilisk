@@ -647,7 +647,7 @@ const finiquito =async (req,res)=>{
         doc.moveDown();
         doc.moveDown();
 
-        const finiquito = `Por este conducto manifiesto, a nombre de mi representada, que  C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} ha cumplido a plena satisfacción de mi representada con los pagos convenidos en el contrato privado de compra venta establecido entre las partes respecto al inmueble con clave  ${informacion[0].land_id_interno}, manzana  ${informacion[0].land_manzana} lote  ${informacion[0].land_lote}, ubicado en el Fraccionamiento Fuerza Área Mexicana, municipio de Acapulco de Juáres, Estado de Guerrero.   `;
+        const finiquito = `Por este conducto manifiesto, a nombre de mi representada, que  C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} ha cumplido a plena satisfacción de mi representada con los pagos convenidos en el contrato privado de compra venta establecido entre las partes respecto al inmueble con clave  ${informacion[0].land_id_interno}, manzana  ${informacion[0].land_manzana} lote  ${informacion[0].land_lote}, ubicado en el Fraccionamiento Fuerza Área Mexicana, municipio de Acapulco de Juárez, Estado de Guerrero.   `;
 
         doc.text(finiquito, {align: 'justify'});
         doc.moveDown();

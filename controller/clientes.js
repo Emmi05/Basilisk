@@ -1,7 +1,7 @@
 import { pool} from '../database/db.js'
 
 // Expresiones regulares globales
-const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+
 const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
 const apellidoRegex = /^[A-Za-zÁ-Úá-ú]+$/;
 const celRegex = /^\d{10}$/;
@@ -11,18 +11,16 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
    export const crearCliente = async (req, res) => {
     try {
         const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
+       
         const validName = nombreRegex.test(name);
-        // Validar el formato de los apellidos permitiendo espacios en blanco
         const validApellido = apellidoRegex.test(a_paterno);
         const validMaterno = apellidoRegex.test(a_materno);
-        // Validar el formato del número de celular
         const validCel = celRegex.test(cel);
         const validAdress = addressRegex.test(adress);
 
         if (req.session.rol == 'admin') {
 
             // console.log(req.body);
-            // Verificar si algún campo obligatorio está vacío
             if (!name || !a_paterno || !a_materno || !cel || !adress) {
 
                 return res.render('registro', {
@@ -47,8 +45,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                     alertTitle: "Error",
                     alertMessage: "El formato del nombre es inválido. Por favor, solo letras.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: true,
@@ -64,8 +62,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                     alertTitle: "Error",
                     alertMessage: "El formato del apellido paterno o materno es inválido. Por favor, solo letras.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: true,
@@ -81,8 +79,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                     alertTitle: "Error",
                     alertMessage: "El formato del número de celular es inválido. Debe tener 10 dígitos.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: true,
@@ -98,8 +96,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                     alertTitle: "Error",
                     alertMessage: "El formato de dirección es inválido. No debe tener caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: true,
@@ -121,8 +119,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                         alertTitle: "Error",
                         alertMessage: "El formato del nombre del cónyuge es inválido. Por favor, solo letras.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 3500,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: true,
@@ -137,8 +135,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                         alertTitle: "Error",
                         alertMessage: "El formato del apellido paterno o materno del cónyuge es inválido.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 5000,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: true,
@@ -153,8 +151,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                         alertTitle: "Error",
                         alertMessage: "El formato del número de teléfono del cónyuge es inválido.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 5000,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: true,
@@ -219,8 +217,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                     alertTitle: "Error",
                     alertMessage: "El formato del nombre es inválido. Por favor, solo letras.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: false,
@@ -236,8 +234,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                     alertTitle: "Error",
                     alertMessage: "El formato del apellido paterno o materno es inválido. Por favor, solo letras.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: false,
@@ -253,8 +251,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                     alertTitle: "Error",
                     alertMessage: "El formato del número de celular es inválido. Debe tener 10 dígitos.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: false,
@@ -270,8 +268,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                     alertTitle: "Error",
                     alertMessage: "El formato de dirección es inválido. No debe tener caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: false,
@@ -293,8 +291,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                         alertTitle: "Error",
                         alertMessage: "El formato del nombre del cónyuge es inválido. Por favor, solo letras.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 3500,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: false,
@@ -309,8 +307,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                         alertTitle: "Error",
                         alertMessage: "El formato del apellido paterno o materno del cónyuge es inválido.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 5000,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: false,
@@ -325,8 +323,8 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
                         alertTitle: "Error",
                         alertMessage: "El formato del número de teléfono del cónyuge es inválido.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 5000,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: false,
@@ -367,7 +365,6 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
         }
         else {
             // El rol no es válido
-            // res.status(403).send('Acceso denegado');
             return res.status(403).render('denegado');
         }
     } catch (error) {
@@ -383,10 +380,19 @@ export const editarClientes = async (req, res) => {
         const id = req.params.id;
         const [rows] =await pool.query('SELECT c.*, p.name_conyuge, p.a_paterno_conyuge, p.a_materno_conyuge, p.cel_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id WHERE c.id = ?', [id]);
 
+        const validApellido = apellidoRegex.test(a_paterno);
+        const validMaterno = apellidoRegex.test(a_materno);
+        const validCel = celRegex.test(cel);
+        const validAdress=addressRegex.test(adress);
+        const validNameConyuge = nombreRegex.test(name_conyuge);
+        const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
+        const validMaternoConyuge = apellidoRegex.test(a_materno_conyuge);
+        const validCelConyuge = celRegex.test(cel_conyuge);
+
         if ( req.session.rol == 'admin') {
             const { id } = req.params;
             const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
-            console.log(req.body.cel);
+           
 
             // Verificar si algún campo está vacío
                 if (!name || !a_paterno || !a_materno || !cel || !adress) {
@@ -395,8 +401,8 @@ export const editarClientes = async (req, res) => {
                         alertTitle: "Error",
                         alertMessage: "Debes rellenar todos los campos!",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 1500,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: true,
@@ -406,17 +412,17 @@ export const editarClientes = async (req, res) => {
                     });
                 }
 
-                    // Validar el formato del nombre permitiendo espacios en blanco
-            const validName = nombreRegex.test(name);
-
+         
+          // Validar el formato del nombre permitiendo espacios en blanco
+          const validName = nombreRegex.test(name);
             if (!validName) {
                 return res.render('clienteEdit', {
                     alert: true,
                     alertTitle: "Error",
                     alertMessage: "El formato del nombre es inválido. Por favor, solo letras.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: true,
@@ -426,9 +432,7 @@ export const editarClientes = async (req, res) => {
                 });
             }
 
-            const validApellido = apellidoRegex.test(a_paterno);
-            const validMaterno = apellidoRegex.test(a_materno);
-
+          
 
             if (!validApellido || !validMaterno) {
                 return res.render('clienteEdit', {
@@ -436,8 +440,8 @@ export const editarClientes = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "El formato del apellidos es inválido. Por favor, solo letras.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/', 
                     login: true,
                     roluser: true,
@@ -448,7 +452,6 @@ export const editarClientes = async (req, res) => {
             }
              // Validar el formato del número de celular
     
-             const validCel = celRegex.test(cel);
         
              if (!validCel) {
                  return res.render('clienteEdit', {
@@ -456,8 +459,8 @@ export const editarClientes = async (req, res) => {
                      alertTitle: "Error",
                      alertMessage: "El formato del número de celular es inválido. Debe tener 10 dígitos.",
                      alertIcon: 'error',
-                     showConfirmButton: false,
-                     timer: 3500,
+                     showConfirmButton: true,
+                     timer: false,
                      ruta: '/', 
                      login: true,
                      roluser: true,
@@ -467,16 +470,15 @@ export const editarClientes = async (req, res) => {
                  });
              }
 
-                   //validar formato de dirección 
-        const validAdress=addressRegex.test(adress);
+    
         if (!validAdress) {
             return res.render('clienteEdit', {
                 alert: true,
                 alertTitle: "Error",
                 alertMessage: "El formato de dirección inválido. No debe tener caracteres especiales.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/', 
                 login: true,
                 roluser: true,
@@ -487,10 +489,7 @@ export const editarClientes = async (req, res) => {
         }
         if (name_conyuge.trim() !== '' || a_paterno_conyuge.trim() !== '' || a_materno_conyuge.trim() !== '' || cel_conyuge.trim() !== '') {
         
-            const validNameConyuge = nombreRegex.test(name_conyuge);
-            const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
-            const validMaternoConyuge = apellidoRegex.test(a_materno_conyuge);
-            const validCelConyuge = celRegex.test(cel_conyuge);
+         
 
             if (!validNameConyuge) {
                 return res.render('clienteEdit', {
@@ -498,8 +497,8 @@ export const editarClientes = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "El formato del nombre del cónyuge es inválido. Por favor, solo letras.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: true,
@@ -515,8 +514,8 @@ export const editarClientes = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "El formato del apellido paterno o materno del cónyuge es inválido.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 5000,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: true,
@@ -532,8 +531,8 @@ export const editarClientes = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "El formato del número de celular del cónyuge es inválido.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 5000,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: true,
@@ -545,7 +544,7 @@ export const editarClientes = async (req, res) => {
         }  
             // Actualizar los datos del cliente en la tabla customers
             const [result] = await pool.query('UPDATE customers SET name = IFNULL (?, name), a_paterno = IFNULL (?, a_paterno), a_materno = IFNULL (?, a_materno), cel = IFNULL (?, cel), adress= IFNULL (?, adress) WHERE id = ?', [name, a_paterno, a_materno, cel, adress, id]);
-            // console.log(result);
+          
 
             // Verificar si la actualización fue exitosa
             if (result && result.affectedRows > 0) {
@@ -596,8 +595,8 @@ export const editarClientes = async (req, res) => {
                         alertTitle: "Error",
                         alertMessage: "Debes rellenar todos los campos!",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 1500,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: false,
@@ -606,17 +605,17 @@ export const editarClientes = async (req, res) => {
                         clientes: rows,
                     });
                 }
-
-                // Validar el formato del nombre permitiendo espacios en blanco
-                const validName = nombreRegex.test(name);
+          // Validar el formato del nombre permitiendo espacios en blanco
+          const validName = nombreRegex.test(name);
+            
                 if (!validName) {
                     return res.render('clienteEdit', {
                         alert: true,
                         alertTitle: "Error",
                         alertMessage: "El formato del nombre es inválido. Por favor, solo letras.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 3500,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: false,
@@ -625,16 +624,15 @@ export const editarClientes = async (req, res) => {
                         clientes: rows,
                     });
                 }
-                const validApellido = apellidoRegex.test(a_paterno);
-                const validMaterno = apellidoRegex.test(a_materno);
+                
                 if (!validApellido || !validMaterno) {
                     return res.render('clienteEdit', {
                         alert: true,
                         alertTitle: "Error",
                         alertMessage: "El formato del apellidos es inválido. Por favor, solo letras.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 3500,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: false,
@@ -643,15 +641,14 @@ export const editarClientes = async (req, res) => {
                         clientes: rows,
                     });
                 }
-                const validCel = celRegex.test(cel);
                 if (!validCel) {
                     return res.render('clienteEdit', {
                         alert: true,
                         alertTitle: "Error",
                         alertMessage: "El formato del número de celular es inválido. Debe tener 10 dígitos.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 3500,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: false,
@@ -660,15 +657,15 @@ export const editarClientes = async (req, res) => {
                         clientes: rows,
                     });
                 }
-                const validAdress=addressRegex.test(adress);
+             
                 if (!validAdress) {
                     return res.render('clienteEdit', {
                         alert: true,
                         alertTitle: "Error",
                         alertMessage: "El formato de dirección inválido. No debe tener caracteres especiales.",
                         alertIcon: 'error',
-                        showConfirmButton: false,
-                        timer: 3500,
+                        showConfirmButton: true,
+                        timer: false,
                         ruta: '/', 
                         login: true,
                         roluser: false,
@@ -680,10 +677,6 @@ export const editarClientes = async (req, res) => {
 
                 if (name_conyuge.trim() !== '' || a_paterno_conyuge.trim() !== '' || a_materno_conyuge.trim() !== '' || cel_conyuge.trim() !== '') {
         
-                    const validNameConyuge = nombreRegex.test(name_conyuge);
-                    const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
-                    const validMaternoConyuge = apellidoRegex.test(a_materno_conyuge);
-                    const validCelConyuge = celRegex.test(cel_conyuge);
     
                     if (!validNameConyuge) {
                         return res.render('clienteEdit', {
@@ -691,8 +684,8 @@ export const editarClientes = async (req, res) => {
                             alertTitle: "Error",
                             alertMessage: "El formato del nombre del cónyuge es inválido. Por favor, solo letras.",
                             alertIcon: 'error',
-                            showConfirmButton: false,
-                            timer: 3500,
+                            showConfirmButton: true,
+                            timer: false,
                             ruta: '/',
                             login: true,
                             roluser: false,
@@ -708,8 +701,8 @@ export const editarClientes = async (req, res) => {
                             alertTitle: "Error",
                             alertMessage: "El formato del apellido paterno o materno del cónyuge es inválido.",
                             alertIcon: 'error',
-                            showConfirmButton: false,
-                            timer: 5000,
+                            showConfirmButton: true,
+                            timer: false,
                             ruta: '/',
                             login: true,
                             roluser: false,
@@ -725,8 +718,8 @@ export const editarClientes = async (req, res) => {
                             alertTitle: "Error",
                             alertMessage: "El formato del número de celular del cónyuge es inválido.",
                             alertIcon: 'error',
-                            showConfirmButton: false,
-                            timer: 5000,
+                            showConfirmButton: true,
+                            timer: false,
                             ruta: '/',
                             login: true,
                             roluser: false,
