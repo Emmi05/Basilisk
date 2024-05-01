@@ -117,6 +117,7 @@ const crearVenta = async (req, res) => {
             // Insertar venta a crédito en la base de datos
            const ventasearch = await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante]);
 
+           console.log(ventasearch)
             // Marcar el terreno como "proceso"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
 
