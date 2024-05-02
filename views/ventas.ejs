@@ -14,7 +14,7 @@
 }
 
 .ui-autocomplete .ui-menu-item {
-    padding: 3px 10px;
+    padding: 5px 10px;
     border-bottom: 1px solid #eeeeee;
 }
 .ui-autocomplete .ui-menu-item:hover {
@@ -229,11 +229,21 @@ $(function() {
         select: function(event, ui) {
             // Cuando se selecciona un cliente, establece el nombre del cliente en el campo de entrada
             $(this).val(ui.item.label);
-            // Almacena el ID del cliente en un atributo de datos en el campo de entrada
+            // Almacena el ID del cliente como un atributo de datos en el campo de entrada
             $(this).data('customer-id', ui.item.value);
             // Previene el comportamiento predeterminado del Autocomplete
             event.preventDefault();
         }
+    });
+
+    // Manejar el envío del formulario
+    $("form").submit(function() {
+        // Obtener el ID del cliente almacenado como atributo de datos
+        var customerId = $("#id_customer").data('customer-id');
+        // Establecer el valor del campo de entrada como el nombre del cliente
+        $("#id_customer").val(customerId);
+        // Continuar con el envío del formulario
+        return true;
     });
 });
 
