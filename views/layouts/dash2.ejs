@@ -1,6 +1,6 @@
 <script>
     function logoutAfterInactivity() {
-      const inactivityTimeout = 2 * 60 * 1000; // 2 minutos en milisegundos
+      const inactivityTimeout = 5 * 60 * 1000; // 2 minutos en milisegundos
   
       setTimeout(function() {
           console.log("Temporizador de inactividad activado");
@@ -29,7 +29,7 @@
                   setTimeout(function() {
                       console.log("Redirigiendo al usuario al login");
                       window.location.href = '/login'; // Cambia '/login' por la ruta de tu página de login
-                  }, 5000); // Esperar 5 segundos antes de redirigir
+                  }, 7000); // Esperar 5 segundos antes de redirigir
               }
           })
           .catch(error => {

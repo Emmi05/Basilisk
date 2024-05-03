@@ -60,22 +60,22 @@
 }
 
 .btn__floating ul li:nth-child(1) a i{
-  background-color: #7a058e;
+  background-color: #0d6efd  ;
 }
 
 .btn__floating ul li:nth-child(2) a i{
-  background-color: #009e20;
+  background-color: #0d6efd;
 }
 
 .btn__floating ul li a {
   text-decoration: none;
   color: #fff;
-  font-size: 14pt;
+  font-size: 20pt;
 }
 
 .btn__floating ul li a i {
- width: 40px;
- height: 40px;
+ width: 50px;
+ height: 50px;
  border-radius: 50%;
  display: flex;
  justify-content: center;
