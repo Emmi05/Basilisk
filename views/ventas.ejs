@@ -1,20 +1,32 @@
 
 <style>
-  #suggestions {
-  position: absolute;
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
-  border-radius: 5px; /* Añadido para bordes redondeados */
-  box-shadow: 0px 4px 6px rgba(0,0,0,0.1); /* Añadido para sombra */
-  margin-top: 5px;
-  z-index: 1000; /* Ajusta este valor según tus necesidades */
-
+.ui-autocomplete {
+    font-size: 14px;
+    background-color: #ffffff;
+    width: 250px; /* Ajusta este valor según tus necesidades */
+    border: 1px solid #cccccc;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 210px; /* Ajusta este valor según tus necesidades */
+    overflow-y: auto; /* Permite el desbordamiento vertical */
+    overflow-x: hidden; /* Oculta el desbordamiento horizontal */
 }
 
-.list-group-item {
-  cursor: pointer;
-
+.ui-autocomplete .ui-menu-item {
+    padding: 5px 10px;
+    border-bottom: 1px solid #eeeeee;
 }
+.ui-autocomplete .ui-menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+    .ui-helper-hidden-accessible div {
+        display: none;
+    }
+
+
+
 </style>
 <%- include ('layouts/head.ejs') %>
 <body id="page-top">
@@ -46,12 +58,7 @@
 
               <div class="col-md-6">
                 <label for="cliente" class="form-label">Cliente</label>
-                <select class="form-control" id="id_customer" name="id_customer">
-                    <option value="" >Seleccione un cliente</option>
-                    <% clientes.forEach(cliente => { %>
-                        <option value="<%= cliente.id %>"><%= cliente.name %> <%= cliente.a_paterno %> <%= cliente.a_materno %></option>
-                    <% }); %>
-                </select>
+                <input class="form-control" id="id_customer" name="id_customer">
             </div>
 
             <div class="col-md-6">
@@ -66,8 +73,6 @@
               </select>
           </div>
           
-
-          
           <div class="col-md-6">
               <label for="interno" class="form-label">Id_terreno</label>
               <input type="text" class="form-control" id="interno" name="interno" disabled placeholder="id terreno">
@@ -75,20 +80,19 @@
           
           <div class="col-md-6">
             <label for="precio" class="form-label">Precio</label>
-            <!-- <input type="int" class="form-control" id="precio" name="precio" disabled  min="1"> -->
             <input type="number" class="form-control" id="precio" name="precio" readonly min="1" placeholder="precio">
-
         </div>
           
         <!-- Tipo venta -->
-        <div class="col-md-6">
-          <label for="tipo_venta">Tipo venta:</label>
-          <select class="form-control" id="tipo_venta" name="tipo_venta" >
-              <option value="">Seleccionar</option>
-              <option value="contado">Contado</option>
-              <option value="credito">Credito</option>
-          </select>
-      </div>
+            <div class="col-md-6">
+              <label for="tipo_venta">Tipo venta:</label>
+              <select class="form-control" id="tipo_venta" name="tipo_venta" >
+                  <option value="">Seleccionar</option>
+                  <option value="contado">Contado</option>
+                  <option value="credito">Credito</option>
+              </select>
+
+            </div>
                 
                 
                   <div class="col-md-6">
@@ -134,9 +138,7 @@
 
               </form>
 
-    <!-- Footer -->
-
-<!-- End of Footer -->
+  
 
 </div>
 <!-- End of Content Wrapper -->
@@ -152,25 +154,27 @@
 <!-- Logout Modal-->
 <%- include ('layouts/logout.ejs') %>    
 
-    		<!-- Bootstrap core JavaScript-->
-  <script src="../resources/vendor/jquery/jquery.min.js"></script>
-  <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../resources/vendor/jquery/jquery.min.js"></script>
+<script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Core plugin JavaScript-->
-  <script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Custom scripts for all pages-->
-  <script src="../resources/scripts/sb-admin-2.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="../resources/scripts/sb-admin-2.min.js"></script>
 
-  <!-- Page level plugins -->
-  <script src="../resources/vendor/datatables/jquery.dataTables.min.js"></script>
-  <script src="../resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Page level plugins -->
+<script src="../resources/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="../resources/scripts/datables.js"></script>
+<!-- Page level custom scripts -->
+<script src="../resources/scripts/datables.js"></script>
 
      		
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 <% if (typeof alert != "undefined")  { %>
  <script>
@@ -185,6 +189,7 @@
  })
  </script>
 <% } %>
+
 
 <script>
   document.getElementById('id_land').addEventListener('change', function() {
@@ -205,6 +210,41 @@
 });
 
 </script>
+
+<script>
+$(function() {
+    var availableTags = [
+        <% clientes.forEach(cliente => { %>
+            { label: "<%= cliente.name %> <%= cliente.a_paterno %> <%= cliente.a_materno %>", value: "<%= cliente.id %>" },
+        <% }); %>
+    ];
+
+    $("#id_customer").autocomplete({
+        source: availableTags,
+        select: function(event, ui) {
+            // Cuando se selecciona un cliente, establece el nombre del cliente en el campo de entrada
+            $(this).val(ui.item.label);
+            // Almacena el ID del cliente como un atributo de datos en el campo de entrada
+            $(this).data('customer-id', ui.item.value);
+            // Previene el comportamiento predeterminado del Autocomplete
+            event.preventDefault();
+        }
+    });
+
+    // Manejar el envío del formulario
+    $("form").submit(function() {
+        // Obtener el ID del cliente almacenado como atributo de datos
+        var customerId = $("#id_customer").data('customer-id');
+        // Establecer el valor del campo de entrada como el nombre del cliente
+        $("#id_customer").val(customerId);
+        // Continuar con el envío del formulario
+        return true;
+    });
+});
+
+</script> 
+
+
 
 <!--  -->
 <script>
@@ -256,6 +296,9 @@
       return cuotasTotal;
   }
 </script>
+
+
+
 
 
 <%- include ('./layouts/dash2.ejs') %>

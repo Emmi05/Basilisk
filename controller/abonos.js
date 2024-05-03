@@ -21,8 +21,6 @@ const crearAbonos = async (req, res) => {
 
         const [abonosrows] = await pool.query('SELECT s.id, s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.id_land, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno  FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id   WHERE s.id = ? ORDER BY a.cuotas_restantes ASC LIMIT 1;', [id_venta]);
     
-        
-
         // Verificar si algún campo está vacío
         if (!n_abono || !fecha_abono) {
             // Renderizar la vista con un mensaje de error si faltan campos
@@ -158,47 +156,35 @@ const crearAbonos = async (req, res) => {
 }
 
 async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res) {
-
         try {
-    
             const doc = new PDFDocument();
             const buffers = [];
-             const fechaAbono = moment(fechaAbonoFormateada, 'YYYY-MM-DD').toDate();
-             const fechaEnLetras = formatFechaEnLetras(fechaAbono);
-    
-                 
-          // Establecer la posición de la imagen
-          const imgWidth = 100; // Ancho de la imagen
-          const imgHeight = 80; // Alto de la imagen
-          const imgX = doc.page.width - imgWidth - 30; // Posición X de la imagen (10 píxeles desde el borde derecho)
-          const imgY = 10; // Posición Y de la imagen (10 píxeles desde el borde superior)
-          doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
-    
-            // Agregar espacio
+            const fechaAbono = moment(fechaAbonoFormateada, 'YYYY-MM-DD').toDate();
+            const fechaEnLetras = formatFechaEnLetras(fechaAbono);
+
+            const imgWidth = 100; 
+            const imgHeight = 80;
+            const imgX = doc.page.width - imgWidth - 30;
+            const imgY = 10; 
+            
+            doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
             doc.moveDown();
-    
             const fecha = `Acapulco, Guerrero, a  ${fechaEnLetras}`;
             doc.text(fecha, {
                 align: 'right' 
             });
-    
             doc.moveDown();
             doc.moveDown();
             doc.moveDown();
-    
            
             const lorem = ' apoderado de Basilisk Inmobiliaria Siete S de RL de CV, personalidad y facultades que acredito mediante escritura pública número 45,153 de 19 de Febrero de 2015, otorgada ante la fe del licenciado José Luis Altamirano Quintero, Notario Público número 66 del Distro Federal.';
             doc.text(`Israel Nogueda Pineda, ${lorem}`, {
-                // width: 410,
                 align: 'justify'
             });
             doc.moveDown();
             doc.moveDown();
-            // Agregar el párrafo del cliente
-           
             const customerName = `Recibo de la C. ${informacion[0].customer_name}  ${informacion[0].customer_paterno} ${informacion[0].customer_materno} la cantidad de $ ${cantidad}  como pago parcial por el lote ${informacion[0].land_lote} de la manzana ${informacion[0].land_manzana}, operación pactada en $ ${informacion[0].land_precio}, los gastos de escrituración e  impuesto predial con número ${informacion[0].land_predial}, son por cuenta del comprador, según acuerdo entre las partes, ubicado en el Fraccionamiento Fuerza Aérea Mexicana, Municipio de Acapulco, Estado de Guerrero e identificado internamiento con la clave ${informacion[0].land_id_interno}, a fin de llevar a cabo la compra venta de dicho lote.  `;
             doc.text(customerName, {
-                // width: 410,
                 align: 'justify'// Alinea el texto
             });
             doc.moveDown();
@@ -281,12 +267,67 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
         }
     
     }
- 
 
-    export const methods = {
-      
-        crearAbonos,
-      }
+ 
+const abonos_vista = async (req, res) => {
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT  c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.estado, l.id_interno, s.n_cuentas,  s.deuda_restante,  s.id, s.tipo_venta, s.inicial, s.cuotas, MAX(a.cuotas_pagadas) as cuotas_pagadas,  (SELECT a2.cuotas_restantes FROM abonos a2 WHERE a2.id_sale = s.id AND a2.cuotas_pagadas = MAX(a.cuotas_pagadas)) as cuotas_restantes FROM   sale s  JOIN customers c ON s.id_customer = c.id  JOIN  abonos a ON a.id_sale = s.id JOIN   land l ON s.id_land = l.id  WHERE  s.tipo_venta = "credito" && l.estado = "proceso" GROUP BY  s.id ORDER BY  a.cuotas_pagadas DESC; ');
+    
+        res.render('abonos_vista', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT  c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.estado, l.id_interno, s.n_cuentas,  s.deuda_restante,  s.id, s.tipo_venta, s.inicial, s.cuotas, MAX(a.cuotas_pagadas) as cuotas_pagadas,  (SELECT a2.cuotas_restantes FROM abonos a2 WHERE a2.id_sale = s.id AND a2.cuotas_pagadas = MAX(a.cuotas_pagadas)) as cuotas_restantes FROM   sale s  JOIN customers c ON s.id_customer = c.id  JOIN  abonos a ON a.id_sale = s.id JOIN   land l ON s.id_land = l.id  WHERE  s.tipo_venta = "credito" && l.estado = "proceso" GROUP BY  s.id ORDER BY  a.cuotas_pagadas DESC; ');
+
+        res.render('abonos_vista', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+        });
+    }
+
+}
+
+const abonos_formulario = async (req, res) => {
+    const id = req.params.id;
+
+    if (req.session.rol == 'usuario') {
+
+        const [rows]=await pool.query(`SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.id, s.tipo_venta, s.inicial,  s.deuda_restante, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes  FROM sale s  JOIN customers c ON s.id_customer = c.id  JOIN abonos a ON a.id_sale = s.id  JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito" && s.id=${id} ORDER BY cuotas_restantes ASC LIMIT 1`);        
+        res.render('abonos_formulario', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+     
+  
+        });
+    } else if (req.session.rol == 'admin') {
+       const [rows]=await pool.query(`SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.precio, l.id_interno, s.n_cuentas, s.id, s.tipo_venta, s.inicial,  s.deuda_restante, s.cuotas, a.cuotas_pagadas, a.cuotas_restantes  FROM sale s  JOIN customers c ON s.id_customer = c.id  JOIN abonos a ON a.id_sale = s.id  JOIN land l ON s.id_land = l.id  WHERE s.tipo_venta = "credito" && s.id=${id} ORDER BY cuotas_restantes ASC LIMIT 1`);
+       res.render('abonos_formulario', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            abonos: rows,
+       
+        });
+    }
+
+}
+
+export const methods = {
+    crearAbonos,
+    abonos_vista,
+    abonos_formulario,
+ }
     
       // Función para obtener el día en letras
 function getDiaEnLetras(fecha) {

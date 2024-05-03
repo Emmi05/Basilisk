@@ -2,12 +2,8 @@
 import { pool} from '../database/db.js'
 import moment from 'moment';
 
-
-// Ventas
 const cantidades = /^\d*,?\d+$/;
 
-
-// venta crear
 const crearVenta = async (req, res) => {
     const terrenoId = req.params.id;
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
@@ -16,7 +12,6 @@ const crearVenta = async (req, res) => {
     
     const vendedor = req.session.name;
     const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, cuotas, precio} = req.body;
-
     
     try {
         if (req.session.rol == 'admin') {
@@ -56,8 +51,8 @@ const crearVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: true,
@@ -75,8 +70,8 @@ const crearVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: true,
@@ -95,8 +90,8 @@ const crearVenta = async (req, res) => {
                 alertTitle: "Error",
                 alertMessage: "La cantidad del enganche debe ser menor que el precio del terreno.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/',
                 login: true,
                 roluser: true,
@@ -118,6 +113,7 @@ const crearVenta = async (req, res) => {
             // Insertar venta a crédito en la base de datos
            const ventasearch = await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante]);
 
+           console.log(ventasearch)
             // Marcar el terreno como "proceso"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
 
@@ -154,7 +150,6 @@ const crearVenta = async (req, res) => {
     
         const deuda_restante = precio - inicial;
 
-        // Verificar si algún campo está vacío o si los valores de 'inicial' y 'n_cuentas' no son números válidos
         if (!id_customer || !id_land || !fecha_venta || !tipo_venta) {
             return res.render('ventas', {
                 alert: true,
@@ -184,8 +179,8 @@ const crearVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -203,8 +198,8 @@ const crearVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -223,8 +218,8 @@ const crearVenta = async (req, res) => {
                 alertTitle: "Error",
                 alertMessage: "La cantidad del enganche debe ser menor que el precio del terreno.",
                 alertIcon: 'error',
-                showConfirmButton: false,
-                timer: 3500,
+                showConfirmButton: true,
+                timer: false,
                 ruta: '/',
                 login: true,
                 roluser: false,
@@ -280,14 +275,11 @@ const crearVenta = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).render('500');
-
-        // res.status(500).send('Error interno del servidor');
     }
 }
 
 
 const editarVenta = async (req, res) => {
-    // re dirigir
     try {
         const { id } = req.params;
         const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta, s.cuotas, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id]);
@@ -327,8 +319,8 @@ const editarVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "El enganche debe ser menor que el precio del terreno.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -344,8 +336,8 @@ const editarVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -361,8 +353,8 @@ const editarVenta = async (req, res) => {
                     alertTitle: "Error",
                     alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
                     alertIcon: 'error',
-                    showConfirmButton: false,
-                    timer: 3500,
+                    showConfirmButton: true,
+                    timer: false,
                     ruta: '/',
                     login: true,
                     roluser: false,
@@ -493,14 +485,11 @@ const editarVenta = async (req, res) => {
     
     } catch (error) {
         console.error("Error al actualizar la venta:", error);
-        // res.status(500).send('Error al actualizar la venta');
         return res.status(500).render('500');
-
     }
 };
 
 
-//ELIMINAR VENTA
 const eliminarVenta = async (req, res) => {
     try {
         if (req.session.rol == 'admin'){
@@ -550,13 +539,96 @@ if (result && result.affectedRows > 0) {
     }
     
 }
-//
+
+
+
+const view_venta = async (req,res) => {
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        res.render('venta', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        res.render('venta', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows
+        });
+    }
+}
+
+const view_editar = async (req, res) => {
+    const id = req.params.id;
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta, s.cuotas, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id]);
+
+        res.render('ventaEdit', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows,
+        });
+    }
+    else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta, s.cuotas, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id]);
+        res.render('ventaEdit', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows,
+        });
+    }
+
+}
+
+
+const ventas = async (req, res) => {
+    const [rows] = await pool.query('SELECT * FROM customers');
+    const [rows2] = await pool.query('SELECT * FROM land');
+
+    if (req.session.rol == 'usuario') {
+        res.render('ventas', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            clientes: rows, //clientes
+            terrenos: rows2, // terrenos
+        });
+    } else if (req.session.rol == 'admin') {
+        res.render('ventas', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            clientes: rows, // Cambié 'ventas' por 'clientes'
+            terrenos:rows2,
+        });
+    }
+
+}
+
 
 export const methods = {
    
     crearVenta,
     editarVenta,
     eliminarVenta,
+    view_venta,
+    view_editar,
+    ventas,
   }
+
+
+
 
 

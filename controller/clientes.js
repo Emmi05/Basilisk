@@ -380,14 +380,7 @@ export const editarClientes = async (req, res) => {
         const id = req.params.id;
         const [rows] =await pool.query('SELECT c.*, p.name_conyuge, p.a_paterno_conyuge, p.a_materno_conyuge, p.cel_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id WHERE c.id = ?', [id]);
 
-        const validApellido = apellidoRegex.test(a_paterno);
-        const validMaterno = apellidoRegex.test(a_materno);
-        const validCel = celRegex.test(cel);
-        const validAdress=addressRegex.test(adress);
-        const validNameConyuge = nombreRegex.test(name_conyuge);
-        const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
-        const validMaternoConyuge = apellidoRegex.test(a_materno_conyuge);
-        const validCelConyuge = celRegex.test(cel_conyuge);
+       
 
         if ( req.session.rol == 'admin') {
             const { id } = req.params;
@@ -432,7 +425,8 @@ export const editarClientes = async (req, res) => {
                 });
             }
 
-          
+            const validApellido = apellidoRegex.test(a_paterno);
+            const validMaterno = apellidoRegex.test(a_materno);
 
             if (!validApellido || !validMaterno) {
                 return res.render('clienteEdit', {
@@ -451,7 +445,7 @@ export const editarClientes = async (req, res) => {
                 });
             }
              // Validar el formato del número de celular
-    
+             const validCel = celRegex.test(cel);
         
              if (!validCel) {
                  return res.render('clienteEdit', {
@@ -470,7 +464,7 @@ export const editarClientes = async (req, res) => {
                  });
              }
 
-    
+             const validAdress=addressRegex.test(adress);
         if (!validAdress) {
             return res.render('clienteEdit', {
                 alert: true,
@@ -488,7 +482,10 @@ export const editarClientes = async (req, res) => {
             });
         }
         if (name_conyuge.trim() !== '' || a_paterno_conyuge.trim() !== '' || a_materno_conyuge.trim() !== '' || cel_conyuge.trim() !== '') {
-        
+            const validNameConyuge = nombreRegex.test(name_conyuge);
+            const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
+            const validMaternoConyuge = apellidoRegex.test(a_materno_conyuge);
+           
          
 
             if (!validNameConyuge) {
@@ -524,7 +521,7 @@ export const editarClientes = async (req, res) => {
                     clientes: rows,
                 });
             }
-
+            const validCelConyuge = celRegex.test(cel_conyuge);
             if (!validCelConyuge) {
                 return res.render('clienteEdit', {
                     alert: true,
@@ -624,6 +621,8 @@ export const editarClientes = async (req, res) => {
                         clientes: rows,
                     });
                 }
+                const validApellido = apellidoRegex.test(a_paterno);
+                const validMaterno = apellidoRegex.test(a_materno);
                 
                 if (!validApellido || !validMaterno) {
                     return res.render('clienteEdit', {
@@ -641,6 +640,7 @@ export const editarClientes = async (req, res) => {
                         clientes: rows,
                     });
                 }
+                const validCel = celRegex.test(cel);
                 if (!validCel) {
                     return res.render('clienteEdit', {
                         alert: true,
@@ -657,7 +657,8 @@ export const editarClientes = async (req, res) => {
                         clientes: rows,
                     });
                 }
-             
+                const validAdress=addressRegex.test(adress);
+
                 if (!validAdress) {
                     return res.render('clienteEdit', {
                         alert: true,
@@ -677,7 +678,10 @@ export const editarClientes = async (req, res) => {
 
                 if (name_conyuge.trim() !== '' || a_paterno_conyuge.trim() !== '' || a_materno_conyuge.trim() !== '' || cel_conyuge.trim() !== '') {
         
-    
+                    const validNameConyuge = nombreRegex.test(name_conyuge);
+                    const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
+                    const validMaternoConyuge = apellidoRegex.test(a_materno_conyuge);
+
                     if (!validNameConyuge) {
                         return res.render('clienteEdit', {
                             alert: true,
@@ -711,6 +715,8 @@ export const editarClientes = async (req, res) => {
                             clientes: rows,
                         });
                     }
+                    const validCelConyuge = celRegex.test(cel_conyuge);
+
     
                     if (!validCelConyuge) {
                         return res.render('clienteEdit', {

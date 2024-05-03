@@ -55,7 +55,8 @@ app.use((err, req, res, next) => {
     res.status(500).render('500');
 });
 
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000, (req, res) => {
-    console.log('SERVER RUNNING IN http://localhost:3000');
+app.listen(PORT, () => {
+    console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
