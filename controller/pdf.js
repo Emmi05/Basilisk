@@ -382,7 +382,7 @@ const disponibles = async (req, res) => {
   
 
     try {
-        const [rows] = await pool.query('SELECT * FROM LAND WHERE estado = "disponible"');
+        const [rows] = await pool.query('SELECT * FROM land WHERE estado = "disponible"');
 
         // Inicializa el documento PDF
         const doc = new PDFDocument();
@@ -493,7 +493,7 @@ const pagados = async (req, res) => {
   
 
     try {
-        const [rows] = await pool.query('SELECT * FROM LAND WHERE estado = "pagado"');
+        const [rows] = await pool.query('SELECT * FROM land WHERE estado = "pagado"');
 
         // Inicializa el documento PDF
         const doc = new PDFDocument();
