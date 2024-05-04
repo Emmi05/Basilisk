@@ -374,6 +374,7 @@ const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
     }
 };
 
+
 export const editarClientes = async (req, res) => {
     try {
 
@@ -445,10 +446,10 @@ export const editarClientes = async (req, res) => {
                 });
             }
              // Validar el formato del número de celular
-             const validCel = celRegex.test(cel);
-        
-             if (!validCel) {
-                 return res.render('clienteEdit', {
+             if (cel_conyuge !== null && cel_conyuge.trim() !== '') {
+                const validCelConyuge = celRegex.test(cel_conyuge);
+                if (!validCelConyuge) {
+                    return res.render('clienteEdit', {
                      alert: true,
                      alertTitle: "Error",
                      alertMessage: "El formato del número de celular es inválido. Debe tener 10 dígitos.",
@@ -774,6 +775,7 @@ export const editarClientes = async (req, res) => {
             } 
 
         }
+    }
     } catch (error) {
         console.error(error);
         // res.status(500).send('Error interno del servidor');
