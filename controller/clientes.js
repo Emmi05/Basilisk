@@ -826,4 +826,3 @@ export const methods = {
     editarClientes,
     eliminarCliente,
   }
-
