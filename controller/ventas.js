@@ -127,11 +127,13 @@ const crearVenta = async (req, res) => {
                 terrenos: rows2,
                 terrenos2: terreno,
             });
-        }
+        
     
          
             
         } else if (tipo_venta === 'credito') {
+            const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD');
+
             // Insertar venta a crédito en la base de datos
            const ventasearch = await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante, ncuotas_pagadas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante,0]);
            console.log(ventasearch)
@@ -161,7 +163,7 @@ const crearVenta = async (req, res) => {
         });
     }
    
-
+        }
     } catch (error) {
         console.error(error);
         return res.status(500).render('500');

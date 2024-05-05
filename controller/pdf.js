@@ -604,7 +604,7 @@ const finiquito =async (req,res)=>{
 
     // const [informacion]=await pool.query('SELECT  s.id AS venta_id, MAX(a.fecha_abono) AS ultima_fecha_abono,  c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
 
-    const [informacion] = await pool.query('SELECT s.id AS venta_id, MAX(a.fecha_abono) AS ultima_fecha_abono, c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ? GROUP BY s.id, c.name, c.a_paterno, c.a_materno, l.lote, l.manzana, l.predial, l.id_interno ORDER BY MAX(a.fecha_abono) DESC LIMIT 1', [id_venta]);
+    const [informacion] = await pool.query('SELECT  s.id AS venta_id, MAX(a.fecha_abono) AS ultima_fecha_abono,  c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
 
 
     
