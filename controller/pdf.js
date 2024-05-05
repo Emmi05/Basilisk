@@ -259,7 +259,7 @@ const proceso = async (req, res) => {
   
 
     try {
-        const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, s.fecha_venta, s.ncuotas_pagadas, l.precio, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.tipo_venta = "credito";');
+        const [rows] = await pool.query('SELECT s.*, c.name AS customer_name, c.a_materno, c.a_paterno, s.fecha_venta, s.ncuotas_pagadas, l.precio, l.lote, l.manzana FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE     s.tipo_venta = "credito" AND l.estado = "proceso" ');
 
         // Inicializa el documento PDF
         const doc = new PDFDocument();

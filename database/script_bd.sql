@@ -27,7 +27,9 @@ CREATE TABLE IF NOT EXISTS `customers` (
   `cel` varchar(20) DEFAULT NULL,
   `adress` varchar(60) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `customers`( `name`, `a_materno`, `a_paterno`, `cel`, `adress`) VALUES ('Nadie','quiere','sereeas','7441318629','Random calle ');
 
 DROP TABLE IF EXISTS `parentesco`;
 CREATE TABLE IF NOT EXISTS `parentesco` (
@@ -36,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `parentesco` (
   `name_conyuge` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `a_materno_conyuge` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `a_paterno_conyuge` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `cel_conyuge` int DEFAULT NULL,
+  `cel_conyuge` varchar (20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -44,6 +46,18 @@ CREATE TABLE IF NOT EXISTS `parentesco` (
 ALTER TABLE `parentesco`
   ADD CONSTRAINT `parentesco_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`);
 
+DELIMITER //
+
+CREATE TRIGGER after_insert_id_costumer 
+AFTER INSERT ON customers 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO parentesco SET customer_id = NEW.id;
+END;
+//
+
+DELIMITER ;
+DROP trigger after_insert_id_costumer ;
 
 DROP TABLE IF EXISTS `land`;
 CREATE TABLE IF NOT EXISTS `land` (
@@ -84,6 +98,20 @@ ALTER TABLE `sale`
   ADD CONSTRAINT `sale_ibfk_1` FOREIGN KEY (`id_customer`) REFERENCES `customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `sale_ibfk_2` FOREIGN KEY (`id_land`) REFERENCES `land` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
+
+DROP trigger after_insert_sale ;
+
+DELIMITER //
+
+CREATE TRIGGER after_insert_sale
+AFTER INSERT ON sale 
+FOR EACH ROW 
+BEGIN
+    INSERT INTO abonos SET id_sale = New.id;
+END;
+//
+
+DELIMITER ;
 
 DROP TABLE IF EXISTS `abonos`;
 CREATE TABLE IF NOT EXISTS `abonos` (
