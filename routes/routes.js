@@ -253,9 +253,36 @@ router.get('/editar_terreno/:id',autenticacionMiddleware, async(req, res) => {
 router.get('/deleteterreno/:id', autenticacionMiddleware, terrenos.eliminarTerreno);
 
 
+
 // venta
-router.get('/ventas',autenticacionMiddleware, ventas.ventas);
-router.get('/terreno/:id', autenticacionMiddleware, async (req, res) => {
+router.get('/ventas', async (req, res) => {
+    const [rows] = await pool.query('SELECT * FROM customers');
+    const [rows2] = await pool.query('SELECT * FROM land');
+    // const [rows2] = await pool.query('SELECT * FROM land WHERE lote = ? AND manzana = ?');
+
+    if (req.session.rol == 'usuario') {
+        res.render('ventas', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            clientes: rows, //clientes
+            terrenos: rows2, // terrenos
+        });
+    } else if (req.session.rol == 'admin') {
+        res.render('ventas', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            clientes: rows, // Cambié 'ventas' por 'clientes'
+            terrenos:rows2,
+        });
+    }
+});
+
+
+router.get('/terreno/:id', async (req, res) => {
     const terrenoId = req.params.id;
     const [rows] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
 
@@ -264,38 +291,89 @@ router.get('/terreno/:id', autenticacionMiddleware, async (req, res) => {
     } else {
         res.status(404).json({ error: 'Terreno no encontrado' });
     }
-});
-router.post('/venta',autenticacionMiddleware, ventas.crearVenta);
-router.get('/view_venta',autenticacionMiddleware, ventas.view_venta);
-router.get('/venta/:id',autenticacionMiddleware, ventas.view_editar);
-router.post('/updateventa/:id', autenticacionMiddleware, ventas.editarVenta);
+})
 
 
-//  ELIMINAR TERRENO
-router.get('/deleteventa/:id',autenticacionMiddleware,  ventas.eliminarVenta);
 
+router.post('/venta', ventas.crearVenta)
 
-// tambien va usuario?? 
-router.get('/credits', autenticacionMiddleware, async(req, res) => {
- if (req.session.rol == 'admin') {
-        const [rows] = await pool.query('SELECT *FROM users');
-        res.render('usuarios', {
+//VER VENTAS
+
+router.get('/view_venta', async(req, res) => {
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        res.render('venta', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows
+        });
+    } else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
+        res.render('venta', {
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-            usuarios: rows
+            ventas: rows
+        });
+    }
+});
+
+//Editar
+router.get('/venta/:id', async(req, res) => {
+
+    const id = req.params.id;
+    if (req.session.rol == 'usuario') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta, s.cuotas, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id]);
+
+        res.render('ventaEdit', {
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows,
+        });
+    }
+    else if (req.session.rol == 'admin') {
+        const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, l.id_interno, s.fecha_venta, s.n_cuentas, s.inicial, s.tipo_venta, s.cuotas, s.id FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id WHERE s.id = ?', [id]);
+        res.render('ventaEdit', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            ventas: rows,
         });
     }
 });
 
 
-router.get('/abono', autenticacionMiddleware, abonos.abonos_vista);
-router.get('/abonos/:id', autenticacionMiddleware, abonos.abonos_formulario);
-router.post('/crear_abonos/:id',autenticacionMiddleware, abonos.crearAbonos);
-router.post('/crear_abonos/:id',autenticacionMiddleware, abonos.crearAbonos);
+router.post('/updateventa/:id',ventas.editarVenta);
+router.get('/deleteventa/:id', ventas.eliminarVenta);
 
-
+//  ELIMINAR TERRENO
+// tambien va usuario?? 
+router.get('/credits', autenticacionMiddleware, async(req, res) => {
+    if (req.session.rol == 'admin') {
+           const [rows] = await pool.query('SELECT *FROM users');
+           res.render('usuarios', {
+               login: true,
+               roluser: true,
+               name: req.session.name,
+               rol: req.session.rol,
+               usuarios: rows
+           });
+       }
+   });
+   
+   
+   router.get('/abono', autenticacionMiddleware, abonos.abonos_vista);
+   router.get('/abonos/:id', autenticacionMiddleware, abonos.abonos_formulario);
+   router.post('/crear_abonos/:id',autenticacionMiddleware, abonos.crearAbonos);
+   router.post('/crear_abonos/:id',autenticacionMiddleware, abonos.crearAbonos);
+   
+   
 router.get('/terrenos_pagados', autenticacionMiddleware, async(req, res) => {
     
     if (req.session.rol == 'usuario') {
@@ -326,7 +404,7 @@ router.get('/reporte/:id',autenticacionMiddleware, pdf.crearPdf);
 router.get('/pagados/',autenticacionMiddleware, pdf.pagados);
 router.get('/proceso/',autenticacionMiddleware,pdf.proceso);
 router.get('/disponibles/',autenticacionMiddleware,pdf.disponibles);
-router.get('/finalizacion/:id',autenticacionMiddleware,pdf.finiquito);
+router.get('/finalizacion/:id',pdf.finiquito);
 
 
 
