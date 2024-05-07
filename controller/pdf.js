@@ -21,15 +21,17 @@ const crearPdf = async (req, res) => {
         const imgY = 10;
         doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
         
-    // Agregar (fecha de generación del PDF)
-        const fechaActual = new Date().toLocaleDateString('es-ES', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
+
+    const fechaActual = new Date().toLocaleString('es-MX', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZone: 'America/Mexico_City' // Establecer la zona horaria a la de México
+
+    });
         // Agrega espacio y texto de descripción
         doc.moveDown();
         doc.moveDown();
@@ -159,15 +161,17 @@ for (let i = 0; i < rows.length; i++) {
     // Resto del código para construir las filas de la tabla...
 }
 
-        // Agregar (fecha de generación del PDF)
-        const fechaActual = new Date().toLocaleDateString('es-ES', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
+const fechaActual = new Date().toLocaleString('es-MX', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'America/Mexico_City' // Establecer la zona horaria a la de México
+
+});
+
         // Agrega espacio y texto de descripción
         doc.moveDown();
         doc.moveDown();
@@ -280,13 +284,15 @@ const proceso = async (req, res) => {
         }
 
         // Agregar (fecha de generación del PDF)
-        const fechaActual = new Date().toLocaleDateString('es-ES', {
+        const fechaActual = new Date().toLocaleString('es-MX', {
             day: '2-digit',
             month: 'long',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit'
+            second: '2-digit',
+            timeZone: 'America/Mexico_City' // Establecer la zona horaria a la de México
+
         });
         // Agrega espacio y texto de descripción
         doc.moveDown();
@@ -510,13 +516,15 @@ const pagados = async (req, res) => {
         doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
   
         // Agregar (fecha de generación del PDF)
-        const fechaActual = new Date().toLocaleDateString('es-ES', {
+        const fechaActual = new Date().toLocaleString('es-MX', {
             day: '2-digit',
             month: 'long',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit'
+            second: '2-digit',
+            timeZone: 'America/Mexico_City' // Establecer la zona horaria a la de México
+
         });
         // Agrega espacio y texto de descripción
         doc.moveDown();
