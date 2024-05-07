@@ -395,14 +395,17 @@ const disponibles = async (req, res) => {
         doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
   
        
-        const fechaActual = new Date().toLocaleDateString('es-MX', {
+        const fechaActual = new Date().toLocaleString('es-MX', {
             day: '2-digit',
             month: 'long',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit'
+            second: '2-digit',
+            timeZone: 'America/Mexico_City' // Establecer la zona horaria a la de México
+
         });
+        
         
         // Agrega espacio y texto de descripción
         doc.moveDown();
