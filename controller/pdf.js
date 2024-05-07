@@ -2,7 +2,10 @@
 import { pool} from '../database/db.js'
 import PDFDocument from "pdfkit-table";
 import moment from 'moment-timezone';
+import 'moment/locale/es'; 
 
+// Establecer el idioma en español
+moment.locale('es');
 
 const crearPdf = async (req, res) => {
     const id_venta = req.params.id;
@@ -164,6 +167,7 @@ const proceso = async (req, res) => {
 
         // Agregar (fecha de generación del PDF)
         const fechaActual = moment.tz('America/Mexico_City').format('LLLL');
+
 
         // Agrega espacio y texto de descripción
         doc.moveDown();
