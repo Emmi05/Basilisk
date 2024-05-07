@@ -304,7 +304,7 @@ const crearVenta = async (req, res) => {
        
             }
     } catch (error) {
-        console.error(error);
+        console.log(error);
         return res.status(500).render('500');
     }
 }
@@ -413,7 +413,7 @@ const editarVenta = async (req, res) => {
             name: req.session.name,
             rol: req.session.rol,
             ventas: rows,
-            ruta: '/'
+            ruta: 'view_venta'
         });
         }else if (req.session.rol =='usuario'){
             if (tipo_venta === 'contado' && estado_terreno !== 'pagado') {
@@ -501,13 +501,13 @@ const editarVenta = async (req, res) => {
             name: req.session.name,
             rol: req.session.rol,
             ventas: rows,
-            ruta: '/'
+            ruta: 'view_venta'
         });
 
         }
     } catch (error) {
-        // console.error("Error al actualizar la venta:", error);
-        res.status(500).send('Error al actualizar la venta');
+        console.log(error);
+        return res.status(500).render('500');
     }
 };
 
@@ -544,12 +544,13 @@ if (result && result.affectedRows > 0) {
             ruta: 'view_venta'
         });
     } else {
-        // Manejar el caso en que no se pudo actualizar el estado del terreno
-        res.status(500).send('Error al actualizar el estado del terreno');
+        console.log(error);
+        return res.status(500).render('500');
     }
 } else {
-    // Manejar el caso en que no se pudo eliminar la venta
-    res.status(500).send('Error al eliminar la venta');
+    console.log(error);
+    return res.status(500).render('500');
+
 }
 
 }
