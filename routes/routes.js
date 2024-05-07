@@ -255,7 +255,7 @@ router.get('/deleteterreno/:id', autenticacionMiddleware, terrenos.eliminarTerre
 
 
 // venta
-router.get('/ventas', async (req, res) => {
+router.get('/ventas',autenticacionMiddleware, async (req, res) => {
     const [rows] = await pool.query('SELECT * FROM customers');
     const [rows2] = await pool.query('SELECT * FROM land');
     // const [rows2] = await pool.query('SELECT * FROM land WHERE lote = ? AND manzana = ?');
@@ -282,7 +282,7 @@ router.get('/ventas', async (req, res) => {
 });
 
 
-router.get('/terreno/:id', async (req, res) => {
+router.get('/terreno/:id',autenticacionMiddleware, async (req, res) => {
     const terrenoId = req.params.id;
     const [rows] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
 
@@ -295,11 +295,11 @@ router.get('/terreno/:id', async (req, res) => {
 
 
 
-router.post('/venta', ventas.crearVenta)
+router.post('/venta',autenticacionMiddleware, ventas.crearVenta)
 
 //VER VENTAS
 
-router.get('/view_venta', async(req, res) => {
+router.get('/view_venta', autenticacionMiddleware, async(req, res) => {
     if (req.session.rol == 'usuario') {
         const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
         res.render('venta', {
@@ -322,7 +322,7 @@ router.get('/view_venta', async(req, res) => {
 });
 
 //Editar
-router.get('/venta/:id', async(req, res) => {
+router.get('/venta/:id', autenticacionMiddleware, async(req, res) => {
 
     const id = req.params.id;
     if (req.session.rol == 'usuario') {
@@ -349,8 +349,8 @@ router.get('/venta/:id', async(req, res) => {
 });
 
 
-router.post('/updateventa/:id',ventas.editarVenta);
-router.get('/deleteventa/:id', ventas.eliminarVenta);
+router.post('/updateventa/:id',autenticacionMiddleware,ventas.editarVenta);
+router.get('/deleteventa/:id', autenticacionMiddleware,ventas.eliminarVenta);
 
 //  ELIMINAR TERRENO
 // tambien va usuario?? 
