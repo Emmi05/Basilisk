@@ -23,9 +23,6 @@ app.use(
         secret: "I am girl",
         resave: true,
         saveUninitialized: false,
-        cookie: {
-            maxAge: 120000, // 2 minutos en milisegundos
-          }
     })
 );
  

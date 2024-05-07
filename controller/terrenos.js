@@ -10,7 +10,7 @@ const manzanaregex = /^[a-zA-Z0-9\s-]+$/;
 const dimensionesregex = /^\d+$/;
 const precioRegex = /\b\d{1,3}(,\d{3})*(\.\d+)?\b/;
 const predialregex = /^\d{3}-\d{3}-\d{3}-\d{3}$/;
-const addressRegex = /^[A-Za-z0-9\s-]{10,100}$/;
+const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
 
 export const crearTerreno= async (req, res) => {
     try {
