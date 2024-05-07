@@ -23,16 +23,8 @@ const crearPdf = async (req, res) => {
         doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
         
 
-    const fechaActual = new Date().toLocaleString('es-MX', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        timeZone: 'America/Mexico_City' // Establecer la zona horaria a la de México
+        const fechaActual = moment.tz('America/Mexico_City').locale('es').format('dddd D [de] MMMM [de] YYYY, h:mm:ss A');
 
-    });
         // Agrega espacio y texto de descripción
         doc.moveDown();
         doc.moveDown();
@@ -164,9 +156,6 @@ const proceso = async (req, res) => {
 
   
         const fechaActual = moment.tz('America/Mexico_City').locale('es').format('dddd D [de] MMMM [de] YYYY, h:mm:ss A');
-        
-        
-        
 
         // Agrega espacio y texto de descripción
         doc.moveDown();
@@ -390,16 +379,8 @@ const pagados = async (req, res) => {
         doc.image('./public/img/logo.png', imgX, imgY, { width: imgWidth, height: imgHeight });
   
         // Agregar (fecha de generación del PDF)
-        const fechaActual = new Date().toLocaleString('es-MX', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: 'America/Mexico_City' // Establecer la zona horaria a la de México
+        const fechaActual = moment.tz('America/Mexico_City').locale('es').format('dddd D [de] MMMM [de] YYYY, h:mm:ss A');
 
-        });
         // Agrega espacio y texto de descripción
         doc.moveDown();
         doc.moveDown();
