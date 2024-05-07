@@ -98,7 +98,7 @@
 
 /* MEDIA QUERYS */
 /* Media query para pantallas más pequeñas */
-@media (max-width: 767.98px) {
+/* @media (max-width: 767.98px) {
   html, body {
     width: 100%;
     height: 100%;
@@ -108,10 +108,10 @@
 
   .modal-wrapper {
     position: fixed;
-    top: 59%; /* Centrado verticalmente */
+    top: 59%; 
     left: 0;
     width: 100%;
-    height: auto; /* Mantenemos auto para adaptabilidad */
+    height: auto; 
   
     z-index: 1100;
   }
@@ -132,17 +132,16 @@
     width: 100%;
     height: 70vh;
   }
-}
+} */
 
 /* Media query para iPads y pantallas más grandes */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* @media (min-width: 768px) and (max-width: 1024px) {
   .modal-wrapper {
     position: fixed;
-    top: 59%; /* Centrado verticalmente */
+    top: 59%; 
     left: 0;
     width: 100%;
-    height: auto; /* Mantenemos auto para adaptabilidad */
-  
+    height: auto;
     z-index: 1100;
   }
   
@@ -152,9 +151,9 @@
   }
 
   .modal-content iframe {
-    height: 60vh;
+    height: 50vh;
   }
-}
+} */
 
 
 /* Ajustes para pantallas aún más pequeñas */
@@ -165,6 +164,6 @@
   }
 
   .modal-content iframe {
-    height: 60vh;
+    height: 40vh;
   }
 }
