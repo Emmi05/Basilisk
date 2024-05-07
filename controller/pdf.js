@@ -614,7 +614,6 @@ const finiquito =async (req,res)=>{
 export const methods = {
 
     crearPdf,
-    contado,
     proceso,
     disponibles,
     pagados,    
