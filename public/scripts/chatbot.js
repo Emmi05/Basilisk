@@ -4,6 +4,7 @@ window.WebChat.renderWebChat({
       token: 'bmQmB_t4MwU.h6j8DxlDke2T85xLmQmCJJJoTMQYRVVYRiEi9lUtJeo'
     }),
     styleOptions: {
+      hideUploadButton: true,
       botAvatarImage: './resources/img/logo_ovalado.png',
       botAvatarInitials: 'BS',
       userAvatarImage: './resources/img/exito.png',
@@ -24,7 +25,7 @@ window.WebChat.renderWebChat({
       bubbleFromUserNubSize: 10,
       groupTimestamp: 3000,
       showAvatarInGroup: 'status',
-      hideUploadButton: true
+    
     }
   }, document.getElementById('webchat'))
   
