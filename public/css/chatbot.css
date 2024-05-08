@@ -171,7 +171,7 @@
 /* Ajustes para pantallas aún más pequeñas */
 @media (max-width: 600px) and (min-width: 401px) {
   .modal-dialog {
-    width: 90%; /* Cambia el porcentaje según tus necesidades */
+    width: 95%; /* Cambia el porcentaje según tus necesidades */
     max-width: 90%; /* Cambia el porcentaje según tus necesidades */
   }
 
