@@ -23,7 +23,8 @@ window.WebChat.renderWebChat({
       bubbleFromUserNubOffset: 0,
       bubbleFromUserNubSize: 10,
       groupTimestamp: 3000,
-      showAvatarInGroup: 'status'
+      showAvatarInGroup: 'status',
+      hideUploadButton: true
     }
   }, document.getElementById('webchat'))
   
