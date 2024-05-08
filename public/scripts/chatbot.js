@@ -1,7 +1,7 @@
 window.WebChat.renderWebChat({
     className: 'webchat__chat',
     directLine: window.WebChat.createDirectLine({
-      token: 'bmQmB_t4MwU.rlUSv2ByiBnJ0jatqvN99wDolJH_wPYZOOtM6qCl9xc'
+      token: 'bmQmB_t4MwU.h6j8DxlDke2T85xLmQmCJJJoTMQYRVVYRiEi9lUtJeo'
     }),
     styleOptions: {
       botAvatarImage: './resources/img/logo_ovalado.png',
