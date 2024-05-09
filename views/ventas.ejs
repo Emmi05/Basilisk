@@ -51,7 +51,7 @@
                   <% } %> 
         
        <!-- Begin Page Content -->
-       <% if(roluser){ %>
+
         <div class="container-fluid">
             <h1>Registro ventas</h1>
             <form class="row g-3" action="/venta" method="POST" autocomplete="off">
@@ -144,99 +144,6 @@
   
 
 </div>
-<%}else{%>
-  <div class="container-fluid">
-    <h1>Registro ventas</h1>
-    <form class="row g-3" action="/venta" method="POST" autocomplete="off">
-
-      <div class="col-md-6">
-        <label for="cliente" class="form-label">Cliente</label>
-        <div class="input-group">
-            <input type="text"  id="id_customer" name="id_customer" class="form-control" placeholder="Buscar cliente" aria-label="Buscar cliente" aria-describedby="basic-addon2">
-            <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-        </div>
-    </div>
-    
-    <div class="col-md-6">
-      <label for="terreno" class="form-label">Terreno</label>
-      <select class="form-control" id="id_land" name="id_land">
-          <option value="">Seleccione un terreno</option>
-          <% terrenos.forEach(terreno => { %>
-              <% if (terreno.estado === 'disponible') { %>
-                  <option value="<%= terreno.id %>">Manzana <%= terreno.manzana %> Lote <%= terreno.lote %></option>
-              <% } %>
-          <% }); %>
-      </select>
-  </div>
-  
-  <div class="col-md-6">
-      <label for="interno" class="form-label">Id_terreno</label>
-      <input type="text" class="form-control" id="interno" name="interno" disabled placeholder="id terreno">
-  </div>
-  
-  <div class="col-md-6">
-    <label for="precio" class="form-label">Precio</label>
-    <input type="number" class="form-control" id="precio" name="precio" readonly min="1" placeholder="precio">
-</div>
-  
-<!-- Tipo venta -->
-    <div class="col-md-6" disable>
-      <label for="tipo_venta">Tipo venta:</label>
-      <select class="form-control" id="tipo_venta" name="tipo_venta" disabled >
-          <option value="">Seleccionar</option>
-          <option value="contado">Contado</option>
-          <option value="credito">Credito</option>
-      </select>
-
-    </div>
-        
-        
-          <div class="col-md-6">
-            <label for="fecha" name="fecha" class="form-label">Fecha</label>
-            <input type="date" class="form-control" id="fecha_venta" name="fecha_venta" readonly>
-          </div>
-          
-          <div class="col-md-6">
-            <label for="inicial" name="inicial" class="form-label">Enganche</label>
-            <input type="number" class="form-control" id="inicial" name="inicial" placeholder="enganche" readonly>
-            <div id="rol" class="form-text">
-              Solo debe tener números.         
-           </div>
-          </div>
-          
-
-          <div class="col-md-6">
-            <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-            <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" placeholder="plazos" readonly>
-            <div id="rol" class="form-text">
-              Solo debe tener números.         
-           </div>
-          </div>
-
-          <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
-          <div class="col-md-6">
-            <label for="vendedor" class="form-label">Vendedor</label>
-            <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" disabled>
-        </div>
-            
-        
-        <!-- Cuotas -->
-        <div class="col-md-6">
-          <label for="cuotas" class="form-label">Cuotas por mes</label>
-          <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
-      </div>
-
-      <br> <br> <br> <br>
-        <div class="col-12">
-          <a href="/" class="btn btn-secondary">Regresar</a>
-        </div>
-
-      </form>
-
-
-
-</div>
-<%}%>
 <!-- End of Content Wrapper -->
 
 </div>
