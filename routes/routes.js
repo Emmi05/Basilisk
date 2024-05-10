@@ -349,11 +349,10 @@ router.get('/venta/:id', autenticacionMiddleware, async(req, res) => {
 });
 
 
-router.post('/updateventa/:id',autenticacionMiddleware,ventas.editarVenta);
-router.get('/deleteventa/:id', autenticacionMiddleware,ventas.eliminarVenta);
+router.post('/updateventa/:id',autenticacionMiddleware,autorizacionMiddleware ('admin'), ventas.editarVenta);
+router.get('/deleteventa/:id', autenticacionMiddleware,autorizacionMiddleware ('admin'),ventas.eliminarVenta);
 
-//  ELIMINAR TERRENO
-// tambien va usuario?? 
+
 router.get('/credits', autenticacionMiddleware, async(req, res) => {
     if (req.session.rol == 'admin') {
            const [rows] = await pool.query('SELECT *FROM users');

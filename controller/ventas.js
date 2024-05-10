@@ -416,21 +416,11 @@ const editarVenta = async (req, res) => {
             ruta: 'view_venta'
         });
         }else if (req.session.rol =='usuario'){
-            if (tipo_venta === 'contado' && estado_terreno !== 'pagado') {
-                result = await pool.query(
-                'UPDATE sale SET tipo_venta = ?, inicial = NULL, n_cuentas = NULL, cuotas = 0 WHERE id = ?',
-                [tipo_venta, id]
-            );
-
-
-            // Marcar el terreno como "pagado"
-            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_terreno_asociado]);
-        } else if (tipo_venta === 'credito') {
-            if((inicialNumber >= precio_terreno)) {
-                return res.render('ventaEdit', {
+           
+                return res.render('venta', {
                     alert: true,
                     alertTitle: "Error",
-                    alertMessage: "El enganche debe ser menor que el precio del terreno.",
+                    alertMessage: "No tienes acceso",
                     alertIcon: 'error',
                     showConfirmButton: true,
                     timer: false,
@@ -443,68 +433,8 @@ const editarVenta = async (req, res) => {
                     terrenos2: terreno,
                 });
             }
-            if(inicialNumber <= 0 || !cantidades.test(inicial)) {
-                return res.render('ventaEdit', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "Los valores de inicial son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: false,
-                    ruta: '/',
-                    login: true,
-                    roluser: false,
-                    name: req.session.name,
-                    rol: req.session.rol,
-                    ventas: rows,
-                    terrenos2: terreno,
-                });
-            }
-            if(nCuentasNumber <= 0 || !cantidades.test(n_cuentas)) {
-                return res.render('ventaEdit', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "Los valores de n_cuentas son inválidos. Deben ser mayor a 0 y sin caracteres especiales.",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: false,
-                    ruta: '/',
-                    login: true,
-                    roluser: false,
-                    name: req.session.name,
-                    rol: req.session.rol,
-                    ventas: rows,
-                    terrenos2: terreno,
-                });
-            }
-
-            // Si es "crédito", actualiza los valores normales
-            result = await pool.query(
-                'UPDATE sale SET tipo_venta = ?, inicial = ?, n_cuentas = ?, cuotas = ? WHERE id = ?',
-                [tipo_venta, inicial, n_cuentas, cuotas, id]
-            );
+            
         
-            // Marcar el terreno como "proceso"
-            await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_terreno_asociado]);
-        }
-    
-        
-        res.render('venta', {
-            alert: true,
-            alertTitle: "Actualización",
-            alertMessage: "¡Actualización Exitosa!",
-            alertIcon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
-            login: true,
-            roluser: false,
-            name: req.session.name,
-            rol: req.session.rol,
-            ventas: rows,
-            ruta: 'view_venta'
-        });
-
-        }
     } catch (error) {
         console.log(error);
         return res.status(500).render('500');
