@@ -417,23 +417,13 @@ const editarVenta = async (req, res) => {
         });
         }else if (req.session.rol =='usuario'){
            
-                return res.render('venta', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "No tienes acceso",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: false,
-                    ruta: '/',
-                    login: true,
-                    roluser: false,
-                    name: req.session.name,
-                    rol: req.session.rol,
-                    ventas: rows,
-                    terrenos2: terreno,
-                });
-            }
-            
+            res.render('denegado', {
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol
+            });
+        }   
         
     } catch (error) {
         console.log(error);

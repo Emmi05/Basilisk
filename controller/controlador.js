@@ -13,7 +13,7 @@ export const login = async (req, res) => {
 
     if (user && pass) {
         try {
-            const [results, fields] = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
+            const [results] = await pool.query('SELECT * FROM users WHERE user = ?', [user]);
 
             if (results.length == 0 || !(await bcrypt.compare(pass, results[0].pass))) {
                 console.log('Usuario y/o contraseña incorrectos');
@@ -27,17 +27,11 @@ export const login = async (req, res) => {
                     ruta: 'login'
                 });
             } else {
-                // Crear una nueva sesión incluso si una sesión anterior ha expirado
-                req.session.regenerate(err => {
-                    if (err) {
-                        console.error('Error al regenerar la sesión:', err);
-                        return res.status(500).send('Error de servidor');
-                    }
 
                     req.session.loggedin = true;
                     req.session.name = results[0].name;
                     req.session.rol = results[0].rol;
-                    req.session.userId = results[0].id; // Asociar el ID del usuario con la sesión
+                    req.session.userId = results[0].id;
 
                     if (req.session.rol == 'usuario') {
                         res.render('login', {
@@ -60,11 +54,9 @@ export const login = async (req, res) => {
                             ruta: ''
                         });
                     }
-                });
             }
         } catch (error) {
-            console.error('Error al ejecutar la consulta SQL:', error);
-            // return res.status(500).send('Error de servidor');
+            console.log('Error al ejecutar la consulta SQL:', error);
             return res.status(500).render('500');
         }
     } else {
@@ -82,7 +74,6 @@ export const login = async (req, res) => {
 }
 
 
-// Middleware de autenticación
 
 
 export const perfil = async (req, res) => {
@@ -115,13 +106,12 @@ export const perfil = async (req, res) => {
 export const password = async (req, res) => {
     const { pass, newpass } = req.body;
 
-    const userId = req.user.id; // Accediendo al ID de usuario desde req.user
-  
+    const userId = req.user.id; 
 
     if (req.session.rol === 'usuario') {
         try {
             const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
- // Verificar si algún campo está vacío
+
         if (!pass || !newpass) {
             return res.render('profile', {
                 alert: true,
@@ -170,7 +160,7 @@ export const password = async (req, res) => {
                         alertIcon: 'error',
                         showConfirmButton: false,
                         timer: 3500,
-                        ruta: '/', // Redirigir a la página de registro nuevamente
+                        ruta: '/', 
                         login: true,
                         roluser: false,
                         name: req.session.name,
@@ -178,8 +168,7 @@ export const password = async (req, res) => {
                         usuarios: rows,
                     });
                 }
-         // Aquí deberías agregar la lógica para cambiar la contraseña en la base de datos
-         const passwordHash = await bcrypt.hash(newpass, 8); // Hash de la nueva contraseña, no de la contraseña actual
+         const passwordHash = await bcrypt.hash(newpass, 8);
 
          await pool.query('UPDATE users SET pass = ? WHERE id = ?', [passwordHash, userId]);
          
@@ -226,10 +215,8 @@ export const password = async (req, res) => {
                 usuarios: rows,
             });
         }
-            // Obtener la contraseña actual del usuario desde la base de datos
             const storedPassword = rows[0].pass;
 
-            // Comparar la contraseña actual con la que el usuario está proporcionando
             const passwordMatch = await bcrypt.compare(pass, storedPassword);
 
             if (!passwordMatch) {
@@ -248,7 +235,6 @@ export const password = async (req, res) => {
                     usuarios: rows,
                 });
             } else {
-                // La contraseña actual es correcta, puedes proceder con el cambio de contraseña
                 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
                 if (!passwordRegex.test(newpass)) {
                     return res.render('profile', {
@@ -258,7 +244,7 @@ export const password = async (req, res) => {
                         alertIcon: 'error',
                         showConfirmButton: false,
                         timer: 3500,
-                        ruta: '/', // Redirigir a la página de registro nuevamente
+                        ruta: '/', 
                         login: true,
                         roluser: true,
                         name: req.session.name,
@@ -266,8 +252,7 @@ export const password = async (req, res) => {
                         usuarios: rows,
                     });
                 }
-         // Aquí deberías agregar la lógica para cambiar la contraseña en la base de datos
-         const passwordHash = await bcrypt.hash(newpass, 8); // Hash de la nueva contraseña, no de la contraseña actual
+         const passwordHash = await bcrypt.hash(newpass, 8);
 
          await pool.query('UPDATE users SET pass = ? WHERE id = ?', [passwordHash, userId]);
          
@@ -303,8 +288,6 @@ export const register=  async(req, res) => {
         if (req.session.rol == 'admin') {
         const { user, name, rol, pass } = req.body;
         
-        // console.log(req.body)
-        // Verificar si algún campo está vacío
         if (!user || !name || !rol || !pass) {
             return res.render('register', {
                 alert: true,
@@ -337,8 +320,6 @@ export const register=  async(req, res) => {
                 rol: req.session.rol,
             });
         }
-
-        
   
         if(!usernameRegex.test(user)){
             return res.render('register', {
@@ -348,7 +329,7 @@ export const register=  async(req, res) => {
                 alertIcon: 'error',
                 showConfirmButton: true,
                 timer: false,
-                ruta: '/', // Redirigir a la página de registro nuevamente
+                ruta: '/', 
                 login: true,
                 roluser: true,
                 name: req.session.name,
@@ -364,7 +345,7 @@ export const register=  async(req, res) => {
                 alertIcon: 'error',
                 showConfirmButton: true,
                 timer: false,
-                ruta: '/', // Redirigir a la página de registro nuevamente
+                ruta: '/', 
                 login: true,
                 roluser: true,
                 name: req.session.name,
@@ -373,7 +354,7 @@ export const register=  async(req, res) => {
         }
 
 
-         // Verificar si la contraseña cumple con los requisitos
+     
          if (!passwordRegex.test(pass)) {
              return res.render('register', {
                  alert: true,
@@ -382,7 +363,7 @@ export const register=  async(req, res) => {
                  alertIcon: 'error',
                  showConfirmButton: true,
                  timer: false,
-                 ruta: '/', // Redirigir a la página de registro nuevamente
+                 ruta: '/', 
                  login: true,
                  roluser: true,
                  name: req.session.name,
@@ -423,12 +404,11 @@ export const register=  async(req, res) => {
     }
     } catch (error) {
         console.error(error);
-        // Manejar el error apropiadamente
         return res.status(500).render('500');
     }
 }
 
-// vista 
+
 export const usuarios=  async(req, res) => {
     if (req.session.rol == 'usuario') {
         res.render('denegado', {
@@ -455,7 +435,6 @@ try {
     if (req.session.rol == 'admin') {
         const { user, name, rol } = req.body;
 
-        // Verificar si algún campo está vacío
         if (!user || !name || !rol) {
             return res.render('editar', {
                 alert: true,
@@ -473,7 +452,7 @@ try {
             });
         }
 
-        // Verificar si el nombre de usuario ha sido modificado
+        
         const usuarioModificado = user !== rows[0].user;
 
         // Si el nombre de usuario ha sido modificado, verificar si ya existe en la base de datos
@@ -505,7 +484,7 @@ try {
                 alertIcon: 'error',
                 showConfirmButton: true,
                 timer: false,
-                ruta: '/', // Redirigir a la página de registro nuevamente
+                ruta: '/', 
                 login: true,
                 roluser: true,
                 name: req.session.name,
@@ -523,7 +502,7 @@ try {
                 alertIcon: 'error',
                 showConfirmButton: true,
                 timer: false,
-                ruta: '/', // Redirigir a la página de registro nuevamente
+                ruta: '/', 
                 login: true,
                 roluser: true,
                 name: req.session.name,
