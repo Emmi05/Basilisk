@@ -11,17 +11,11 @@ const crearAbonos = async (req, res) => {
     const id_venta = req.params.id;
 
     try {
-        // Obtener los datos del cuerpo de la solicitud
         const { n_abono, fecha_abono, cantidad } = req.body;
          // Manejar la fecha de abono cuando no está presente
          const fechaAbono = fecha_abono || new Date();
-
         const [informacion]=await pool.query('SELECT  s.id AS venta_id, s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas AS abono_cuotas_pagadas, a.cuotas_restantes AS abono_cuotas_restantes, c.name AS customer_name, c.a_paterno AS customer_paterno, c.a_materno AS customer_materno, l.lote AS land_lote, l.manzana AS land_manzana, l.predial AS land_predial, l.id_interno AS land_id_interno, l.precio AS land_precio FROM  sale s JOIN  abonos a ON s.id = a.id_sale JOIN  customers c ON s.id_customer = c.id JOIN  land l ON s.id_land = l.id WHERE  s.id = ? ORDER BY  a.fecha_abono DESC LIMIT 1;',  [id_venta]);
-        // Consulta para obtener detalles de la venta y el último abono
-
         const [abonosrows] = await pool.query('SELECT s.id, s.ncuotas_pagadas, s.cuotas, s.n_cuentas, s.id_land, s.deuda_restante, a.fecha_abono, a.cuotas_pagadas, a.cuotas_restantes, c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno  FROM sale s JOIN abonos a ON s.id = a.id_sale JOIN customers c ON s.id_customer = c.id   WHERE s.id = ? ORDER BY a.cuotas_restantes ASC LIMIT 1;', [id_venta]);
-    
-        // Verificar si algún campo está vacío
         if (!n_abono || !fecha_abono) {
             // Renderizar la vista con un mensaje de error si faltan campos
             return res.render('abonos_formulario', {
@@ -40,7 +34,6 @@ const crearAbonos = async (req, res) => {
             });
         } else if (abonosrows[0].cuotas_pagadas <= abonosrows[0].n_cuentas) {
             const cuotasFaltantes = abonosrows[0].cuotas_restantes;
-            
             // Verificar si n_abono es un número positivo
             if (!numeros.test(n_abono)) {
                 return res.render('abonos_formulario', {
@@ -58,35 +51,20 @@ const crearAbonos = async (req, res) => {
                     abonos: abonosrows,
                 });
             }
-            // console.log(n_abono, "abono dado");
-            // console.log(cuotasFaltantes, "cuotas generales");
-    
             const id_land=abonosrows[0].id_land;
-            const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono); // Sumar n_abono a las cuotas pagadas
-
-            // console.log(cuota_restante, "cuota pagada?");            
-            const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat(n_abono); // Restar n_abono a las cuotas restantes
-
-            // console.log(abonosrows[0].cuotas_restantes);
-            // console.log(cuota_pagada, "cuota restante");
-            
-
+            const cuota_restante = abonosrows[0].ncuotas_pagadas + parseFloat(n_abono);        
+            const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat(n_abono); 
             const deuda_restante = abonosrows[0].deuda_restante - cantidad;
-            // console.log(deuda_restante, "deuda restante ");
-            // console.log("-------------------------------------------------")
-
+        
             ///aqui se valida los decimales 
             if(deuda_restante<=1){
+
                 const deuda_restante=0;
                 const id_sale = abonosrows[0].id;
-                // console.log(id_sale);
-                 const [landsearch] = await pool.query('SELECT * FROM sale WHERE id = ?', [id_sale]);
-
+                const [landsearch] = await pool.query('SELECT * FROM sale WHERE id = ?', [id_sale]);
                 const id_land = landsearch[0].id_land;
-            
                 // Insertar el nuevo abono en la base de datos
                 const fechaAbonoFormateada = moment(fechaAbono).format('YYYY-MM-DD');
-
                 const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes, cantidad, n_abono) VALUES (?, ?, ?, ?, ?, ?)',
                 [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada, cantidad, n_abono])
 
@@ -98,60 +76,35 @@ const crearAbonos = async (req, res) => {
                     throw error;
                 });
     
-                // // Obtener el ID del último abono insertado
-                // const lastInsertedAbonoId = iabono.insertId;
-    
-                // Actualizar la venta con las nuevas cuotas pagadas y la deuda restante
                 const result = await pool.query('UPDATE sale INNER JOIN land ON sale.id_land = land.id SET sale.ncuotas_pagadas = ?, sale.deuda_restante = ?, land.estado = ? WHERE sale.id = ? AND land.id = ?', [cuota_restante, deuda_restante, 'pagado', id_sale, id_land])
                     .catch(error => {
                         console.error('Error al actualizar las cuotas en la base de datos:', error);
                         throw error; 
                     });
-             
-              
-    
-               // Genera y envía el PDF
-     await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
 
+             await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
 
             }else{
                 const fechaAbonoFormateada = moment(fechaAbono).format('YYYY-MM-DD');
 
-            
-            // const cuota_pagada = abonosrows[0].cuotas_restantes - parseFloat(n_abono);
-            // console.log(cuota_pagada, "cuota pagado");
-            // ID de la venta
             const id_sale = abonosrows[0].id;
-            
-            // Insertar el nuevo abono en la base de datos
             const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes,cantidad, n_abono) VALUES (?, ?, ?, ?, ?, ?)',
                 [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada,cantidad, n_abono])
                 .catch(error => {
                     console.error('Error al insertar el abono en la base de datos:', error);
                     throw error;
                 });
-
-      
-            // Actualizar la venta con las nuevas cuotas pagadas y la deuda restante
             const result = await pool.query('UPDATE sale SET ncuotas_pagadas = ?, deuda_restante = ? WHERE id = ?', [cuota_restante, deuda_restante, id_sale])
                 .catch(error => {
                     console.error('Error al actualizar las cuotas en la base de datos:', error);
                     throw error; 
                 });
-
-            
-
             await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
-            // res.json({ success: true });
-
-
-        
       }
      }
     } catch (error) {
         console.error(error);
         return res.status(500).render('500');
-        // res.status(500).send('Error interno del servidor');
     }
 }
 

@@ -1,7 +1,7 @@
 window.WebChat.renderWebChat({
     className: 'webchat__chat',
     directLine: window.WebChat.createDirectLine({
-      token: 'bmQmB_t4MwU.h6j8DxlDke2T85xLmQmCJJJoTMQYRVVYRiEi9lUtJeo'
+      token: 'Hn6enMHa6dY.YQ64B8fdnFuBvW0cxS_j1v-0f-_oIwXAST6h-4AnC1U'
     }),
     styleOptions: {
       hideUploadButton: true,
