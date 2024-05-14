@@ -133,8 +133,8 @@
      title:'<%= alertTitle %>',
      text:'<%= alertMessage %>',
      icon:'<%= alertIcon %>',
-     showConfirmButton: <%= showConfirmButton %>,
-     timer: <%= timer %>
+     showConfirmButton:' <%= showConfirmButton %>',
+     timer:' <%= timer %>'
    }).then(()=>{
      window.location='/<%= ruta %>'
    })
@@ -154,7 +154,6 @@
          confirmButtonText: "Sí, eliminarlo"
      }).then((result) => {
          if (result.isConfirmed) {
-             // Redirigir a la ruta de eliminación
              window.location.href = `/delete/${id}`;
          }
      });

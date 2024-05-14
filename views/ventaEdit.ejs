@@ -44,14 +44,10 @@
          <% ventas.forEach(function(venta) { %>
           <div class="container-fluid">
               <h1>Editar ventas</h1>
+
               <form class="row g-3" action="/updateventa/<%= venta.id %>" method="POST">
-            
                 <input id="id" name="id" value="<%= venta.id %>" hidden>
-
-
-
                
-  
                 <div class="col-md-6">
                   <label for="cliente" class="form-label">Cliente</label>
                   <input type="text" class="form-control" id="id_customer" name="id_customer" value=" <%= venta.customer_name %>  <%= venta.customer_paterno %>  <%= venta.customer_materno %>" disabled>
@@ -60,13 +56,6 @@
               <div class="col-md-6">
                 <label for="terreno" class="form-label">Terreno</label>
                 <input type="text" class="form-control" id="id_land" name="id_land" value="Manzana <%= venta.manzana %> Lote <%= venta.lote %>" disabled>
-
-                <!-- <select class="form-select" id="id_land" name="id_land">
-                    <option value="">Seleccione un terreno</option>
-                    
-                        <option value="<%= venta.id %>">Manzana <%= venta.manzana %> Lote <%= venta.lote %></option>
-             
-                </select> -->
             </div>
             
             <div class="col-md-6">
@@ -78,61 +67,55 @@
               <label for="precio" class="form-label">Precio</label>
               <input type="int" class="form-control" id="precio" name="precio" disabled value="<%= venta.precio %>">
           </div>
-            
-             
-                    <!-- Tipo venta -->
+
+          <div class="col-md-6">
+              <label for="tipo_venta">Tipo venta:</label>
+              <select class="form-control" id="tipo_venta" name="tipo_venta" >
+                  <option value="">Seleccionar</option>
+                  <option <%= venta.tipo_venta=='contado' ? "selected" : '' %> value="contado">Contado</option>
+                  <option <%= venta.tipo_venta=='credito' ? "selected" : '' %> value="credito">Credito</option>
+                
+              </select>
+        </div>
+
         <div class="col-md-6">
-          <label for="tipo_venta">Tipo venta:</label>
-          <select class="form-control" id="tipo_venta" name="tipo_venta" >
-              <option value="">Seleccionar</option>
-              <option <%= venta.tipo_venta=='contado' ? "selected" : '' %> value="contado">Contado</option>
-              <option <%= venta.tipo_venta=='credito' ? "selected" : '' %> value="credito">Credito</option>
-            
-          </select>
-      </div>
+            <label for="fecha" name="fecha" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="fecha_venta" name="fecha_venta" value="<%= venta.fecha_venta%>" disabled>
+        </div>
 
-                  
-                    <div class="col-md-6">
-                      <label for="fecha" name="fecha" class="form-label">Fecha</label>
-                      <input type="date" class="form-control" id="fecha_venta" name="fecha_venta" value="<%= venta.fecha_venta%>" disabled>
-                    </div>
-                    <div class="col-md-6">
-                      <label for="inicial" name="inicial" class="form-label">Enganche</label>
-                      <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>" placeholder="Enganche">
-                      <div id="rol" class="form-text">
-                        Solo debe tener números.         
-                     </div>
-                    </div>
+          <div class="col-md-6">
+              <label for="inicial" name="inicial" class="form-label">Enganche</label>
+              <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>" placeholder="Enganche">
+              <div id="rol" class="form-text">
+              Solo debe tener números.         
+              </div>
+          </div>
+
   
-                    <div class="col-md-6">
-                      <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                      <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>" placeholder="plazo">
-                      <div id="rol" class="form-text">
-                        Solo debe tener números.         
-                     </div>
-                    </div>
-                  
-                    <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
-                    <div class="col-md-6">
-                      <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
-                      <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" readonly>
-                    </div>
+          <div class="col-md-6">
+              <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
+              <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>" placeholder="plazo">
+              <div id="rol" class="form-text">
+              Solo debe tener números.         
+              </div>
+          </div>
+                
+          <div class="col-md-6">
+            <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
+            <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" readonly>
+          </div>
      
-                          <!-- Cuotas -->
-                     <div class="col-md-6">
-                      <label for="cuotas" class="form-label">Cuotas por mes</label>
-                      <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
-                     </div>
-          
+          <div class="col-md-6">
+            <label for="cuotas" class="form-label">Cuotas por mes</label>
+            <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
+          </div>
 
-
-  
                 <br> <br> <br> <br>
-                  <div class="col-12">
-                    <a href="/view_venta" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-primary"  value="Save">Guardar</button>
-                  </div>
-  
+          <div class="col-12">
+            <a href="/view_venta" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary"  value="Save">Guardar</button>
+          </div>
+
                 </form>
                 <% }); %>
             
@@ -150,10 +133,6 @@
         
             <input id="id" name="id" value="<%= venta.id %>" hidden>
 
-
-
-           
-
             <div class="col-md-6">
               <label for="cliente" class="form-label">Cliente</label>
               <input type="text" class="form-control" id="id_customer" name="id_customer" value=" <%= venta.customer_name %>  <%= venta.customer_paterno %>  <%= venta.customer_materno %>" disabled>
@@ -162,7 +141,6 @@
           <div class="col-md-6">
             <label for="terreno" class="form-label">Terreno</label>
             <input type="text" class="form-control" id="id_land" name="id_land" value="Manzana <%= venta.manzana %> Lote <%= venta.lote %>" disabled>
-
         </div>
         
         <div class="col-md-6">
@@ -187,41 +165,40 @@
       </select>
   </div>
 
+
+
               
-                <div class="col-md-6">
-                  <label for="fecha" name="fecha" class="form-label">Fecha</label>
-                  <input type="date" class="form-control" id="fecha_venta" name="fecha_venta" value="<%= venta.fecha_venta%>" disabled>
-                </div>
-                <div class="col-md-6">
-                  <label for="inicial" name="inicial" class="form-label">Enganche</label>
-                  <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>" placeholder="Enganche" disabled>
-                  <div id="rol" class="form-text">
-                    Solo debe tener números.         
-                 </div>
-                </div>
-
-                <div class="col-md-6">
-                  <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
-                  <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>" placeholder="plazo" readonly>
-                  <div id="rol" class="form-text">
-                    Solo debe tener números.         
-                 </div>
-                </div>
-              
-                <!-- lO HAGO DESPLEGABLE O QUE JALE EL NOMBRE -->
-                <div class="col-md-6">
-                  <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
-                  <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" readonly>
-                </div>
- 
-                      <!-- Cuotas -->
-                 <div class="col-md-6">
-                  <label for="cuotas" class="form-label">Cuotas por mes</label>
-                  <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
-                 </div>
-      
+  <div class="col-md-6">
+    <label for="fecha" name="fecha" class="form-label">Fecha</label>
+    <input type="date" class="form-control" id="fecha_venta" name="fecha_venta" value="<%= venta.fecha_venta%>" disabled>
+  </div>
 
 
+  <div class="col-md-6">
+    <label for="inicial" name="inicial" class="form-label">Enganche</label>
+    <input type="number" class="form-control" id="inicial" name="inicial" value="<%= venta.inicial%>" placeholder="Enganche" disabled>
+      <div id="rol" class="form-text">
+          Solo debe tener números.         
+      </div>
+  </div>
+
+    <div class="col-md-6">
+        <label for="n_plazos" name="n_plazos" class="form-label">Cantidad Plazo</label>
+        <input type="number" class="form-control" id="n_cuentas" name="n_cuentas" value="<%= venta.n_cuentas %>" placeholder="plazo" readonly>
+        <div id="rol" class="form-text">
+         Solo debe tener números.         
+      </div>
+    </div>
+                      
+     <div class="col-md-6">
+      <label for="vendedor" name="vendedor" class="form-label">Vendedor</label>
+      <input type="text" class="form-control" id="vendedor" name="vendedor" value="<%= name %>" readonly>
+    </div>
+            
+     <div class="col-md-6">
+        <label for="cuotas" class="form-label">Cuotas por mes</label>
+        <input type="number" class="form-control" id="cuotas" name="cuotas" readonly value=`${cuotasTotal}` placeholder="cuotas x mes">
+   </div>
 
             <br> <br> <br> <br>
               <div class="col-12">
@@ -275,8 +252,8 @@
      title:'<%= alertTitle %>',
      text:'<%= alertMessage %>',
      icon:'<%= alertIcon %>',
-     showConfirmButton: <%= showConfirmButton %>,
-     timer: <%= timer %>
+     showConfirmButton: '<%= showConfirmButton %>',
+     timer:' <%= timer %>'
    }).then(()=>{
      window.location='/<%= ruta %>'
    })
@@ -307,13 +284,11 @@
     // Obtener la fecha como una cadena
 const fechaString = "<%= venta.fecha_venta %>";
 
-// Crear un objeto Date a partir de la cadena de fecha
 const fecha = new Date(fechaString);
 
-// Obtener los componentes de la fecha
 const year = fecha.getFullYear();
-const month = String(fecha.getMonth() + 1).padStart(2, '0'); // Ajustar el mes a dos dígitos
-const day = String(fecha.getDate()).padStart(2, '0'); // Ajustar el día a dos dígitos
+const month = String(fecha.getMonth() + 1).padStart(2, '0'); 
+const day = String(fecha.getDate()).padStart(2, '0'); 
 
 // Construir la cadena de fecha en el formato YYYY-MM-DD
 const fechaFormateada = `${year}-${month}-${day}`;

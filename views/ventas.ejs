@@ -3,14 +3,14 @@
 .ui-autocomplete {
     font-size: 14px;
     background-color: #ffffff;
-    width: 250px; /* Ajusta este valor según tus necesidades */
+    width: 250px; 
     border: 1px solid #cccccc;
     list-style-type: none;
     padding: 0;
     margin: 0;
-    max-height: 210px; /* Ajusta este valor según tus necesidades */
-    overflow-y: auto; /* Permite el desbordamiento vertical */
-    overflow-x: hidden; /* Oculta el desbordamiento horizontal */
+    max-height: 210px; 
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
 .ui-autocomplete .ui-menu-item {
@@ -185,8 +185,8 @@
    title:'<%= alertTitle %>',
    text:'<%= alertMessage %>',
    icon:'<%= alertIcon %>',
-   showConfirmButton: <%= showConfirmButton %>,
-   timer: <%= timer %>
+   showConfirmButton:' <%= showConfirmButton %>',
+   timer: '<%= timer %>'
  }).then(()=>{
    window.location='/<%= ruta %>'
  })
@@ -225,22 +225,15 @@ $(function() {
     $("#id_customer").autocomplete({
         source: availableTags,
         select: function(event, ui) {
-            // Cuando se selecciona un cliente, establece el nombre del cliente en el campo de entrada
             $(this).val(ui.item.label);
-            // Almacena el ID del cliente como un atributo de datos en el campo de entrada
             $(this).data('customer-id', ui.item.value);
-            // Previene el comportamiento predeterminado del Autocomplete
             event.preventDefault();
         }
     });
 
-    // Manejar el envío del formulario
     $("form").submit(function() {
-        // Obtener el ID del cliente almacenado como atributo de datos
         var customerId = $("#id_customer").data('customer-id');
-        // Establecer el valor del campo de entrada como el nombre del cliente
         $("#id_customer").val(customerId);
-        // Continuar con el envío del formulario
         return true;
     });
 });
@@ -248,8 +241,6 @@ $(function() {
 </script> 
 
 
-
-<!--  -->
 <script>
   document.getElementById('tipo_venta').addEventListener('change', function() {
     var tipoVenta = this.value;
@@ -269,22 +260,21 @@ $(function() {
     }
   });
 </script>
-<!-- Después de mostrar el mensaje, redirigir después de un breve tiempo -->
+
 <script>
   // Obtener los campos de "inicial", "n_cuentas" y "cuotas"
   var inicialField = document.getElementById('inicial');
   var nCuentasField = document.getElementById('n_cuentas');
   var cuotasField = document.getElementById('cuotas');
-  var saldoPendienteField = document.getElementById('saldo_pendiente'); // Agrega el campo de saldo pendiente
+  var saldoPendienteField = document.getElementById('saldo_pendiente'); 
 
-  // Agregar un evento "input" a los campos de "inicial" y "n_cuentas"
   inicialField.addEventListener('input', calcularCuotas);
   nCuentasField.addEventListener('input', calcularCuotas);
 
   function calcularCuotas() {
       // Obtener el valor de "inicial" y "n_cuentas"
-      var inicialValue = parseFloat(inicialField.value) || 0; // Si no hay valor, asignar cero
-      var nCuentasValue = parseFloat(nCuentasField.value) || 0; // Si no hay valor, asignar cero
+      var inicialValue = parseFloat(inicialField.value) || 0; 
+      var nCuentasValue = parseFloat(nCuentasField.value) || 0; 
 
       // Obtener el valor de "precio" y calcular "cuotasTotal"
       var precioTerreno = parseFloat(document.getElementById('precio').value);
@@ -292,10 +282,10 @@ $(function() {
       var cuotasTotal = saldoPendiente / nCuentasValue;
 
       // Actualizar el campo "cuotas" con el valor calculado
-      cuotasField.value = isNaN(cuotasTotal) ? '' : cuotasTotal.toFixed(2); // Mostrar el valor solo si es un número válido
+      cuotasField.value = isNaN(cuotasTotal) ? '' : cuotasTotal.toFixed(2); 
       
       // Actualizar el campo "saldo_pendiente" con el valor calculado
-      saldoPendienteField.value = isNaN(saldoPendiente) ? '' : saldoPendiente.toFixed(2); // Mostrar el valor solo si es un número válido
+      saldoPendienteField.value = isNaN(saldoPendiente) ? '' : saldoPendiente.toFixed(2); 
       return cuotasTotal;
   }
 </script>

@@ -11,13 +11,11 @@ const app = express();
 app.use(urlencoded({ extended: false }));
 app.use(json());
 
-//  Invocamos a dotenv
 dotenv.config({ path: './env/.env' });
 
 app.use('/resources', expressStatic('public'));
 app.set('view engine', 'ejs');
 
-// Configuración del middleware de sesión
 app.use(
     session({
         secret: "I am girl",
