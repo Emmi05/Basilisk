@@ -165,14 +165,20 @@
             body: JSON.stringify({ id: '<%= abono.id %>' })
         })
         .then(response => {
+            // Verificar el tipo de contenido de la respuesta
             if (response.ok) {
-                return response.text(); 
+                return response.text(); // Si es exitosa, obtener el cuerpo de la respuesta como texto
             } else {
                 throw new Error('Error al generar el PDF. Código de estado: ' + response.status);
             }
         })
         .then(html => {
+     // Inserta el HTML de la respuesta en el contenedor de alerta
+    // document.getElementById('alertContainer').innerHTML = html;
     document.body.innerHTML += html;
+
+    
+ 
     Swal.fire({
         title: 'Exito',
         text: 'Proceso realizado con éxito',
@@ -185,6 +191,7 @@
     });
         })
         .catch(error => {
+            // Mostrar un mensaje de error si hubo un problema con la solicitud AJAX
             console.error('Error al generar el PDF:', error);
             Swal.fire({
                 title: 'Error',

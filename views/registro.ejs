@@ -127,8 +127,8 @@
    title:'<%= alertTitle %>',
    text:'<%= alertMessage %>',
    icon:'<%= alertIcon %>',
-   showConfirmButton:' <%= showConfirmButton %>',
-   timer: '<%= timer %>'
+   showConfirmButton: <%= showConfirmButton %>,
+   timer: <%= timer %>
  }).then(()=>{
    window.location='/<%= ruta %>'
  })
@@ -149,7 +149,6 @@
 
 
 </script>
-
 <script>
   function mostrarCampos() {
     if (campos1.style.display === "none") {
