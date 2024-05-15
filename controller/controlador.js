@@ -73,9 +73,6 @@ export const login = async (req, res) => {
     }
 }
 
-
-
-
 export const perfil = async (req, res) => {
   // Capturando el ID de sesión
           const userId = req.session.userId;
@@ -282,7 +279,6 @@ export const password = async (req, res) => {
     }
 }
 
-
 export const register=  async(req, res) => {
     try {
         if (req.session.rol == '1') {
@@ -412,7 +408,6 @@ export const register=  async(req, res) => {
     }
 }
 
-
 export const usuarios=  async(req, res) => {
     if (req.session.rol == '2') {
         res.render('denegado', {
@@ -432,6 +427,7 @@ export const usuarios=  async(req, res) => {
         });
     }
 }
+
 export const editarUsuario = async (req, res) => {
     const id = req.params.id;
     let usuariorolid;
@@ -593,19 +589,9 @@ try {
 
 export const datosUsuarioid = async (req, res) =>{
     const id = req.params.id;
-    let usuariorolid;
-    let usuariosrolid;
 
-        const [usuarios] = await pool.query('SELECT * FROM users '); //all users data 
-        const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);//especific user data
-        const [rows2] = await pool.query('SELECT * FROM rol');//all rol data
-        rows.forEach(async usuario => {
-            return usuariorolid =  usuario.id_rol;    //export data rol     
-        });
-        
-        
-         const [usuariorol] = await pool.query('SELECT * FROM rol WHERE id_rol = ?', [usuariorolid]);
-       
+    const [rows] = await pool.query('SELECT u.*, r.* FROM users u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE u.id =?',[id]);
+    const [rows2] = await pool.query('SELECT * FROM rol');//all rol data       
        
         res.render('editar', {
             login: true,
@@ -614,7 +600,6 @@ export const datosUsuarioid = async (req, res) =>{
             rol: req.session.rol,
             usuarios: rows,
             roles: rows2,
-            usuariorol: usuariorol,
         });
 }
 
