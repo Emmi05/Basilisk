@@ -73,38 +73,53 @@ export const login = async (req, res) => {
     }
 }
 
+
 export const perfil = async (req, res) => {
-  // Capturando el ID de sesión
-          const userId = req.session.userId;
+    try {
+        const userId = req.session.userId;
+        const rol= req.session.rol;
 
-    if (req.session.rolid == '2') {
+        console.log('UserID:', userId);
+
+        if (!userId) {
+            // Si no hay userId en la sesión, redirige o muestra un error
+            return res.status(400).send('No user ID in session');
+        }
+
+    
+        if (!rol) {
+            return res.status(400).send('No role ID in session');
+        }
+
+        // Consulta a la base de datos
         const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
+        // Si no hay usuarios encontrados
+        if (rows.length === 0) {
+            return res.status(404).send('User not found');
+        }
+
+        // Renderiza la vista con los datos obtenidos
         res.render('profile', {
             login: true,
-            roluser: false,
+            roluser: true, // true si rolid es 1, false si es 2
             name: req.session.name,
             rol: req.session.rol,
             usuarios: rows,
         });
-    } else if (req.session.rolid == '1') {
-        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
-        res.render('profile', {
-            login: true,
-            roluser: true,
-            name: req.session.name,
-            rol: req.session.rol,
-            usuarios: rows,
-        });
+    } catch (error) {
+        console.error('Error en perfil:', error);
+        res.status(500).send('Internal Server Error');
     }
 };
+
 
 export const password = async (req, res) => {
     const { pass, newpass } = req.body;
 
     const userId = req.user.id; 
-
+    const rol= req.session.rol;
     if (req.session.rolid === '2') {
         try {
             const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
