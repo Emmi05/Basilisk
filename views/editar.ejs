@@ -51,9 +51,14 @@
                                
                                 <label for="rol">Rol:</label>
                                 <select class="form-control" id="rol" name="rol" >
-                                    <option value="">Seleccionar</option>
-                                    <option <%= usuario.rol=='admin' ? "selected" : '' %> value="admin">Administrador</option>
-                                    <option <%= usuario.rol=='usuario' ? "selected" : '' %>  value="usuario">Usuario</option>
+                                    <% usuariorol.forEach(user=> { %>
+                                    <option value="<%= user.id_rol %>"><%= user.id_name %></option>
+                                    <% }); %>
+                                    <% roles.forEach(rol => { %>
+                                        <% if (rol.id_name === 'admin' || 'usuario') { %>
+                                    <option value="<%= rol.id_rol %>"><%= rol.id_name %> </option>
+                                    <% } %>
+                                    <% }); %>
                                 </select>
                             </div>
                             <!-- <div class="form-group">

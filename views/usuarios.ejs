@@ -68,7 +68,9 @@
                                                 <tr>
                                                     <td><%= usuario.name %></td>
                                                     <td><%= usuario.user %></td>
-                                                    <td><%= usuario.rol %></td>
+                                                    <% usuarioroles.forEach(user=> { %>
+                                                    <td><%= user.id_name %></td>
+                                                    <% }) %>
                                                     <td>
                                                         <a href="/editar_usuario/<%= usuario.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
                                                         <a onclick="eliminar(<%= usuario.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
