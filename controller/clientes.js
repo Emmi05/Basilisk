@@ -18,7 +18,7 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
         const validCel = celRegex.test(cel);
         const validAdress = addressRegex.test(adress);
 
-        if (req.session.rol == 'admin') {
+        if (req.session.rol == '1') {
 
             // console.log(req.body);
             if (!name || !a_paterno || !a_materno || !cel || !adress) {

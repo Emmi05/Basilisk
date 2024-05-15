@@ -78,17 +78,20 @@ export const perfil = async (req, res) => {
     try {
         const userId = req.session.userId;
         const rol= req.session.rol;
-
         console.log('UserID:', userId);
 
+        if (req.session.rol == 2) {
         if (!userId) {
-            // Si no hay userId en la sesión, redirige o muestra un error
-            return res.status(400).send('No user ID in session');
+            console.log('No user ID in session');
+            return res.status(500).render('500');
+    
         }
 
     
         if (!rol) {
-            return res.status(400).send('No role ID in session');
+            console.log('No role ID in session');
+            return res.status(500).render('500');
+          
         }
 
         // Consulta a la base de datos
@@ -96,7 +99,9 @@ export const perfil = async (req, res) => {
 
         // Si no hay usuarios encontrados
         if (rows.length === 0) {
-            return res.status(404).send('User not found');
+             console.log('User not found');
+            return res.status(500).render('500');
+          
         }
 
         // Renderiza la vista con los datos obtenidos
@@ -107,10 +112,47 @@ export const perfil = async (req, res) => {
             rol: req.session.rol,
             usuarios: rows,
         });
+    }
+    else if (req.session.rol==1){
+        if (!userId) {
+            console.log('No user ID in session');
+            return res.status(500).render('500');
+    
+        }
+
+    
+        if (!rol) {
+            console.log('No role ID in session');
+            return res.status(500).render('500');
+          
+        }
+
+        // Consulta a la base de datos
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+
+        // Si no hay usuarios encontrados
+        if (rows.length === 0) {
+            console.log('User not found');
+            return res.status(500).render('500');
+          
+        }
+
+        // Renderiza la vista con los datos obtenidos
+        res.render('profile', {
+            login: true,
+            roluser: true, // true si rolid es 1, false si es 2
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows,
+        });
+    }
+    
 
     } catch (error) {
-        console.error('Error en perfil:', error);
-        res.status(500).send('Internal Server Error');
+       
+        console.log('Error en perfils');
+        return res.status(500).render('500');
+      
     }
 };
 
@@ -118,7 +160,8 @@ export const perfil = async (req, res) => {
 export const password = async (req, res) => {
     const { pass, newpass } = req.body;
     const userId = req.session.userId; // Usa userId de la sesión
-
+    try {
+        if (req.session.rol == 1){  
     if (!userId) {
         return res.status(400).render('profile', {
             alert: true,
@@ -150,7 +193,7 @@ export const password = async (req, res) => {
         });
     }
 
-    try {
+  
         // Obtener datos del usuario
         const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
@@ -234,6 +277,122 @@ export const password = async (req, res) => {
             usuarios: rows,
         });
 
+    }
+   else  if (req.session.rol == 2){
+    if (!userId) {
+        return res.status(400).render('profile', {
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Usuario no autenticado.",
+            alertIcon: 'error',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: '/login', // Redirigir al login si no está autenticado
+            login: false,
+        });
+    }
+
+    // Verificar que los campos no estén vacíos
+    if (!pass || !newpass) {
+        return res.render('profile', {
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "Debes rellenar todos los campos!",
+            alertIcon: 'error',
+            showConfirmButton: true,
+            timer: false,
+            ruta: '/', 
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: [],
+        });
+    }
+
+  
+        // Obtener datos del usuario
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+
+        if (rows.length === 0) {
+            return res.render('profile', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Usuario no encontrado.",
+                alertIcon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: '/',
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios: [],
+            });
+        }
+
+        const storedPassword = rows[0].pass;
+        const passwordMatch = await bcrypt.compare(pass, storedPassword);
+
+        if (!passwordMatch) {
+            return res.render('profile', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Contraseña antigua incorrecta.",
+                alertIcon: 'error',
+                showConfirmButton: true,
+                timer: false,
+                ruta: '/',
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios: rows,
+            });
+        }
+
+        // Verificar que la nueva contraseña cumple con los requisitos
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+        if (!passwordRegex.test(newpass)) {
+            return res.render('profile', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.",
+                alertIcon: 'error',
+                showConfirmButton: true,
+                timer: false,
+                ruta: '/',
+                login: true,
+                roluser: false,
+                name: req.session.name,
+                rol: req.session.rol,
+                usuarios: rows,
+            });
+        }
+
+        // Hashear la nueva contraseña
+        const passwordHash = await bcrypt.hash(newpass, 8);
+
+        // Actualizar la contraseña en la base de datos
+        await pool.query('UPDATE users SET pass = ? WHERE id = ?', [passwordHash, userId]);
+
+        // Renderizar la página con un mensaje de éxito
+        res.render('profile', {
+            alert: true,
+            alertTitle: "Contraseña",
+            alertMessage: "Cambio Exitoso!",
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            ruta: '/',
+            login: true,
+            roluser: false,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows,
+        });
+
+    }
     } catch (error) {
         console.error('Error al ejecutar la consulta SQL:', error);
         return res.status(500).render('500');
