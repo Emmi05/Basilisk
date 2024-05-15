@@ -52,7 +52,7 @@
                                 <select class="form-control" id="rol" name="rol">
                                     <option value="">Seleccionar</option>
                                     <% roles.forEach(rol => { %>
-                                        <option value="<%= rol.id_rol %>" <%= usuario.id_rol === rol.id_rol ? "selected" : "" %>><%= rol.id_name %></option>
+                                        <option value="<%= rol.id_rol %>" <%= usuario.id_rol === rol.id_rol ? "selected" : "" %>><%= rol.rol_name %></option>
                                     <% }); %>
                                 </select>
                             </div>

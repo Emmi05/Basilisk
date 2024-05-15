@@ -605,7 +605,7 @@ export const datosUsuarioid = async (req, res) =>{
 
 export const datosUsuario = async (req, res) =>{   
 
-    const [rows] = await pool.query('SELECT u.*, r.id_name FROM users u INNER JOIN rol r ON u.id_rol = r.id_rol');
+    const [rows] = await pool.query('SELECT u.*, r.rol_name FROM users u INNER JOIN rol r ON u.id_rol = r.id_rol');
         
        
         res.render('usuarios', {
