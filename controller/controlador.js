@@ -30,10 +30,10 @@ export const login = async (req, res) => {
 
                     req.session.loggedin = true;
                     req.session.name = results[0].name;
-                    req.session.rol = results[0].rol;
+                    req.session.rol = results[0].id_rol;
                     req.session.userId = results[0].id;
 
-                    if (req.session.rol == 'usuario') {
+                    if (req.session.rol == 2) {
                         res.render('login', {
                             alert: true,
                             alertTitle: "Usuario normal:",
@@ -73,14 +73,11 @@ export const login = async (req, res) => {
     }
 }
 
-
-
-
 export const perfil = async (req, res) => {
   // Capturando el ID de sesión
           const userId = req.session.userId;
 
-    if (req.session.rol == 'usuario') {
+    if (req.session.rolid == '2') {
         const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
         res.render('profile', {
@@ -90,7 +87,7 @@ export const perfil = async (req, res) => {
             rol: req.session.rol,
             usuarios: rows,
         });
-    } else if (req.session.rol == 'admin') {
+    } else if (req.session.rolid == '1') {
         const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
         res.render('profile', {
@@ -108,7 +105,7 @@ export const password = async (req, res) => {
 
     const userId = req.user.id; 
 
-    if (req.session.rol === 'usuario') {
+    if (req.session.rolid === '2') {
         try {
             const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
@@ -164,7 +161,7 @@ export const password = async (req, res) => {
                         login: true,
                         roluser: false,
                         name: req.session.name,
-                        rol: req.session.rol,
+                        rol: req.session.rolid,
                         usuarios: rows,
                     });
                 }
@@ -183,7 +180,7 @@ export const password = async (req, res) => {
                 login: true,
                 roluser: false,
                 name: req.session.name,
-                rol: req.session.rol,
+                rol: req.session.rolid,
                 usuarios: rows,
             });
 
@@ -195,7 +192,7 @@ export const password = async (req, res) => {
             return res.status(500).render('500');
         
         }
-        } else if (req.session.rol === 'admin') {
+        } else if (req.session.rol === '1') {
         try {
             const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
  // Verificar si algún campo está vacío
@@ -282,10 +279,9 @@ export const password = async (req, res) => {
     }
 }
 
-
 export const register=  async(req, res) => {
     try {
-        if (req.session.rol == 'admin') {
+        if (req.session.rol == '1') {
         const { user, name, rol, pass } = req.body;
         
         if (!user || !name || !rol || !pass) {
@@ -372,7 +368,9 @@ export const register=  async(req, res) => {
          }
 
         const passwordHash = await bcrypt.hash(pass, 8);
-        await pool.query('INSERT INTO users SET ?', { user, name, rol, pass: passwordHash });
+        
+        await pool.query('INSERT INTO users SET ?', { user, name, id_rol: rol, pass: passwordHash });
+        const [rows] = await pool.query('SELECT * FROM rol');
         
         res.render('register', {
             alert: true,
@@ -386,6 +384,7 @@ export const register=  async(req, res) => {
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
+            roles: rows,
         });
     }else{
         res.render('register', {
@@ -400,6 +399,7 @@ export const register=  async(req, res) => {
             roluser: false,
             name: req.session.name,
             rol: req.session.rol,
+            roles: rows,
         });
     }
     } catch (error) {
@@ -408,16 +408,15 @@ export const register=  async(req, res) => {
     }
 }
 
-
 export const usuarios=  async(req, res) => {
-    if (req.session.rol == 'usuario') {
+    if (req.session.rol == '2') {
         res.render('denegado', {
             login: true,
             roluser: false,
             name: req.session.name,
             rol: req.session.rol
         });
-    } else if (req.session.rol == 'admin') {
+    } else if (req.session.rol == '1') {
         const [rows] = await pool.query('SELECT *FROM users');
         res.render('usuarios', {
             login: true,
@@ -428,12 +427,23 @@ export const usuarios=  async(req, res) => {
         });
     }
 }
+
 export const editarUsuario = async (req, res) => {
     const id = req.params.id;
+    let usuariorolid;
+
     const [rows] = await pool.query('SELECT * FROM users WHERE id=?',[id]);
+    const [rows2] = await pool.query('SELECT * FROM rol');
+        rows.forEach(async usuario => {
+            return usuariorolid =  usuario.id_rol;
+            
+             
+        });    
+         const [usuariorol] = await pool.query('SELECT * FROM rol WHERE id_rol = ?', [usuariorolid]);
 try {
-    if (req.session.rol == 'admin') {
+    if (req.session.rol == '1') {
         const { user, name, rol } = req.body;
+        console.log(req.body)
 
         if (!user || !name || !rol) {
             return res.render('editar', {
@@ -449,6 +459,8 @@ try {
                 name: req.session.name,
                 rol: req.session.rol,
                 usuarios:rows,
+                roles: rows2,
+                usuariorol: usuariorol,
             });
         }
 
@@ -472,6 +484,8 @@ try {
                     name: req.session.name,
                     rol: req.session.rol,
                     usuarios:rows,
+                    roles: rows2,
+                    usuariorol: usuariorol,
                 });
             }
         }
@@ -490,6 +504,8 @@ try {
                 name: req.session.name,
                 rol: req.session.rol,
                 usuarios:rows,
+                roles: rows2,
+                usuariorol: usuariorol,
 
             }); 
         }
@@ -508,13 +524,15 @@ try {
                 name: req.session.name,
                 rol: req.session.rol,
                 usuarios:rows,
+                roles: rows2,
+                usuariorol: usuariorol,
 
             }); 
         }
 
         // Si el usuario no ha sido modificado o no existe en la base de datos, continuar con la actualización
-        const [result] = await pool.query('UPDATE users SET name = IFNULL (?, name), user = IFNULL (?, user), rol = IFNULL (?, rol) WHERE id = ?', [name, user, rol, id]);
-
+        const [result] = await pool.query('UPDATE users SET name = IFNULL (?, name), user = IFNULL (?, user), id_rol = IFNULL (?, id_rol) WHERE id = ?', [name, user, rol, id]);
+      
         // Verificar si la actualización fue exitosa
         if (result && result.affectedRows > 0) {
             const [rows] = await pool.query('SELECT * FROM users');
@@ -530,7 +548,9 @@ try {
                 name: req.session.name,
                 rol: req.session.rol,
                 usuarios: rows,
-                ruta: 'usuarios'
+                ruta: 'usuarios',
+                roles: rows2,
+                usuariorol: usuariorol,
             });
         } else {
             // Si no se actualizó ninguna fila, mostrar un mensaje de error
@@ -547,10 +567,12 @@ try {
                 name: req.session.name,
                 rol: req.session.rol,
                 usuarios:rows,
+                roles: rows2,
+                usuariorol: usuariorol,
             });
         }
 
-    } else if (req.session.rol == 'usuario') {
+    } else if (req.session.rol == '2') {
         res.render('denegado', {
             login: true,
             roluser: false,
@@ -560,13 +582,45 @@ try {
     }
 }catch{
     return res.status(500).render('500');
+    //console.error(error); catch(error) en caso de haber error poner
 
 }
+}
+
+export const datosUsuarioid = async (req, res) =>{
+    const id = req.params.id;
+
+    const [rows] = await pool.query('SELECT u.*, r.* FROM users u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE u.id =?',[id]);
+    const [rows2] = await pool.query('SELECT * FROM rol');//all rol data       
+       
+        res.render('editar', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows,
+            roles: rows2,
+        });
+}
+
+export const datosUsuario = async (req, res) =>{   
+
+    const [rows] = await pool.query('SELECT u.*, r.id_name FROM users u INNER JOIN rol r ON u.id_rol = r.id_rol');
+        
+       
+        res.render('usuarios', {
+            login: true,
+            roluser: true,
+            name: req.session.name,
+            rol: req.session.rol,
+            usuarios: rows,
+
+        });
 }
 
 export const eliminarUsuario = async (req, res) => {
     try {
-        if (req.session.rol == 'admin') {
+        if (req.session.rol == '1') {
             const { id } = req.params;
             const [result]=await pool.query('DELETE FROM users WHERE id=?',[id])
             //otro if de si es mayor a 0?
@@ -589,7 +643,7 @@ export const eliminarUsuario = async (req, res) => {
         }else{
 
         }
-    } else if (req.session.rol == 'usuarios'){
+    } else if (req.session.rol == '2'){
         res.render('denegado', {
             login: true,
             roluser: false,
@@ -609,14 +663,15 @@ export const eliminarUsuario = async (req, res) => {
 export const home =async (req, res) =>{
      // Validación de sesión
      if (req.session.loggedin) {
-        if (req.session.rol == 'usuario') {
+        
+        if (req.session.rol == '2') {
           res.render('home', {
             login: true,
             roluser: false,
             name: req.session.name,
             rol: req.session.rol
           });
-        } else if (req.session.rol == 'admin') {
+        } else if (req.session.rol == '1') {
        
           res.render('home', {
             login: true,
@@ -640,6 +695,8 @@ export const methods = {
     login,
     usuarios,
     editarUsuario,
+    datosUsuario,
+    datosUsuarioid,
     eliminarUsuario,
     perfil,
     password,
