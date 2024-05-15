@@ -618,26 +618,18 @@ export const datosUsuarioid = async (req, res) =>{
         });
 }
 
-export const datosUsuario = async (req, res) =>{
-    let usuariorol;
+export const datosUsuario = async (req, res) =>{   
 
-        const [usuarios] = await pool.query('SELECT * FROM users '); //all users data 
-        const [rows2] = await pool.query('SELECT * FROM rol');//all rol data
-        usuarios.forEach(async usuario => {
-        const usuariorolid =  usuario.id_rol; 
-        return usuariorol = await pool.query('SELECT * FROM rol WHERE id_rol = ?', [usuariorolid]);
-        });
+    const [rows] = await pool.query('SELECT u.*, r.id_name FROM users u INNER JOIN rol r ON u.id_rol = r.id_rol');
         
-         const [usuariosroles] = usuariorol;
        
         res.render('usuarios', {
             login: true,
             roluser: true,
             name: req.session.name,
             rol: req.session.rol,
-            usuarios: usuarios,
-            roles: rows2,
-            usuariosroles: usuariorol,
+            usuarios: rows,
+
         });
 }
 
