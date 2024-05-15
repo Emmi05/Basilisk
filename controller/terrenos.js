@@ -27,7 +27,7 @@ export const crearTerreno= async (req, res) => {
 
 
 
-        if (req.session.rol == 'admin') {
+        if (req.session.rol == '1') {
 
         // Verificar si algún campo está vacío
         if (!id_interno || !calle || !lote || !manzana || !superficie || !precio || !predial || !escritura || !estado) {
@@ -243,7 +243,7 @@ export const crearTerreno= async (req, res) => {
         });
 
     }
-    if (req.session.rol == 'usuario') {
+    if (req.session.rol == '2') {
        
 
         // Verificar si algún campo está vacío
@@ -475,7 +475,7 @@ export const editarTerrenos = async (req, res) => {
     const validDimensiones=dimensionesregex.test(superficie);
     const validpredial = predialregex.test(predial);
 
-    if (req.session.rol == 'usuario') {
+    if (req.session.rol == '2') {
         const { id } = req.params;
         const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
         
@@ -714,7 +714,7 @@ export const editarTerrenos = async (req, res) => {
             });
 
 
-   }} else if (req.session.rol == 'admin') {
+   }} else if (req.session.rol == '1') {
     const { id } = req.params;
         const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
         
@@ -966,7 +966,7 @@ export const editarTerrenos = async (req, res) => {
 export const eliminarTerreno = async (req, res) => {
 
     try {
-        if (req.session.rol == 'admin') {
+        if (req.session.rol == '1') {
             const { id } = req.params;
             const [result]=await pool.query('DELETE FROM land WHERE id=?',[id])
         //otro if de si es mayor a 0?

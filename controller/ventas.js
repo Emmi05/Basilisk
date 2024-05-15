@@ -13,7 +13,7 @@ const crearVenta = async (req, res) => {
     const { id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, cuotas, precio} = req.body;
     
     try {
-        if (req.session.rol == 'admin') {
+        if (req.session.rol == '1') {
 
         const inicialNumber = parseFloat(inicial);
         const nCuentasNumber = parseFloat(n_cuentas);
@@ -163,7 +163,7 @@ const crearVenta = async (req, res) => {
         });
     }
    
-        }    else if (req.session.rol == 'usuario') {
+        }    else if (req.session.rol == '2') {
 
             const inicialNumber = parseFloat(inicial);
             const nCuentasNumber = parseFloat(n_cuentas);
@@ -326,7 +326,7 @@ const editarVenta = async (req, res) => {
         const estado_terreno = terreno[0].estado;
         const precio_terreno = terreno[0].precio;
 
-        if (req.session.rol=='admin'){
+        if (req.session.rol=='1'){
 
             if (tipo_venta === 'contado' && estado_terreno !== 'pagado') {
                 result = await pool.query(
@@ -415,7 +415,7 @@ const editarVenta = async (req, res) => {
             ventas: rows,
             ruta: 'view_venta'
         });
-        }else if (req.session.rol =='usuario'){
+        }else if (req.session.rol =='2'){
            
             res.render('denegado', {
                 login: true,

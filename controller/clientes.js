@@ -190,7 +190,7 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
                     });
                 }
             }
-        }  else if (req.session.rol == 'usuario') {
+        }  else if (req.session.rol == '2') {
 
      
             if (!name || !a_paterno || !a_materno || !cel || !adress) {
@@ -381,7 +381,7 @@ export const editarClientes = async (req, res) => {
         const id = req.params.id;
         const [rows] =await pool.query('SELECT c.*, p.name_conyuge, p.a_paterno_conyuge, p.a_materno_conyuge, p.cel_conyuge FROM customers c LEFT JOIN parentesco p ON c.id = p.customer_id WHERE c.id = ?', [id]);
 
-        if ( req.session.rol == 'admin') {
+        if ( req.session.rol == '1') {
             const { id } = req.params;
             const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
             console.log(req.body.cel);
@@ -584,7 +584,7 @@ export const editarClientes = async (req, res) => {
 
         } 
 
-        else if (req.session.rol == 'usuario') {
+        else if (req.session.rol == '2') {
             const { id } = req.params;
             const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
                 // Verificar si algún campo está vacío
@@ -782,7 +782,7 @@ export const editarClientes = async (req, res) => {
 
 
 export const eliminarCliente = async (req, res) => {
-    if (req.session.rol == 'admin') {
+    if (req.session.rol == '1') {
         const { id } = req.params;
         try {
             // Eliminar registros relacionados en la tabla parentezco
