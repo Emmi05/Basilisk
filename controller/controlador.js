@@ -400,6 +400,7 @@ export const password = async (req, res) => {
 };
 
 export const register=  async(req, res) => {
+    const [rows] = await pool.query('SELECT * FROM rol');
     try {
         if (req.session.rol == '1') {
         const { user, name, rol, pass } = req.body;
@@ -417,6 +418,7 @@ export const register=  async(req, res) => {
                 roluser: true,
                 name: req.session.name,
                 rol: req.session.rol,
+                roles: rows,
             });
         }
         const existingUser = await pool.query('SELECT * FROM users WHERE user = ?', user);
@@ -434,6 +436,7 @@ export const register=  async(req, res) => {
                 roluser: true,
                 name: req.session.name,
                 rol: req.session.rol,
+                roles: rows,
             });
         }
   
@@ -450,6 +453,7 @@ export const register=  async(req, res) => {
                 roluser: true,
                 name: req.session.name,
                 rol: req.session.rol,
+                roles: rows,
             }); 
         }
         
@@ -466,11 +470,9 @@ export const register=  async(req, res) => {
                 roluser: true,
                 name: req.session.name,
                 rol: req.session.rol,
+                roles: rows,
             }); 
         }
-
-
-     
          if (!passwordRegex.test(pass)) {
              return res.render('register', {
                  alert: true,
@@ -484,13 +486,14 @@ export const register=  async(req, res) => {
                  roluser: true,
                  name: req.session.name,
                  rol: req.session.rol,
+                 roles: rows,
              });
          }
 
         const passwordHash = await bcrypt.hash(pass, 8);
         
         await pool.query('INSERT INTO users SET ?', { user, name, id_rol: rol, pass: passwordHash });
-        const [rows] = await pool.query('SELECT * FROM rol');
+      
         
         res.render('register', {
             alert: true,
