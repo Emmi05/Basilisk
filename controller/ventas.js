@@ -2,7 +2,7 @@ import { pool} from '../database/db.js'
 import moment from 'moment';
 
 const cantidades = /^\d*,?\d+$/;
-
+// const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
 const crearVenta = async (req, res) => {
     const terrenoId = req.params.id;
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
