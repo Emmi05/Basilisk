@@ -467,7 +467,7 @@ export const editarTerrenos = async (req, res) => {
     const id = req.params.id;
     const [rows] = await pool.query('SELECT * FROM land WHERE id=?',[id]);
     try {
-        const precioTerreno = parseFloat(precio.replace(',', ''));
+        // const precioTerreno = parseFloat(precio.replace(',', ''));
         const validIdInterno = idInternoRegex.test(id_interno);
         const validAdress=addressRegex.test(calle);
         const validLote=loteRegex.test(lote);
@@ -479,7 +479,7 @@ export const editarTerrenos = async (req, res) => {
             const { id } = req.params;
             const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
             
-       
+            const precioTerreno = parseFloat(precio.replace(',', ''));
             // Verificar si algún campo está vacío
             if (!id_interno || !calle || !lote || !manzana || !superficie || !precio || !predial || !escritura || !estado) {
                 return res.render('terrenosEdit', {
@@ -717,7 +717,7 @@ export const editarTerrenos = async (req, res) => {
        }} else if (req.session.rol == '1') {
         const { id } = req.params;
             const {id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
-            
+            const precioTerreno = parseFloat(precio.replace(',', ''));
     
             // Verificar si algún campo está vacío
             if (!id_interno || !calle || !lote || !manzana || !superficie || !precio || !predial || !escritura || !estado) {
