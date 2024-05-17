@@ -384,7 +384,7 @@ export const editarClientes = async (req, res) => {
         if ( req.session.rol == '1') {
             const { id } = req.params;
             const { name, a_paterno, a_materno, cel, adress, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge } = req.body;
-            console.log(req.body.cel);
+            
 
             // Verificar si algún campo está vacío
                 if (!name || !a_paterno || !a_materno || !cel || !adress) {
