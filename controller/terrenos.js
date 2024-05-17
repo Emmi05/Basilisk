@@ -16,14 +16,14 @@ export const crearTerreno= async (req, res) => {
     try {
         const { id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
         
-        const precioTerreno = parseFloat(precio.replace(',', ''));
-        const validID = idInternoRegex.test(id_interno);
-        const validAdress=addressRegex.test(calle);
-        const validLote=loteRegex.test(lote);
-        const validManzana=manzanaregex.test(manzana);
-        const validDimensiones=dimensionesregex.test(superficie)
-        const validPrecio=precioRegex.test(precio);
-        const validPredial=predialregex.test(predial);
+        // const precioTerreno = parseFloat(precio.replace(',', ''));
+        // const validID = idInternoRegex.test(id_interno);
+        // const validAdress=addressRegex.test(calle);
+        // const validLote=loteRegex.test(lote);
+        // const validManzana=manzanaregex.test(manzana);
+        // const validDimensiones=dimensionesregex.test(superficie)
+        // const validPrecio=precioRegex.test(precio);
+        // const validPredial=predialregex.test(predial);
 
 
 
@@ -469,11 +469,11 @@ export const editarTerrenos = async (req, res) => {
     try {
       
         // const validIdInterno = idInternoRegex.test(id_interno);
-        const validAdress=addressRegex.test(calle);
-        const validLote=loteRegex.test(lote);
-        const validManzana=manzanaregex.test(manzana);
-        const validDimensiones=dimensionesregex.test(superficie);
-        const validpredial = predialregex.test(predial);
+        // const validAdress=addressRegex.test(calle);
+        // const validLote=loteRegex.test(lote);
+        // const validManzana=manzanaregex.test(manzana);
+        // const validDimensiones=dimensionesregex.test(superficie);
+        // const validpredial = predialregex.test(predial);
     
         if (req.session.rol == '2') {
             const { id } = req.params;
@@ -535,7 +535,7 @@ export const editarTerrenos = async (req, res) => {
                  });
              }
          }
-    
+         const validAdress=addressRegex.test(calle);
             if (!validAdress) {
                 return res.render('terrenosEdit', {
                     alert: true,
@@ -553,6 +553,8 @@ export const editarTerrenos = async (req, res) => {
                 });
             }
           
+          
+            const validLote=loteRegex.test(lote);
                 // Verificar si el lote o la manzana han sido modificados
             const loteModificado = req.body.lote !== rows[0].lote;
             if (loteModificado) {
@@ -576,6 +578,7 @@ export const editarTerrenos = async (req, res) => {
                 
                 
             }
+            const validManzana=manzanaregex.test(manzana);
             const manzanaModificada = req.body.manzana !== rows[0].manzana;
             if (manzanaModificada) {
     
@@ -617,7 +620,8 @@ export const editarTerrenos = async (req, res) => {
             }
     
     
-      
+            const validDimensiones=dimensionesregex.test(superficie);
+
          if (!validDimensiones) {
              return res.render('terrenosEdit', {
                  alert: true,
@@ -652,6 +656,8 @@ export const editarTerrenos = async (req, res) => {
              });
          }
          
+         const validpredial = predialregex.test(predial);
+
            // Agregar lógica para verificar si el id_interno ha sido modificado
            const predialModificado = req.body.predial !== rows[0].predial;
            if (predialModificado) {
@@ -737,7 +743,7 @@ export const editarTerrenos = async (req, res) => {
                 });
             }
     
-           
+            const validIdInterno = idInternoRegex.test(id_interno);
          // Agregar lógica para verificar si el id_interno ha sido modificado
          const idInternoModificado = req.body.id_interno !== rows[0].id_interno;
          if (idInternoModificado) {
@@ -777,7 +783,7 @@ export const editarTerrenos = async (req, res) => {
                  });
              }
          }
-    
+         const validAdress=addressRegex.test(calle);
             if (!validAdress) {
                 return res.render('terrenosEdit', {
                     alert: true,
@@ -795,7 +801,7 @@ export const editarTerrenos = async (req, res) => {
                 });
             }
     
-          
+            const validLote=loteRegex.test(lote);
                 // Verificar si el lote o la manzana han sido modificados
             const loteModificado = req.body.lote !== rows[0].lote;
             if (loteModificado) {
@@ -820,6 +826,7 @@ export const editarTerrenos = async (req, res) => {
                 
             }
     
+            const validManzana=manzanaregex.test(manzana);
             const manzanaModificada = req.body.manzana !== rows[0].manzana;
             if (manzanaModificada) {
                
@@ -860,7 +867,8 @@ export const editarTerrenos = async (req, res) => {
     
             }
     
-    
+            const validDimensiones=dimensionesregex.test(superficie);
+
          if (!validDimensiones) {
              return res.render('terrenosEdit', {
                  alert: true,
@@ -895,7 +903,8 @@ export const editarTerrenos = async (req, res) => {
                  terrenos: rows,
              });
          }
-         
+         const validpredial = predialregex.test(predial);
+
            // Agregar lógica para verificar si el  ha sido modificado
            const predialModificado = req.body.predial !== rows[0].predial;
            if (predialModificado) {
