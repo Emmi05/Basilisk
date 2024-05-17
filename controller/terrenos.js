@@ -467,7 +467,7 @@ export const editarTerrenos = async (req, res) => {
     const id = req.params.id;
     const [rows] = await pool.query('SELECT * FROM land WHERE id=?',[id]);
     try {
-        // const precioTerreno = parseFloat(precio.replace(',', ''));
+      
         const validIdInterno = idInternoRegex.test(id_interno);
         const validAdress=addressRegex.test(calle);
         const validLote=loteRegex.test(lote);
