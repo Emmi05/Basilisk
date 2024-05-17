@@ -468,7 +468,7 @@ export const editarTerrenos = async (req, res) => {
     const [rows] = await pool.query('SELECT * FROM land WHERE id=?',[id]);
     try {
       
-        const validIdInterno = idInternoRegex.test(id_interno);
+        // const validIdInterno = idInternoRegex.test(id_interno);
         const validAdress=addressRegex.test(calle);
         const validLote=loteRegex.test(lote);
         const validManzana=manzanaregex.test(manzana);
@@ -497,7 +497,7 @@ export const editarTerrenos = async (req, res) => {
                     terrenos: rows,
                 });
             }
-    
+            const validIdInterno = idInternoRegex.test(id_interno);
          const idInternoModificado = req.body.id_interno !== rows[0].id_interno;
          if (idInternoModificado) {
              if (!validIdInterno) {
