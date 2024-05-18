@@ -896,7 +896,7 @@ export const editarClientes = async (req, res) => {
                 });
             } 
         }
-    }
+
 }
         }
     } catch (error) {
