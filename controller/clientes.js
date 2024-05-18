@@ -365,6 +365,34 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
                 }
             }
 
+             //Busca si existe el cliente 
+             const axistingcstumer = await pool.query('SELECT * FROM customers WHERE name = ?', name);
+             //Si existe, busca datos necesarios cn el nmbre y aellids
+             if (axistingcstumer[0].length > 0) {
+                 
+             const [rows] = await pool.query('SELECT * FROM customers WHERE name = ?', [name]);
+             const nameexist = rows[0].name;
+             const a_maternoexist = rows[0].a_materno;
+             const a_paternoexist = rows[0].a_paterno;
+ 
+                 //  Valida y retrna error
+             if(nameexist===name && a_maternoexist === a_materno && a_paternoexist === a_paterno){
+                 
+                 return res.render('registro', {
+                     alert: true,
+                     alertTitle: "Error",
+                     alertMessage: "El cliente que intenta registrar ya existe.",
+                     alertIcon: 'error',
+                     showConfirmButton: true,
+                     timer: false,
+                     ruta: '/', 
+                     login: true,
+                     roluser: true,
+                     name: req.session.name,
+                     rol: req.session.rol,
+                 });
+ 
+             }else{
             // Continuar con la inserción en la base de datos si todos los campos son válidos
             const ejemplo = await pool.query('INSERT INTO customers SET ?', { name, a_paterno, a_materno, cel, adress });
     
@@ -391,9 +419,12 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
                         name: req.session.name,
                         rol: req.session.rol,
                     });
+            
                 }
             }
         }
+    }
+}
         else {
             // El rol no es válido
             return res.status(403).render('denegado');
@@ -403,6 +434,7 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
         // res.status(500).send('Error interno del servidor');
         return res.status(500).render('500');
     }
+
 };
 
 
@@ -861,6 +893,7 @@ export const editarClientes = async (req, res) => {
         }
     }
 }
+        }
     } catch (error) {
         console.error(error);
         // res.status(500).send('Error interno del servidor');
