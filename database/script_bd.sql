@@ -1,3 +1,4 @@
+CREATE DATABASE railway;
 use railway;
 
 DROP TABLE IF EXISTS `users`;
@@ -5,17 +6,34 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(50) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `rol` varchar(50) NOT NULL,
   `pass` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  `id_rol` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_users_rol` (`id_rol`)
 ) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `users` (`id`, `user`, `name`, `rol`, `pass`) VALUES
-(55, 'ixchell', 'ixchel salgado Nazario', 'usuario', '$2a$08$WLcCpkiSMLQv.3eGRldSKe1B7g1b3SkSNwSqpygQ4sTv358FGjtra'),
-(65, 'emma', 'Emma Flores', 'admin', '$2a$08$epMcBZ3T8vSREV9zsO1Pd.K4HwGG3Sd2TqFz35laUno6HSsKK8To2'),
-(66, 'Diana', 'Diana Arlett Flores Carmona', 'admin', '$2a$08$OYuSDlWELi1pqK0PnZxZEug66NE086sYSgxPCa60X1tARbG7mzyCC'),
-(67, 'israel', 'Israel Nogueda Pineda', 'admin', '$2a$08$IABeXlEslfevSY5k/c0Up.m9uWc9R9VglL1Kw0eFtqU88gX09CgN2'),
-(68, 'Elias', 'Elias Flores Olea', 'admin', '$2a$08$Esmq8B/m2uTQTSSlhQ8v9eCBjh4RNxNxxTDAwU40otlaVowAuOEja');
+
+INSERT INTO `users` (`id`, `user`, `name`, `pass`, `id_rol`) VALUES
+(55, 'ixchell', 'ixchel salgado Nazario', '$2a$08$WLcCpkiSMLQv.3eGRldSKe1B7g1b3SkSNwSqpygQ4sTv358FGjtra', 2),
+(65, 'emma', 'Emma Flores', '$2a$08$epMcBZ3T8vSREV9zsO1Pd.K4HwGG3Sd2TqFz35laUno6HSsKK8To2', 1),
+(66, 'Diana', 'Diana Arlett Flores Carmona', '$2a$08$OYuSDlWELi1pqK0PnZxZEug66NE086sYSgxPCa60X1tARbG7mzyCC', 1),
+(67, 'israel', 'Israel Nogueda Pineda', '$2a$08$IABeXlEslfevSY5k/c0Up.m9uWc9R9VglL1Kw0eFtqU88gX09CgN2', 1),
+(68, 'Elias', 'Elias Flores Olea', '$2a$08$Esmq8B/m2uTQTSSlhQ8v9eCBjh4RNxNxxTDAwU40otlaVowAuOEja', 1);
+
+DROP TABLE IF EXISTS `rol`;
+CREATE TABLE IF NOT EXISTS `rol` (
+  `id_rol` int NOT NULL AUTO_INCREMENT,
+  `rol_name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id_rol`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+INSERT INTO `rol` (`id_rol`, `rol_name`) VALUES
+(1, 'admin'),
+(2, 'usuario');
+
+
+
 
 
 DROP TABLE IF EXISTS `customers`;

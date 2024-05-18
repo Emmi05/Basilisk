@@ -16,16 +16,6 @@ export const crearTerreno= async (req, res) => {
     try {
         const { id_interno, calle, lote, manzana, superficie, precio, predial, escritura, estado } = req.body;
         
-        // const precioTerreno = parseFloat(precio.replace(',', ''));
-        // const validID = idInternoRegex.test(id_interno);
-        // const validAdress=addressRegex.test(calle);
-        // const validLote=loteRegex.test(lote);
-        // const validManzana=manzanaregex.test(manzana);
-        // const validDimensiones=dimensionesregex.test(superficie)
-        // const validPrecio=precioRegex.test(precio);
-        // const validPredial=predialregex.test(predial);
-
-
 
         if (req.session.rol == '1') {
 

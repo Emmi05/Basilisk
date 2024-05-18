@@ -10,7 +10,7 @@ import {methods as pdf} from '../controller/pdf.js'
 import { autenticacionMiddleware } from '../middlewares/auth.js'; //
 import { autorizacionMiddleware } from '../middlewares/autorización.js'; // 
 
-const router = Router();// Definición de la ruta '/'
+const router = Router();
 
 router.get('/nosotros', (req, res) => {
     res.render('nosotros');
