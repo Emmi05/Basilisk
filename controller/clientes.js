@@ -387,7 +387,7 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
                      timer: false,
                      ruta: '/', 
                      login: true,
-                     roluser: true,
+                     roluser: false,
                      name: req.session.name,
                      rol: req.session.rol,
                  });
@@ -630,6 +630,7 @@ export const editarClientes = async (req, res) => {
                  roluser: true,
                  name: req.session.name,
                  rol: req.session.rol,
+                 clientes: rows,
              });
 
          }
@@ -842,7 +843,7 @@ export const editarClientes = async (req, res) => {
           return res.render('registro', {
               alert: true,
               alertTitle: "Error",
-              alertMessage: "El cliente que intenta registrar ya existe.",
+              alertMessage: "El cliente que intenta editar ya existe.",
               alertIcon: 'error',
               showConfirmButton: true,
               timer: false,
@@ -851,6 +852,7 @@ export const editarClientes = async (req, res) => {
               roluser: true,
               name: req.session.name,
               rol: req.session.rol,
+              clientes: rows,
           });
 
       }
