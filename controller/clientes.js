@@ -620,7 +620,7 @@ export const editarClientes = async (req, res) => {
             );
 
             // Si el cliente existe y no es el mismo cliente que estamos editando, retornar error
-            if (existingCustomer.length > 0 && existingCustomer[0].id !== id) {
+            if (existingCustomer.length > 0 ) {
                 return res.render('clienteEdit', {
                     alert: true,
                     alertTitle: "Error",
@@ -637,6 +637,7 @@ export const editarClientes = async (req, res) => {
                 });
             }
         }
+        
         // Actualizar los datos del cliente en la tabla customers
             const [result] = await pool.query('UPDATE customers SET name = IFNULL (?, name), a_paterno = IFNULL (?, a_paterno), a_materno = IFNULL (?, a_materno), cel = IFNULL (?, cel), adress= IFNULL (?, adress) WHERE id = ?', [name, a_paterno, a_materno, cel, adress, id]);
             // console.log(result);
