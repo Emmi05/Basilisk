@@ -28,6 +28,10 @@ router.get('/inicio_terrenos', (req, res) => {
     res.render('vista_terrenos');
 });
 
+router.get('/vista_terrenos_bot', (req, res) => {
+    res.render('bot');
+});
+
 
 
 
