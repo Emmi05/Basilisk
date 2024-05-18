@@ -604,39 +604,39 @@ export const editarClientes = async (req, res) => {
             }
         }  
 
-     // Obtener los valores actuales del cliente
-     const currentCustomer = rows[0];
+ // Obtener los valores actuales del cliente
+ const currentCustomer = rows[0];
 
-     // Verificar si se han modificado el nombre, apellido paterno y apellido materno
-     const nameChanged = currentCustomer.name !== name;
-     const a_paternoChanged = currentCustomer.a_paterno !== a_paterno;
-     const a_maternoChanged = currentCustomer.a_materno !== a_materno;
+ // Verificar si se han modificado el nombre, apellido paterno y apellido materno
+ const nameChanged = currentCustomer.name !== name;
+ const a_paternoChanged = currentCustomer.a_paterno !== a_paterno;
+ const a_maternoChanged = currentCustomer.a_materno !== a_materno;
 
-     if (nameChanged || a_paternoChanged || a_maternoChanged) {
-         // Verificar si los nuevos valores ya existen en la base de datos
-         const [existingCustomer] = await pool.query(
-             'SELECT * FROM customers WHERE name = ? AND a_paterno = ? AND a_materno = ? AND id != ?',
-             [name, a_paterno, a_materno, id]
-         );
+ if (nameChanged || a_paternoChanged || a_maternoChanged) {
+     // Verificar si los nuevos valores ya existen en la base de datos
+     const [existingCustomer] = await pool.query(
+         'SELECT * FROM customers WHERE name = ? AND a_paterno = ? AND a_materno = ?',
+         [name, a_paterno, a_materno]
+     );
 
-         if (existingCustomer.length > 0) {
-             return res.render('clienteEdit', {
-                 alert: true,
-                 alertTitle: "Error",
-                 alertMessage: "El cliente que intenta registrar ya existe.",
-                 alertIcon: 'error',
-                 showConfirmButton: true,
-                 timer: false,
-                 ruta: '/', 
-                 login: true,
-                 roluser: true,
-                 name: req.session.name,
-                 rol: req.session.rol,
-                 clientes: rows,
-             });
-         }
+     // Si el cliente existe y no es el mismo cliente que estamos editando, retornar error
+     if (existingCustomer.length > 0 && existingCustomer[0].id !== id) {
+         return res.render('clienteEdit', {
+             alert: true,
+             alertTitle: "Error",
+             alertMessage: "El cliente que intenta registrar ya existe.",
+             alertIcon: 'error',
+             showConfirmButton: true,
+             timer: false,
+             ruta: '/', 
+             login: true,
+             roluser: true,
+             name: req.session.name,
+             rol: req.session.rol,
+             clientes: rows,
+         });
      }
-
+ }
         // Actualizar los datos del cliente en la tabla customers
             const [result] = await pool.query('UPDATE customers SET name = IFNULL (?, name), a_paterno = IFNULL (?, a_paterno), a_materno = IFNULL (?, a_materno), cel = IFNULL (?, cel), adress= IFNULL (?, adress) WHERE id = ?', [name, a_paterno, a_materno, cel, adress, id]);
             // console.log(result);
