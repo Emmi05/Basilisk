@@ -5,8 +5,8 @@ import { pool} from '../database/db.js'
 const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
 const apellidoRegex = /^[A-Za-zÁ-Úá-ú]+$/;
 const celRegex = /^\d{10}$/;
-const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
-
+// const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
+const addressRegex = /^[A-Za-z0-9\sñÑáéíóúüÁÉÍÓÚÜ-]{10,100}$/;
 
    export const crearCliente = async (req, res) => {
     try {
