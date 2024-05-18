@@ -620,16 +620,15 @@ if (newName !== existingCustomer[0].name || newAPaterno !== existingCustomer[0].
         return res.render('clienteEdit', {
             alert: true,
             alertTitle: "Error",
-            alertMessage: "El cliente ya existe.",
+            alertMessage: "Debes rellenar todos los campos!",
             alertIcon: 'error',
             showConfirmButton: true,
             timer: false,
-            ruta: '/',
+            ruta: '/', 
             login: true,
-            roluser: true,
+            roluser: false,
             name: req.session.name,
             rol: req.session.rol,
-            clientes: rows,
         });
     }
 }
