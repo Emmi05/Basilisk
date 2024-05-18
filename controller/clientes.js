@@ -161,9 +161,40 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
                     });
                 }
             }
+            
+            //Busca si existe el cliente 
+            const axistingcstumer = await pool.query('SELECT * FROM customers WHERE name = ?', name);
+            //Si existe, busca datos necesarios cn el nmbre y aellids
+            if (axistingcstumer[0].length > 0) {
+                
+            const [rows] = await pool.query('SELECT * FROM customers WHERE name = ?', [name]);
+            const nameexist = rows[0].name;
+            const a_maternoexist = rows[0].a_materno;
+            const a_paternoexist = rows[0].a_paterno;
 
-            // Continuar con la inserción en la base de datos si todos los campos son válidos
-            const ejemplo = await pool.query('INSERT INTO customers SET ?', { name, a_paterno, a_materno, cel, adress });
+                //  Valida y retrna error
+            if(nameexist===name && a_maternoexist === a_materno && a_paternoexist === a_paterno){
+                
+                return res.render('registro', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El cliente que intenta registrar ya existe.",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: '/', 
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                });
+
+            }
+            //si no, inserta nrmalmente
+        }else{
+                const ejemplo = await pool.query('INSERT INTO customers SET ?', { name, a_paterno, a_materno, cel, adress });
+            
+
     
             if (ejemplo) {
                 const [rows] = await pool.query('SELECT * FROM customers WHERE name = ? AND a_paterno = ? AND a_materno = ?', [name, a_paterno, a_materno]);
@@ -189,7 +220,7 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
                         rol: req.session.rol,
                     });
                 }
-            }
+            }}
         }  else if (req.session.rol == '2') {
 
      
@@ -541,7 +572,36 @@ export const editarClientes = async (req, res) => {
                 });
             }
         }  
-            // Actualizar los datos del cliente en la tabla customers
+
+         //Busca si existe el cliente 
+         const axistingcstumer = await pool.query('SELECT * FROM customers WHERE name = ?', name);
+         //Si existe, busca datos necesarios cn el nmbre y aellids
+         if (axistingcstumer[0].length > 0) {
+             
+         const [rows] = await pool.query('SELECT * FROM customers WHERE name = ?', [name]);
+         const nameexist = rows[0].name;
+         const a_maternoexist = rows[0].a_materno;
+         const a_paternoexist = rows[0].a_paterno;
+
+             //  Valida y retrna error
+         if(nameexist===name && a_maternoexist === a_materno && a_paternoexist === a_paterno){
+             
+             return res.render('registro', {
+                 alert: true,
+                 alertTitle: "Error",
+                 alertMessage: "El cliente que intenta registrar ya existe.",
+                 alertIcon: 'error',
+                 showConfirmButton: true,
+                 timer: false,
+                 ruta: '/', 
+                 login: true,
+                 roluser: true,
+                 name: req.session.name,
+                 rol: req.session.rol,
+             });
+
+         }
+          else{  // Actualizar los datos del cliente en la tabla customers
             const [result] = await pool.query('UPDATE customers SET name = IFNULL (?, name), a_paterno = IFNULL (?, a_paterno), a_materno = IFNULL (?, a_materno), cel = IFNULL (?, cel), adress= IFNULL (?, adress) WHERE id = ?', [name, a_paterno, a_materno, cel, adress, id]);
             // console.log(result);
 
@@ -581,7 +641,7 @@ export const editarClientes = async (req, res) => {
                 res.status(500).send('Error interno del servidor');
             }
 
-
+        }
         } 
 
         else if (req.session.rol == '2') {
@@ -734,8 +794,35 @@ export const editarClientes = async (req, res) => {
                         });
                     }
                 }
-     
-                
+      //Busca si existe el cliente 
+      const axistingcstumer = await pool.query('SELECT * FROM customers WHERE name = ?', name);
+      //Si existe, busca datos necesarios cn el nmbre y aellids
+      if (axistingcstumer[0].length > 0) {
+          
+      const [rows] = await pool.query('SELECT * FROM customers WHERE name = ?', [name]);
+      const nameexist = rows[0].name;
+      const a_maternoexist = rows[0].a_materno;
+      const a_paternoexist = rows[0].a_paterno;
+
+          //  Valida y retrna error
+      if(nameexist===name && a_maternoexist === a_materno && a_paternoexist === a_paterno){
+          
+          return res.render('registro', {
+              alert: true,
+              alertTitle: "Error",
+              alertMessage: "El cliente que intenta registrar ya existe.",
+              alertIcon: 'error',
+              showConfirmButton: true,
+              timer: false,
+              ruta: '/', 
+              login: true,
+              roluser: true,
+              name: req.session.name,
+              rol: req.session.rol,
+          });
+
+      }
+       else{         
             // Actualizar los datos del cliente en la tabla customers
             const [result] = await pool.query('UPDATE customers SET name = IFNULL (?, name), a_paterno = IFNULL (?, a_paterno), a_materno = IFNULL (?, a_materno), cel = IFNULL (?, cel), adress= IFNULL (?, adress) WHERE id = ?', [name, a_paterno, a_materno, cel, adress, id]);
 
@@ -771,8 +858,9 @@ export const editarClientes = async (req, res) => {
                     ruta: 'clientes'
                 });
             } 
-
         }
+    }
+}
     } catch (error) {
         console.error(error);
         // res.status(500).send('Error interno del servidor');
