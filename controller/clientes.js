@@ -309,7 +309,6 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
         });
     }
 
-    // Validar el formato del nombre, apellido paterno, apellido materno y número de celular del cónyuge
     if (name_conyuge || a_paterno_conyuge || a_materno_conyuge || cel_conyuge) {
         const validNameConyuge = nombreRegex.test(name_conyuge);
         const validApellidoConyuge = apellidoRegex.test(a_paterno_conyuge);
@@ -408,7 +407,6 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
                 await pool.query('INSERT INTO parentesco SET ?', { customer_id, name_conyuge, a_paterno_conyuge, a_materno_conyuge, cel_conyuge });
             }
             
-            // Renderizar vista // renderizarRegistro(req, res);
             res.render('registro', {
                 alert: true,
                 alertTitle: "Registro",
@@ -418,7 +416,7 @@ const addressRegex = /^[A-Za-z0-9\sñÑ-]{10,100}$/;
                 timer: 1500,
                 ruta: '/',
                 login: true,
-                roluser: true,
+                roluser: false,
                 name: req.session.name,
                 rol: req.session.rol,
             });
