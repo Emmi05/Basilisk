@@ -620,10 +620,10 @@ if (newName !== existingCustomer[0].name || newAPaterno !== existingCustomer[0].
         return res.render('clienteEdit', {
             alert: true,
             alertTitle: "Error",
-            alertMessage: "El nombre y apellidos ya existen en la base de datos para otro cliente.",
+            alertMessage: "El cliente ya existe.",
             alertIcon: 'error',
-            showConfirmButton: false,
-            timer: 50000,
+            showConfirmButton: true,
+            timer: false,
             ruta: '/',
             login: true,
             roluser: true,
