@@ -96,7 +96,7 @@
   
   <!-- Logout Modal-->
   <%- include ('layouts/logout.ejs') %>
-<!-- -- Contenedor de la alerta SweetAlert --> -->
+
 
   
               <!-- Bootstrap core JavaScript-->
@@ -138,21 +138,15 @@
     // Función para calcular y actualizar la cantidad de abono
     function calcularCantidadAbono() {
       ' <% abonos.forEach(abono => { %> '
-        // Obtener el valor de "n_abono" y "abono.cuotas"
         var nAbonoValue = parseFloat(document.getElementById('n_abono').value) || 0;
-        var cuotasValue = parseFloat('<%= abono.cuotas %>') || 0; // Asegúrate de tener acceso a abono.cuotas
+        var cuotasValue = parseFloat('<%= abono.cuotas %>') || 0; 
 
-        // Calcular la cantidad de abono
         var cantidadAbono = nAbonoValue * cuotasValue;
-
-        // Actualizar el valor del campo "cantidadAbono"
         document.getElementById('cantidadAbono').value = cantidadAbono.toFixed(2);
     }
 
-    // Agregar un evento "input" al campo "n_abono" para llamar a la función calcularCantidadAbono
     document.getElementById('n_abono').addEventListener('input', calcularCantidadAbono);
 
-    // Llamar a la función calcularCantidadAbono para que la cantidad de abono se actualice automáticamente al cargar la página
     calcularCantidadAbono();
 
 
@@ -165,16 +159,14 @@
             body: JSON.stringify({ id: '<%= abono.id %>' })
         })
         .then(response => {
-            // Verificar el tipo de contenido de la respuesta
             if (response.ok) {
-                return response.text(); // Si es exitosa, obtener el cuerpo de la respuesta como texto
+                return response.text(); 
             } else {
                 throw new Error('Error al generar el PDF. Código de estado: ' + response.status);
             }
         })
         .then(html => {
-     // Inserta el HTML de la respuesta en el contenedor de alerta
-    // document.getElementById('alertContainer').innerHTML = html;
+     
     document.body.innerHTML += html;
 
     
