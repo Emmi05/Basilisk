@@ -80,11 +80,9 @@
                                                     <td><%= cliente.adress %></td>
                                                     <td><%= cliente.name_conyuge %></td>
                                                     <td>
-                                                        <!-- <a href="/clienteEdit/<%= cliente.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a> -->
                                                         <a href="/editar_cliente/<%= cliente.id %>" class="btn btn-sm btn-primary1"><i class="fas fa-pencil-alt"></i></a>
                                                         <a onclick="eliminar(<%= cliente.id %>)" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
-                                                        <!-- <button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" ></i></button>
-                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button> -->
+                                                        
                                                     </td> 
                                                 </tr>
                                         <% }); %>
@@ -151,7 +149,6 @@
                                             <td><%= cliente.adress %></td>
                                             <td><%= cliente.name_conyuge %></td>
                                             <td>
-                                                <!-- <a href="/clienteEdit/<%= cliente.id %>" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a> -->
                                                 <a href="/editar_cliente/<%= cliente.id %>" class="btn btn-sm btn-primary1"><i class="fas fa-pencil-alt"></i></a>
                                                
                                             </td> 

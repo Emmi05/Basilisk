@@ -106,10 +106,10 @@
                   <div class="col-md-6">
                     <label for="inicial" name="inicial" class="form-label">Enganche</label>
                     <input type="number" class="form-control" id="inicial" name="inicial" placeholder="enganche">
-                    <div id="rol" class="form-text">
-                      Solo debe tener números.         
-                   </div>
-                  </div>
+                  <div id="rol" class="form-text">
+                        Solo debe tener números.         
+                    </div>
+                    </div>
                   
 
                   <div class="col-md-6">
@@ -143,169 +143,150 @@
 
   
 
-</div>
-<!-- End of Content Wrapper -->
+                </div>
+                <!-- End of Content Wrapper -->
 
-</div>
-<!-- End of Page Wrapper -->
+                </div>
+                <!-- End of Page Wrapper -->
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-<i class="fas fa-angle-up"></i>
-</a>
+                <!-- Scroll to Top Button-->
+                <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+                </a>
 
-<!-- Logout Modal-->
-<%- include ('layouts/logout.ejs') %>    
+                <!-- Logout Modal-->
+                <%- include ('layouts/logout.ejs') %>    
 
-<script src="../resources/vendor/jquery/jquery.min.js"></script>
-<script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+                <script src="../resources/vendor/jquery/jquery.min.js"></script>
+                <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+                <!-- Core plugin JavaScript-->
+                <script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages-->
-<script src="../resources/scripts/sb-admin-2.min.js"></script>
+                <!-- Custom scripts for all pages-->
+                <script src="../resources/scripts/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
-<script src="../resources/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+                <!-- Page level plugins -->
+                <script src="../resources/vendor/datatables/jquery.dataTables.min.js"></script>
+                <script src="../resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-<!-- Page level custom scripts -->
-<script src="../resources/scripts/datables.js"></script>
+                <!-- Page level custom scripts -->
+                <script src="../resources/scripts/datables.js"></script>
 
-     		
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                        
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+                <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
-<% if (typeof alert != "undefined")  { %>
- <script>
- Swal.fire({
-   title:'<%= alertTitle %>',
-   text:'<%= alertMessage %>',
-   icon:'<%= alertIcon %>',
-   showConfirmButton: <%= showConfirmButton %>,
-   timer: <%= timer %>
- }).then(()=>{
-   window.location='/<%= ruta %>'
- })
- </script>
-<% } %>
+                <% if (typeof alert != "undefined")  { %>
+                <script>
+                Swal.fire({
+                  title:'<%= alertTitle %>',
+                  text:'<%= alertMessage %>',
+                  icon:'<%= alertIcon %>',
+                  showConfirmButton: <%= showConfirmButton %>,
+                  timer: <%= timer %>
+                }).then(()=>{
+                  window.location='/<%= ruta %>'
+                })
+                </script>
+                <% } %>
 
 
-<script>
-  document.getElementById('id_land').addEventListener('change', function() {
-    var terrenoId = this.value;
+                <script>
+                  document.getElementById('id_land').addEventListener('change', function() {
+                    var terrenoId = this.value;
 
-    // Realizar una solicitud al servidor para obtener los detalles del terreno seleccionado
-    fetch('/terreno/' + terrenoId)
-        .then(response => response.json())
-        .then(data => {
-            // Actualizar los campos en la vista con los datos recibidos
-            document.getElementById('interno').value = data.id_interno;
-            document.getElementById('precio').value = data.precio;
-            // Actualizar otros campos aquí según sea necesario
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-});
+                    fetch('/terreno/' + terrenoId)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('interno').value = data.id_interno;
+                            document.getElementById('precio').value = data.precio;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
 
-</script>
+                </script>
 
-<script>
-$(function() {
-    var availableTags = [
-        <% clientes.forEach(cliente => { %>
-            { label: "<%= cliente.name %> <%= cliente.a_paterno %> <%= cliente.a_materno %>", value: "<%= cliente.id %>" },
-        <% }); %>
-    ];
+                <script>
+                $(function() {
+                    var availableTags = [
+                        <% clientes.forEach(cliente => { %>
+                            { label: "<%= cliente.name %> <%= cliente.a_paterno %> <%= cliente.a_materno %>", value: "<%= cliente.id %>" },
+                        <% }); %>
+                    ];
 
-    $("#id_customer").autocomplete({
-        source: availableTags,
-        select: function(event, ui) {
-            // Cuando se selecciona un cliente, establece el nombre del cliente en el campo de entrada
-            $(this).val(ui.item.label);
-            // Almacena el ID del cliente como un atributo de datos en el campo de entrada
-            $(this).data('customer-id', ui.item.value);
-            // Previene el comportamiento predeterminado del Autocomplete
-            event.preventDefault();
-        }
-    });
+                    $("#id_customer").autocomplete({
+                        source: availableTags,
+                        select: function(event, ui) {
+                            $(this).val(ui.item.label);
+                            $(this).data('customer-id', ui.item.value);
+                            event.preventDefault();
+                        }
+                    });
 
-    // Manejar el envío del formulario
-    $("form").submit(function() {
-        // Obtener el ID del cliente almacenado como atributo de datos
-        var customerId = $("#id_customer").data('customer-id');
-        // Establecer el valor del campo de entrada como el nombre del cliente
-        $("#id_customer").val(customerId);
-        // Continuar con el envío del formulario
-        return true;
-    });
-});
+                    $("form").submit(function() {
+                        var customerId = $("#id_customer").data('customer-id');
+                        $("#id_customer").val(customerId);
+                        return true;
+                    });
+                });
 
-</script> 
+                </script> 
 
 
 
-<!--  -->
-<script>
-  document.getElementById('tipo_venta').addEventListener('change', function() {
-    var tipoVenta = this.value;
+                <!--  -->
+                <script>
+                  document.getElementById('tipo_venta').addEventListener('change', function() {
+                    var tipoVenta = this.value;
 
-    // Obtener los campos de "inicial" y "n_plazos"
-    var inicialField = document.getElementById('inicial');
-    var nPlazosField = document.getElementById('n_cuentas');
+                    // Obtener los campos de "inicial" y "n_plazos"
+                    var inicialField = document.getElementById('inicial');
+                    var nPlazosField = document.getElementById('n_cuentas');
 
-    // Si se selecciona "contado", deshabilitar los campos de "inicial" y "n_plazos"
-    if (tipoVenta === 'contado') {
-      inicialField.disabled = true;
-      nPlazosField.disabled = true;
-    } else {
-      // Si se selecciona otra opción, habilitar los campos de "inicial" y "n_plazos"
-      inicialField.disabled = false;
-      nPlazosField.disabled = false;
-    }
-  });
-</script>
-<!-- Después de mostrar el mensaje, redirigir después de un breve tiempo -->
-<script>
-  // Obtener los campos de "inicial", "n_cuentas" y "cuotas"
-  var inicialField = document.getElementById('inicial');
-  var nCuentasField = document.getElementById('n_cuentas');
-  var cuotasField = document.getElementById('cuotas');
-  var saldoPendienteField = document.getElementById('saldo_pendiente'); // Agrega el campo de saldo pendiente
+                    if (tipoVenta === 'contado') {
+                      inicialField.disabled = true;
+                      nPlazosField.disabled = true;
+                    } else {
+                      inicialField.disabled = false;
+                      nPlazosField.disabled = false;
+                    }
+                  });
+                </script>
+                <script>
+                  var inicialField = document.getElementById('inicial');
+                  var nCuentasField = document.getElementById('n_cuentas');
+                  var cuotasField = document.getElementById('cuotas');
+                  var saldoPendienteField = document.getElementById('saldo_pendiente'); 
 
-  // Agregar un evento "input" a los campos de "inicial" y "n_cuentas"
-  inicialField.addEventListener('input', calcularCuotas);
-  nCuentasField.addEventListener('input', calcularCuotas);
+                  inicialField.addEventListener('input', calcularCuotas);
+                  nCuentasField.addEventListener('input', calcularCuotas);
 
-  function calcularCuotas() {
-      // Obtener el valor de "inicial" y "n_cuentas"
-      var inicialValue = parseFloat(inicialField.value) || 0; // Si no hay valor, asignar cero
-      var nCuentasValue = parseFloat(nCuentasField.value) || 0; // Si no hay valor, asignar cero
+                  function calcularCuotas() {
+                      var inicialValue = parseFloat(inicialField.value) || 0; 
+                      var nCuentasValue = parseFloat(nCuentasField.value) || 0; 
 
-      // Obtener el valor de "precio" y calcular "cuotasTotal"
-      var precioTerreno = parseFloat(document.getElementById('precio').value);
-      var saldoPendiente = precioTerreno - inicialValue;
-      var cuotasTotal = saldoPendiente / nCuentasValue;
+                      var precioTerreno = parseFloat(document.getElementById('precio').value);
+                      var saldoPendiente = precioTerreno - inicialValue;
+                      var cuotasTotal = saldoPendiente / nCuentasValue;
 
-      // Actualizar el campo "cuotas" con el valor calculado
-      cuotasField.value = isNaN(cuotasTotal) ? '' : cuotasTotal.toFixed(2); // Mostrar el valor solo si es un número válido
-      
-      // Actualizar el campo "saldo_pendiente" con el valor calculado
-      saldoPendienteField.value = isNaN(saldoPendiente) ? '' : saldoPendiente.toFixed(2); // Mostrar el valor solo si es un número válido
-      return cuotasTotal;
-  }
-</script>
+                      cuotasField.value = isNaN(cuotasTotal) ? '' : cuotasTotal.toFixed(2); 
+                      // Actualizar el campo "saldo_pendiente" con el valor calculado
+                      saldoPendienteField.value = isNaN(saldoPendiente) ? '' : saldoPendiente.toFixed(2); 
+                      return cuotasTotal;
+                  }
+                </script>
 
 
 
 
 
-<%- include ('./layouts/dash2.ejs') %>
+                <%- include ('./layouts/dash2.ejs') %>
 
-</div>
-</body>
-</html>
+                </div>
+                </body>
+                </html>

@@ -48,10 +48,6 @@
             
                 <input id="id" name="id" value="<%= venta.id %>" hidden>
 
-
-
-               
-  
                 <div class="col-md-6">
                   <label for="cliente" class="form-label">Cliente</label>
                   <input type="text" class="form-control" id="id_customer" name="id_customer" value=" <%= venta.customer_name %>  <%= venta.customer_paterno %>  <%= venta.customer_materno %>" disabled>
@@ -60,13 +56,6 @@
               <div class="col-md-6">
                 <label for="terreno" class="form-label">Terreno</label>
                 <input type="text" class="form-control" id="id_land" name="id_land" value="Manzana <%= venta.manzana %> Lote <%= venta.lote %>" disabled>
-
-                <!-- <select class="form-select" id="id_land" name="id_land">
-                    <option value="">Seleccione un terreno</option>
-                    
-                        <option value="<%= venta.id %>">Manzana <%= venta.manzana %> Lote <%= venta.lote %></option>
-             
-                </select> -->
             </div>
             
             <div class="col-md-6">
@@ -78,18 +67,17 @@
               <label for="precio" class="form-label">Precio</label>
               <input type="int" class="form-control" id="precio" name="precio" disabled value="<%= venta.precio %>">
           </div>
-            
              
-                    <!-- Tipo venta -->
-        <div class="col-md-6">
-          <label for="tipo_venta">Tipo venta:</label>
-          <select class="form-control" id="tipo_venta" name="tipo_venta" >
-              <option value="">Seleccionar</option>
-              <option <%= venta.tipo_venta=='contado' ? "selected" : '' %> value="contado">Contado</option>
-              <option <%= venta.tipo_venta=='credito' ? "selected" : '' %> value="credito">Credito</option>
-            
-          </select>
-      </div>
+                            <!-- Tipo venta -->
+                <div class="col-md-6">
+                  <label for="tipo_venta">Tipo venta:</label>
+                  <select class="form-control" id="tipo_venta" name="tipo_venta" >
+                      <option value="">Seleccionar</option>
+                      <option <%= venta.tipo_venta=='contado' ? "selected" : '' %> value="contado">Contado</option>
+                      <option <%= venta.tipo_venta=='credito' ? "selected" : '' %> value="credito">Credito</option>
+                    
+                  </select>
+              </div>
 
                   
                     <div class="col-md-6">
@@ -138,7 +126,7 @@
             
       <!-- Footer -->
   
-  <!-- End of Footer -->
+
   
   </div>
 
@@ -149,10 +137,6 @@
           <form class="row g-3" action="/updateventa/<%= venta.id %>" method="POST">
         
             <input id="id" name="id" value="<%= venta.id %>" hidden>
-
-
-
-           
 
             <div class="col-md-6">
               <label for="cliente" class="form-label">Cliente</label>
@@ -176,16 +160,16 @@
       </div>
         
          
-                <!-- Tipo venta -->
-    <div class="col-md-6">
-      <label for="tipo_venta">Tipo venta:</label>
-      <select class="form-control" id="tipo_venta" name="tipo_venta" disabled >
-          <option value="">Seleccionar</option>
-          <option <%= venta.tipo_venta=='contado' ? "selected" : '' %> value="contado">Contado</option>
-          <option <%= venta.tipo_venta=='credito' ? "selected" : '' %> value="credito">Credito</option>
-        
-      </select>
-  </div>
+                    <!-- Tipo venta -->
+        <div class="col-md-6">
+          <label for="tipo_venta">Tipo venta:</label>
+          <select class="form-control" id="tipo_venta" name="tipo_venta" disabled >
+              <option value="">Seleccionar</option>
+              <option <%= venta.tipo_venta=='contado' ? "selected" : '' %> value="contado">Contado</option>
+              <option <%= venta.tipo_venta=='credito' ? "selected" : '' %> value="credito">Credito</option>
+            
+          </select>
+      </div>
 
               
                 <div class="col-md-6">
