@@ -121,18 +121,17 @@
   
   <% if (typeof alert != "undefined")  { %>
     <script>
-     Swal.fire({
+    Swal.fire({
       title:'<%= alertTitle %>',
       text:'<%= alertMessage %>',
       icon:'<%= alertIcon %>',
-      showConfirmButton: '<%= showConfirmButton %>',
-      timer: '<%= timer %>',
+      showConfirmButton: <%= showConfirmButton %>,
+      timer: <%= timer %>
     }).then(()=>{
       window.location='/<%= ruta %>'
     })
     </script>
    <% } %>
-   
   
   <script>
     // Función para calcular y actualizar la cantidad de abono
