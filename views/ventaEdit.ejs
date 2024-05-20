@@ -278,7 +278,6 @@
               // Actualizar los campos en la vista con los datos recibidos
               document.getElementById('interno').value = data.id_interno;
               document.getElementById('precio').value = data.precio;
-              // Actualizar otros campos aquí según sea necesario
           })
           .catch(error => {
               console.error('Error:', error);
@@ -288,37 +287,29 @@
   </script>
   <script>
       <% ventas.forEach(function(venta) { %>
-    // Obtener la fecha como una cadena
 const fechaString = "<%= venta.fecha_venta %>";
 
-// Crear un objeto Date a partir de la cadena de fecha
 const fecha = new Date(fechaString);
 
-// Obtener los componentes de la fecha
 const year = fecha.getFullYear();
-const month = String(fecha.getMonth() + 1).padStart(2, '0'); // Ajustar el mes a dos dígitos
-const day = String(fecha.getDate()).padStart(2, '0'); // Ajustar el día a dos dígitos
-
-// Construir la cadena de fecha en el formato YYYY-MM-DD
+const month = String(fecha.getMonth() + 1).padStart(2, '0'); 
+const day = String(fecha.getDate()).padStart(2, '0'); 
 const fechaFormateada = `${year}-${month}-${day}`;
 
-// Asignar el valor formateado al input
 document.getElementById('fecha_venta').value = fechaFormateada;
 <% }); %>
             
   </script>
 
 <script>
-  // Función para verificar el valor inicial del campo "tipo_venta" al cargar la página
+  // verifica el valor inicial del campo "tipo_venta" al cargar la página
   document.addEventListener('DOMContentLoaded', function() {
     var tipoVenta = document.getElementById('tipo_venta').value;
 
-    // Obtener los campos de "inicial" y "n_cuentas"
     var inicialField = document.getElementById('inicial');
     var nPlazosField = document.getElementById('n_cuentas');
     var cuotas = document.getElementById('cuotas');
 
-    // Si el valor inicial es "contado", deshabilitar los campos de "inicial" y "n_cuentas"
     if (tipoVenta === 'contado') {
       inicialField.disabled = true;
       nPlazosField.disabled = true;
@@ -337,7 +328,6 @@ document.getElementById('fecha_venta').value = fechaFormateada;
     var coutas = document.getElementById('cuotas');
     
 
-    // Si se selecciona "contado", limpiar los campos de "inicial" y "n_cuentas"
     if (tipoVenta === 'contado') {
       inicialField.value = '';
       nPlazosField.value = '';
@@ -345,7 +335,6 @@ document.getElementById('fecha_venta').value = fechaFormateada;
       inicialField.disabled = true;
       nPlazosField.disabled = true;
     } else {
-      // Si se selecciona otra opción, habilitar los campos de "inicial" y "n_cuentas"
       inicialField.disabled = false;
       nPlazosField.disabled = false;
     }
@@ -357,24 +346,20 @@ document.getElementById('fecha_venta').value = fechaFormateada;
   <script>
     // Función para calcular y actualizar las cuotas
 function calcularCuotas() {
-    // Obtener los valores de "inicial" y "n_cuentas"
     var inicialValue = parseFloat(document.getElementById('inicial').value) || 0;
     var nCuentasValue = parseFloat(document.getElementById('n_cuentas').value) || 0;
     var precioTerreno = parseFloat(document.getElementById('precio').value);
    
-    // Calcular las cuotas (aquí puedes aplicar tu lógica específica)
     var saldoPendiente = precioTerreno - inicialValue;
     var cuotasTotal = saldoPendiente / nCuentasValue;
 
-    // Actualizar el valor del campo "cuotas"
+    
     document.getElementById('cuotas').value = cuotasTotal.toFixed(2);
 }
 
-// Agregar un evento "input" a los campos relevantes para llamar a la función calcularCuotas
 document.getElementById('inicial').addEventListener('input', calcularCuotas);
 document.getElementById('n_cuentas').addEventListener('input', calcularCuotas);
 
-// Llamar a la función calcularCuotas para que las cuotas se muestren automáticamente al cargar la página
 calcularCuotas();
 
   </script>

@@ -35,6 +35,23 @@ const crearAbonos = async (req, res) => {
         } else if (abonosrows[0].cuotas_pagadas <= abonosrows[0].n_cuentas) {
             const cuotasFaltantes = abonosrows[0].cuotas_restantes;
             // Verificar si n_abono es un número positivo
+            if (n_abono >abonosrows[0].cuotas_restantes) {
+                return res.render('abonos_formulario', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "El número de abono no debe ser mayor a cuotas restantes",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: '/',
+                    login: true,
+                    roluser: true,
+                    name: req.session.name,
+                    rol: req.session.rol,
+                    abonos: abonosrows,
+                });
+            }
+
             if (!numeros.test(n_abono)) {
                 return res.render('abonos_formulario', {
                     alert: true,
@@ -68,14 +85,11 @@ const crearAbonos = async (req, res) => {
                 const iabono = await pool.query('INSERT INTO abonos (id_sale, fecha_abono, cuotas_pagadas, cuotas_restantes, cantidad, n_abono) VALUES (?, ?, ?, ?, ?, ?)',
                 [id_sale, fechaAbonoFormateada, cuota_restante, cuota_pagada, cantidad, n_abono])
 
-                   // Marcar el terreno como "proceso"
-                 // await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_land])
-
                 .catch(error => {
                     console.error('Error al insertar el abono en la base de datos:', error);
                     throw error;
                 });
-    
+                  // SI YA TERMINO DE PAGAR
                 const result = await pool.query('UPDATE sale INNER JOIN land ON sale.id_land = land.id SET sale.ncuotas_pagadas = ?, sale.deuda_restante = ?, land.estado = ? WHERE sale.id = ? AND land.id = ?', [cuota_restante, deuda_restante, 'pagado', id_sale, id_land])
                     .catch(error => {
                         console.error('Error al actualizar las cuotas en la base de datos:', error);
@@ -194,10 +208,10 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
             // Manejador para agregar datos al buffer
             doc.on('data', buffers.push.bind(buffers));
     
-            // Manejador para finalizar el documento
+            
             doc.on('end', () => {
                 const pdfData = Buffer.concat(buffers);
-                // Envía el PDF como respuesta
+              
                 res.writeHead(200, {
                     'Content-Type': 'application/pdf',
                     'Content-Disposition': 'attachment; filename=reporte.pdf',
@@ -209,14 +223,11 @@ async function generateAndSendPDF(informacion,cantidad,fechaAbonoFormateada, res
 
             });
 
-            // Finaliza y cierra el documento PDF
             doc.end();
-            // res.json({ success: true, message: 'PDF generado exitosamente.' });
     
 
         } catch (error) {
             console.error('Error en la generación del PDF:', error);
-            // res.status(500).send('Error interno del servidor al generar el PDF');
         }
     
     }
