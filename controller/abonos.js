@@ -53,14 +53,14 @@ const crearAbonos = async (req, res) => {
                });
            }
 
-           if (!numeros.test(n_abono)) {
+           if (!numeros.test(n_abono) || n_abono==0) {
                return res.render('abonos_formulario', {
                    alert: true,
                    alertTitle: "Error",
                    alertMessage: "El número de abono debe ser un número positivo sin caracteres especiales",
                    alertIcon: 'error',
-                   showConfirmButton: false,
-                   timer: 1500,
+                   showConfirmButton: true,
+                   timer: false,
                    ruta: '/',
                    login: true,
                    roluser: true,
