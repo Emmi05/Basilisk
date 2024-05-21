@@ -2,7 +2,6 @@ import { pool} from '../database/db.js'
 import moment from 'moment';
 
 const cantidades = /^\d*,?\d+$/;
-// const nombreRegex = /^[A-Za-zÁ-Úá-ú\s]+$/;
 const crearVenta = async (req, res) => {
     const terrenoId = req.params.id;
     const [terreno] = await pool.query('SELECT * FROM land WHERE id = ?', [terrenoId]);
@@ -127,14 +126,11 @@ const crearVenta = async (req, res) => {
                 terrenos: rows2,
                 terrenos2: terreno,
             });
-        
-    
-         
+          
             
         } else if (tipo_venta === 'credito') {
             const fechaFormateada = moment(fecha_venta).format('YYYY-MM-DD');
 
-            // Insertar venta a crédito en la base de datos
            const ventasearch = await pool.query('INSERT INTO sale (id_customer, id_land, fecha_venta, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante, ncuotas_pagadas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)', [id_customer, id_land, fechaFormateada, tipo_venta, inicial, n_cuentas, vendedor, cuotas, deuda_restante,0]);
            console.log(ventasearch)
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_land]);
@@ -333,9 +329,6 @@ const editarVenta = async (req, res) => {
                 'UPDATE sale SET tipo_venta = ?, inicial = NULL, n_cuentas = NULL, cuotas = 0 WHERE id = ?',
                 [tipo_venta, id]
             );
-
-
-            // Marcar el terreno como "pagado"
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['pagado', id_terreno_asociado]);
         } else if (tipo_venta === 'credito') {
             if((inicialNumber >= precio_terreno)) {
@@ -389,14 +382,12 @@ const editarVenta = async (req, res) => {
                     terrenos2: terreno,
                 });
             }
-
             // Si es "crédito", actualiza los valores normales
             result = await pool.query(
                 'UPDATE sale SET tipo_venta = ?, inicial = ?, n_cuentas = ?, cuotas = ? WHERE id = ?',
                 [tipo_venta, inicial, n_cuentas, cuotas, id]
             );
-        
-            // Marcar el terreno como "proceso"
+
             await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['proceso', id_terreno_asociado]);
         }
     
@@ -446,9 +437,7 @@ if (result && result.affectedRows > 0) {
     // Actualizar el estado del terreno
     const [updateResult] = await pool.query('UPDATE land SET estado = ? WHERE id = ?', ['disponible', id_terreno_asociado]);
     if (updateResult && updateResult.affectedRows > 0) {
-        // Renderizar la página con el mensaje de eliminación exitosa
         const [rows] = await pool.query('SELECT c.name as customer_name, c.a_paterno as customer_paterno, c.a_materno as customer_materno, l.lote, l.manzana, l.precio, s.fecha_venta, s.n_cuentas, s.ncuotas_pagadas, s.id, s.tipo_venta FROM sale s JOIN customers c ON s.id_customer = c.id JOIN land l ON s.id_land = l.id;');
-
         res.render('venta', {
             alert: true,
             alertTitle: "Eliminado",

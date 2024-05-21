@@ -998,7 +998,7 @@ export const eliminarTerreno = async (req, res) => {
             rol: req.session.rol
         });
     }
-        
+    
     }
 
     } catch (error) {

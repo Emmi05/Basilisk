@@ -117,7 +117,9 @@ const crearAbonos = async (req, res) => {
            await generateAndSendPDF(informacion, cantidad,fechaAbonoFormateada, res);
      }
     }
+    // rol2
       }else{
+        // rol2
         const { n_abono, fecha_abono, cantidad } = req.body;
         // Manejar la fecha de abono cuando no está presente
         const fechaAbono = fecha_abono || new Date();

@@ -605,8 +605,6 @@ export const editarClientes = async (req, res) => {
 
         // Antes de la actualización, obtener los datos actuales del cliente
         const [existingCustomer] = await pool.query('SELECT name, a_paterno, a_materno FROM customers WHERE id = ?', [id]);
-
-        // Obtener los nuevos valores del cuerpo de la solicitud
         const { name: newName, a_paterno: newAPaterno, a_materno: newAMaterno } = req.body;
 
         // Verificar si los valores han cambiado
@@ -615,7 +613,6 @@ export const editarClientes = async (req, res) => {
             const [existingNameCount] = await pool.query('SELECT COUNT(*) as count FROM customers WHERE name = ? AND a_paterno = ? AND a_materno = ? AND id != ?', [newName, newAPaterno, newAMaterno, id]);
 
             if (existingNameCount[0].count > 0) {
-                // Mostrar un mensaje de error porque los nuevos valores ya existen en la base de datos
                 return res.render('clienteEdit', {
                     alert: true,
                     alertTitle: "Error",

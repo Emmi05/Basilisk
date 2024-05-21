@@ -36,8 +36,8 @@ export const login = async (req, res) => {
                     if (req.session.rol == 2) {
                         res.render('login', {
                             alert: true,
-                            alertTitle: "Usuario normal:",
-                            alertMessage: "Usuario",
+                            alertTitle: "Usuario:",
+                            alertMessage: "Empleado",
                             alertIcon: 'success',
                             showConfirmButton: false,
                             timer: 3000,
@@ -83,15 +83,12 @@ export const perfil = async (req, res) => {
         if (req.session.rol == 2) {
         if (!userId) {
             console.log('No user ID in session');
-            return res.status(500).render('500');
-    
+            return res.status(500).render('500');    
         }
 
-    
         if (!rol) {
             console.log('No role ID in session');
             return res.status(500).render('500');
-          
         }
 
         // Consulta a la base de datos
@@ -107,7 +104,7 @@ export const perfil = async (req, res) => {
         // Renderiza la vista con los datos obtenidos
         res.render('profile', {
             login: true,
-            roluser: true, // true si rolid es 1, false si es 2
+            roluser: false, // true si rolid es 1, false si es 2
             name: req.session.name,
             rol: req.session.rol,
             usuarios: rows,
@@ -215,7 +212,6 @@ export const password = async (req, res) => {
         }
 
         const storedPassword = rows[0].pass;
-
         // Comparar la contraseña actual con la proporcionada
         const passwordMatch = await bcrypt.compare(pass, storedPassword);
 
@@ -653,10 +649,8 @@ try {
             }); 
         }
 
-        // Si el usuario no ha sido modificado o no existe en la base de datos, continuar con la actualización
         const [result] = await pool.query('UPDATE users SET name = IFNULL (?, name), user = IFNULL (?, user), id_rol = IFNULL (?, id_rol) WHERE id = ?', [name, user, rol, id]);
-      
-        // Verificar si la actualización fue exitosa
+
         if (result && result.affectedRows > 0) {
             const [rows] = await pool.query('SELECT * FROM users');
             res.render('usuarios', {
@@ -705,8 +699,6 @@ try {
     }
 }catch{
     return res.status(500).render('500');
-    //console.error(error); catch(error) en caso de haber error poner
-
 }
 }
 
