@@ -66,7 +66,7 @@ router.get('/registro_usuario', autenticacionMiddleware,autorizacionMiddleware (
     })    
 router.post('/register',  autenticacionMiddleware, autorizacionMiddleware (1), controlador.register);
 
- router.get('/usuarios', autenticacionMiddleware,autorizacionMiddleware (1), controlador.datosUsuario);
+router.get('/usuarios', autenticacionMiddleware,autorizacionMiddleware (1), controlador.datosUsuario);
 
 router.get('/editar_usuario/:id', autenticacionMiddleware, autorizacionMiddleware (1), controlador.datosUsuarioid);
 
