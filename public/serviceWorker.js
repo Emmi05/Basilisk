@@ -26,16 +26,15 @@ const urlsToCache = [
   "/resources/vendor/datatables/jquery.dataTables.min.js",
   "/resources/scripts/datables.js",
   "/resources/scripts/sb-admin-2.min.js",
-  "icons/72x72.png",
-  "icons/96x96.png",
-  "icons/128x128.png",
-  "icons/144x144.png",
-  "icons/152x152.png",
-  "icons/192x192.png",
-  "icons/384x384.png",
-  "icons/512x512.png",
- 
-  
+  "/icons/72x72.png",
+  "/icons/96x96.png",
+  "/icons/128x128.png",
+  "/icons/144x144.png",
+  "/icons/152x152.png",
+  "/icons/192x192.png",
+  "/icons/384x384.png",
+  "/icons/512x512.png",
+
 ]
 
 self.addEventListener('install', event => {
