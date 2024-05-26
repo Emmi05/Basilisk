@@ -1,7 +1,7 @@
 {
   "name": "BASILISK INMOBILIARIA SIETE",
-  "short_name": "Inventario de Equipos",
-  "description": "Esta aplicación está diseñada para realizar un control de los equipos de Cómputo",
+  "short_name": "Basilisk",
+  "description": "random kitty",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ededed",
