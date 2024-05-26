@@ -2,7 +2,7 @@
   "name": "BASILISK INMOBILIARIA SIETE",
   "short_name": "Inventario de Equipos",
   "description": "Esta aplicación está diseñada para realizar un control de los equipos de Cómputo",
-  "start_url": "/login",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ededed",
   "theme_color": "#009CFF",
@@ -51,28 +51,6 @@
       "src": "icons/512x512.png",
       "sizes": "512x512",
       "type": "image/png"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/mobile-screenshot.png",
-      "sizes": "640x1136",
-      "type": "image/png",
-      "platform": "mobile",
-      "orientations": "portrait"
-    },
-    {
-      "src": "/screenshots/desktop-screenshot.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "platform": "desktop"
-    },
-    {
-      "src": "/screenshots/desktop-wide-screenshot.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "platform": "desktop",
-      "form_factor": "wide"
     }
   ]
 }
