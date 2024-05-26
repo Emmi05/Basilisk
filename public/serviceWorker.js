@@ -2,8 +2,8 @@ const CACHE_NAME = 'v1';
 const urlsToCache = [
   "/",
   "/login",
-  "manifest.json",
-  "app.js",
+  "/manifest.json",
+  "/app.js",
   "https://cdn.botframework.com/botframework-webchat/latest/webchat.js",
   "//fonts.googleapis.com/css?family=Work+Sans:300,400,500,700,800%7CPoppins:300,400,700",
   "/resources/css/boostrap.css",
